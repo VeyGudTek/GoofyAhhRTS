@@ -1,12 +1,20 @@
 using UnityEngine;
 using Source.Shared;
 
-public class SceneController : MonoBehaviour
+namespace Source.GamePlay
 {
-    [SerializeField]
-    private InputManager inputManager;
-    void Awake()
+    public class SceneController : MonoBehaviour
     {
-        inputManager.InitializeCallbacks(new() { });
+        [SerializeField]
+        private InputManager InputManager;
+        [SerializeField]
+        private GamePlayService GamePlayService;
+        void Awake()
+        {
+            InputManager.InitializeCallbacks(new()
+            {
+                PrimaryClickEvent = GamePlayService.OnClick
+            });
+        }
     }
 }

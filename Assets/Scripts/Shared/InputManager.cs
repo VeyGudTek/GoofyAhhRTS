@@ -9,10 +9,10 @@ namespace Source.Shared
     {
         public CallbackFunction PrimaryClickEvent = null;
         public CallbackFunction PrimaryHoldEvent = null;
-        public CallbackFunction PrimaryOffEvent = null;
+        public CallbackFunction PrimaryReleaseEvent = null;
         public CallbackFunction SecondaryClickEvent = null;
         public CallbackFunction SecondaryHoldEvent = null;
-        public CallbackFunction SecondaryOffEvent = null;
+        public CallbackFunction SecondaryReleaseEvent = null;
     }
 
     public class InputManager : MonoBehaviour
@@ -22,22 +22,22 @@ namespace Source.Shared
         private InputAction Primary;
         private CallbackFunction PrimaryClickEvent = null;
         private CallbackFunction PrimaryHoldEvent = null;
-        private CallbackFunction PrimaryOffEvent = null;
+        private CallbackFunction PrimaryReleaseEvent = null;
 
         private InputAction Secondary;
         private CallbackFunction SecondaryClickEvent = null;
         private CallbackFunction SecondaryHoldEvent = null;
-        private CallbackFunction SecondaryOffEvent = null;
+        private CallbackFunction SecondaryReleaseEvent = null;
 
         public void InitializeCallbacks(InitializeCallbackDTO callBacks)
         {
             Initialized = true;
             PrimaryClickEvent = callBacks.PrimaryClickEvent;
             PrimaryHoldEvent = callBacks.PrimaryHoldEvent;
-            PrimaryOffEvent = callBacks.PrimaryOffEvent;
+            PrimaryReleaseEvent = callBacks.PrimaryReleaseEvent;
             SecondaryClickEvent = callBacks.SecondaryClickEvent;
             SecondaryHoldEvent = callBacks.SecondaryHoldEvent;
-            SecondaryOffEvent = callBacks.SecondaryOffEvent;
+            SecondaryReleaseEvent = callBacks.SecondaryReleaseEvent;
         }
 
         void Awake()
@@ -73,7 +73,7 @@ namespace Source.Shared
             }
             if (Primary.WasPressedThisFrame())
             {
-                PrimaryOffEvent?.Invoke();
+                PrimaryReleaseEvent?.Invoke();
             }
         }
 
@@ -89,7 +89,7 @@ namespace Source.Shared
             }
             if (Secondary.WasPressedThisFrame())
             {
-                SecondaryOffEvent?.Invoke();
+                SecondaryReleaseEvent?.Invoke();
             }
         }
     }
