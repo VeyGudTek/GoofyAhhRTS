@@ -13,13 +13,13 @@ namespace Source.GamePlay
         private CameraController CameraController;
         void Awake()
         {
-            InputManager.InitializeCallbacks(new()
+            InputManager.Initialize(new()
             {
                 PrimaryClickEvent = GamePlayService.OnClick,
                 MoveEvent = CameraController.OnMove
             });
 
-            GamePlayService.InitializeCallbacks(new()
+            GamePlayService.Initialize(new()
             {
                 GetMouseWorldPoint = CameraController.GetMouseWorldPoint
             });

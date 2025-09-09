@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
+using Source.Shared.Utilities;
 
 namespace Source.Shared
 {
@@ -17,10 +17,8 @@ namespace Source.Shared
         public AxisCallback MoveEvent = null;
     }
 
-    public class InputManager : MonoBehaviour
+    public class InputManager : InitializationRequiredMonoBehavior<InitializeInputCallbackDTO>
     {
-        private bool Initialized = false;
-
         private InputAction Primary;
         private ButtonCallback PrimaryClickEvent = null;
         private ButtonCallback PrimaryHoldEvent = null;
@@ -34,7 +32,7 @@ namespace Source.Shared
         private InputAction Move;
         private AxisCallback MoveEvent = null;
 
-        public void InitializeCallbacks(InitializeInputCallbackDTO callbacks)
+        override public void Initialize(InitializeInputCallbackDTO callbacks)
         {
             Initialized = true;
             PrimaryClickEvent = callbacks.PrimaryClickEvent;
@@ -55,10 +53,7 @@ namespace Source.Shared
 
         private void Start()
         {
-            if (!Initialized)
-            {
-                throw new Exception("Initialization Error: Input Callbacks Not Initialized.");
-            }
+            CheckInitialized();
         }
 
 

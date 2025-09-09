@@ -1,3 +1,4 @@
+using Source.Shared.Utilities;
 using UnityEngine;
 
 namespace Source.GamePlay
@@ -15,19 +16,20 @@ namespace Source.GamePlay
         Playing
     }
 
-    public class GamePlayService : MonoBehaviour
+    public class GamePlayService : InitializationRequiredMonoBehavior<InitializeGamePlayCallbackDto>
     {
-        private bool Initialized = false;
         private GameState State;
         private GetMouseWorldPointCallback GetMouseWorldPoint;
 
         private void Start()
         {
             State = GameState.Playing;
+            CheckInitialized();
         }
 
-        public void InitializeCallbacks(InitializeGamePlayCallbackDto callbacks)
+        override public void Initialize(InitializeGamePlayCallbackDto callbacks)
         {
+            Initialized = true;
             GetMouseWorldPoint = callbacks.GetMouseWorldPoint;
         }
 
