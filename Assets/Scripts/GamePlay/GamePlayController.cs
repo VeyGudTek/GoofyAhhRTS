@@ -18,6 +18,11 @@ namespace Source.GamePlay
                 PrimaryClickEvent = GamePlayService.OnClick,
                 MoveEvent = CameraController.OnMove
             });
+
+            GamePlayService.InitializeCallbacks(new()
+            {
+                GetMouseWorldPoint = CameraController.GetMouseWorldPoint
+            });
         }
     }
 }

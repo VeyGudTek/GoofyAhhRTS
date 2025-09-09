@@ -6,7 +6,7 @@ namespace Source.Shared
 {
     public delegate void ButtonCallback();
     public delegate void AxisCallback(float x, float y);
-    public class InitializeCallbackDTO
+    public class InitializeInputCallbackDTO
     {
         public ButtonCallback PrimaryClickEvent = null;
         public ButtonCallback PrimaryHoldEvent = null;
@@ -34,16 +34,16 @@ namespace Source.Shared
         private InputAction Move;
         private AxisCallback MoveEvent = null;
 
-        public void InitializeCallbacks(InitializeCallbackDTO callBacks)
+        public void InitializeCallbacks(InitializeInputCallbackDTO callbacks)
         {
             Initialized = true;
-            PrimaryClickEvent = callBacks.PrimaryClickEvent;
-            PrimaryHoldEvent = callBacks.PrimaryHoldEvent;
-            PrimaryReleaseEvent = callBacks.PrimaryReleaseEvent;
-            SecondaryClickEvent = callBacks.SecondaryClickEvent;
-            SecondaryHoldEvent = callBacks.SecondaryHoldEvent;
-            SecondaryReleaseEvent = callBacks.SecondaryReleaseEvent;
-            MoveEvent = callBacks.MoveEvent;
+            PrimaryClickEvent = callbacks.PrimaryClickEvent;
+            PrimaryHoldEvent = callbacks.PrimaryHoldEvent;
+            PrimaryReleaseEvent = callbacks.PrimaryReleaseEvent;
+            SecondaryClickEvent = callbacks.SecondaryClickEvent;
+            SecondaryHoldEvent = callbacks.SecondaryHoldEvent;
+            SecondaryReleaseEvent = callbacks.SecondaryReleaseEvent;
+            MoveEvent = callbacks.MoveEvent;
         }
 
         void Awake()
@@ -57,7 +57,7 @@ namespace Source.Shared
         {
             if (!Initialized)
             {
-                throw new Exception("Callbacks not Initialized.");
+                throw new Exception("Initialization Error: Input Callbacks Not Initialized.");
             }
         }
 

@@ -2,6 +2,13 @@ using UnityEngine;
 
 namespace Source.GamePlay
 {
+    public delegate Vector3 GetMouseWorldPointCallback();
+
+    public class InitializeGamePlayCallbackDto
+    {
+        public GetMouseWorldPointCallback GetMouseWorldPoint;
+    }
+
     public enum GameState
     {
         Paused,
@@ -10,16 +17,23 @@ namespace Source.GamePlay
 
     public class GamePlayService : MonoBehaviour
     {
-        public GameState State;
+        private bool Initialized = false;
+        private GameState State;
+        private GetMouseWorldPointCallback GetMouseWorldPoint;
 
         private void Start()
         {
             State = GameState.Playing;
         }
 
+        public void InitializeCallbacks(InitializeGamePlayCallbackDto callbacks)
+        {
+            GetMouseWorldPoint = callbacks.GetMouseWorldPoint;
+        }
+
         public void OnClick()
         {
-            Debug.Log("Clicked");
+            Debug.Log(GetMouseWorldPoint?.Invoke());
         }
 
         public void OnHold()
