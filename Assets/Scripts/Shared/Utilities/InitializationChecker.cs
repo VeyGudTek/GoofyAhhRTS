@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Source.Shared.Utilities
 {
-    public record DelegateDTO
+    public record InitializeCheckDTO<T>
     {
         public string Name;
-        public Delegate Delegate;
+        public T Dependency;
     }
 
     public static class InitializationChecker
@@ -29,12 +29,12 @@ namespace Source.Shared.Utilities
             }
         }
 
-        public static void CheckDelegates(string className, params DelegateDTO[] dtos)
+        public static void CheckDelegates(string className, params InitializeCheckDTO<Delegate>[] dtos)
         {
             string errors = string.Empty;
-            foreach (DelegateDTO dto in dtos)
+            foreach (InitializeCheckDTO<Delegate> dto in dtos)
             {
-                if (dto.Delegate == null)
+                if (dto.Dependency == null)
                 {
                     errors += $"[{className}] missing [{dto.Name}]\n";
                 }
@@ -46,14 +46,14 @@ namespace Source.Shared.Utilities
             }
         }
 
-        public static void CheckDependencies(string className, params MonoBehaviour[] dependencies)
+        public static void CheckMonoBehaviors(string className, params InitializeCheckDTO<MonoBehaviour>[] monoBehaviors)
         {
             string errors = string.Empty;
-            foreach (MonoBehaviour dependency in dependencies)
+            foreach (InitializeCheckDTO<MonoBehaviour> monobehavior in monoBehaviors)
             {
-                if (dependency == null)
+                if (monobehavior.Dependency == null)
                 {
-                    errors += $"[{className}] missing [{dependency.GetType().Name}]\n";
+                    errors += $"[{className}] missing [{monobehavior.Name}]\n";
                 }
             }
 

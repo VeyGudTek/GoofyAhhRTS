@@ -226,8 +226,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5857e56a6f3a5ef409e0656fa0cc4636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rigidbody: {fileID: 73509408}
-  Camera: {fileID: 0}
 --- !u!114 &73509407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,7 +479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InputManager: {fileID: 1654136892}
-  GamePlayService: {fileID: 690498331}
+  GamePlayService: {fileID: 0}
   CameraController: {fileID: 73509406}
 --- !u!4 &1066151762
 Transform:

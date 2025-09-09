@@ -22,8 +22,8 @@ namespace Source.GamePlay
 
         private void Start()
         {
-            InitializationChecker.CheckDelegates(className: name,
-                new DelegateDTO() { Name = "GetMouseWorldPoint", Delegate = GetMouseWorldPoint }
+            InitializationChecker.CheckDelegates(className: this.GetType().Name,
+                new InitializeCheckDTO<Delegate>() { Name = "GetMouseWorldPoint", Dependency = GetMouseWorldPoint }
             );
 
             State = GameState.Playing;

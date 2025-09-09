@@ -51,14 +51,14 @@ namespace Source.Shared
 
         private void Start()
         {
-            InitializationChecker.CheckDelegates(className: name,
-                new() { Name = "PrimaryClickEvent", Delegate = PrimaryClickEvent },
-                new() { Name = "PrimaryHoldEvent", Delegate = PrimaryHoldEvent } ,
-                new() { Name = "PrimaryReleaseEvent", Delegate = PrimaryReleaseEvent },
-                new() { Name = "SecondaryClickEvent", Delegate = SecondaryClickEvent },
-                new() { Name = "SecondaryHoldEvent", Delegate = SecondaryHoldEvent } ,
-                new() { Name = "SecondaryReleaseEvent", Delegate = SecondaryReleaseEvent },
-                new() { Name = "MoveEvent", Delegate = MoveEvent }
+            InitializationChecker.CheckDelegates(className: this.GetType().Name,
+                new() { Name = "PrimaryClickEvent", Dependency = PrimaryClickEvent },
+                new() { Name = "PrimaryHoldEvent", Dependency = PrimaryHoldEvent } ,
+                new() { Name = "PrimaryReleaseEvent", Dependency = PrimaryReleaseEvent },
+                new() { Name = "SecondaryClickEvent", Dependency = SecondaryClickEvent },
+                new() { Name = "SecondaryHoldEvent", Dependency = SecondaryHoldEvent } ,
+                new() { Name = "SecondaryReleaseEvent", Dependency = SecondaryReleaseEvent },
+                new() { Name = "MoveEvent", Dependency = MoveEvent }
                 );
         }
 
@@ -74,15 +74,15 @@ namespace Source.Shared
         {
             if (Primary.WasCompletedThisFrame())
             {
-                PrimaryClickEvent.Invoke();
+                PrimaryClickEvent?.Invoke();
             }
             if (Primary.inProgress)
             {
-                PrimaryHoldEvent.Invoke();
+                PrimaryHoldEvent?.Invoke();
             }
             if (Primary.WasPressedThisFrame())
             {
-                PrimaryReleaseEvent.Invoke();
+                PrimaryReleaseEvent?.Invoke();
             }
         }
 
@@ -90,22 +90,22 @@ namespace Source.Shared
         {
             if (Secondary.WasCompletedThisFrame())
             {
-                SecondaryClickEvent.Invoke();
+                SecondaryClickEvent?.Invoke();
             }
             if (Secondary.inProgress)
             {
-                SecondaryHoldEvent.Invoke();
+                SecondaryHoldEvent?.Invoke();
             }
             if (Secondary.WasPressedThisFrame())
             {
-                SecondaryReleaseEvent.Invoke();
+                SecondaryReleaseEvent?.Invoke();
             }
         }
 
         void UpdateMovement()
         {
             Vector2 moveVector = Move.ReadValue<Vector2>();
-            MoveEvent.Invoke(moveVector);
+            MoveEvent?.Invoke(moveVector);
         }
     }
 }
