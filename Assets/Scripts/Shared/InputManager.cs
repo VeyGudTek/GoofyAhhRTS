@@ -4,15 +4,17 @@ using System;
 
 namespace Source.Shared
 {
-    public delegate void CallbackFunction();
+    public delegate void ButtonCallback();
+    public delegate void AxisCallback(float x, float y);
     public class InitializeCallbackDTO
     {
-        public CallbackFunction PrimaryClickEvent = null;
-        public CallbackFunction PrimaryHoldEvent = null;
-        public CallbackFunction PrimaryReleaseEvent = null;
-        public CallbackFunction SecondaryClickEvent = null;
-        public CallbackFunction SecondaryHoldEvent = null;
-        public CallbackFunction SecondaryReleaseEvent = null;
+        public ButtonCallback PrimaryClickEvent = null;
+        public ButtonCallback PrimaryHoldEvent = null;
+        public ButtonCallback PrimaryReleaseEvent = null;
+        public ButtonCallback SecondaryClickEvent = null;
+        public ButtonCallback SecondaryHoldEvent = null;
+        public ButtonCallback SecondaryReleaseEvent = null;
+        public AxisCallback MoveEvent = null;
     }
 
     public class InputManager : MonoBehaviour
@@ -20,14 +22,17 @@ namespace Source.Shared
         private bool Initialized = false;
 
         private InputAction Primary;
-        private CallbackFunction PrimaryClickEvent = null;
-        private CallbackFunction PrimaryHoldEvent = null;
-        private CallbackFunction PrimaryReleaseEvent = null;
+        private ButtonCallback PrimaryClickEvent = null;
+        private ButtonCallback PrimaryHoldEvent = null;
+        private ButtonCallback PrimaryReleaseEvent = null;
 
         private InputAction Secondary;
-        private CallbackFunction SecondaryClickEvent = null;
-        private CallbackFunction SecondaryHoldEvent = null;
-        private CallbackFunction SecondaryReleaseEvent = null;
+        private ButtonCallback SecondaryClickEvent = null;
+        private ButtonCallback SecondaryHoldEvent = null;
+        private ButtonCallback SecondaryReleaseEvent = null;
+
+        private InputAction Move;
+        private AxisCallback MoveEvent = null;
 
         public void InitializeCallbacks(InitializeCallbackDTO callBacks)
         {
@@ -38,12 +43,14 @@ namespace Source.Shared
             SecondaryClickEvent = callBacks.SecondaryClickEvent;
             SecondaryHoldEvent = callBacks.SecondaryHoldEvent;
             SecondaryReleaseEvent = callBacks.SecondaryReleaseEvent;
+            MoveEvent = callBacks.MoveEvent;
         }
 
         void Awake()
         {
             Primary = InputSystem.actions.FindAction("Attack");
             Secondary = InputSystem.actions.FindAction("RightClick");
+            Move = InputSystem.actions.FindAction("Move");
         }
 
         private void Start()
@@ -59,6 +66,7 @@ namespace Source.Shared
         {
             UpdatePrimary();
             UpdateSecondary();
+            UpdateMovement();
         }
 
         void UpdatePrimary()
@@ -91,6 +99,12 @@ namespace Source.Shared
             {
                 SecondaryReleaseEvent?.Invoke();
             }
+        }
+
+        void UpdateMovement()
+        {
+            Vector2 moveVector = Move.ReadValue<Vector2>();
+            MoveEvent?.Invoke(moveVector.x, moveVector.y);
         }
     }
 }

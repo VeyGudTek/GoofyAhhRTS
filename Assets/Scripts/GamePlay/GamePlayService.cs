@@ -1,12 +1,22 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace Source.GamePlay
 {
+    public enum GameState
+    {
+        Paused,
+        Playing
+    }
+
     public class GamePlayService : MonoBehaviour
     {
-        Unit test;
-        private List<Unit> huh;
+        public GameState State;
+
+        private void Start()
+        {
+            State = GameState.Playing;
+        }
+
         public void OnClick()
         {
             Debug.Log("Clicked");
