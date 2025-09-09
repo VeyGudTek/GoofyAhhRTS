@@ -1,13 +1,12 @@
 using Source.Shared.Utilities;
+using System;
 using UnityEngine;
 
 namespace Source.GamePlay
 {
-    public delegate Vector3 GetMouseWorldPointCallback();
-
     public class InitializeGamePlayCallbackDto
     {
-        public GetMouseWorldPointCallback GetMouseWorldPoint;
+        public Func<Vector3> GetMouseWorldPoint;
     }
 
     public enum GameState
@@ -16,20 +15,22 @@ namespace Source.GamePlay
         Playing
     }
 
-    public class GamePlayService : InitializationRequiredMonoBehavior<InitializeGamePlayCallbackDto>
+    public class GamePlayService : MonoBehaviour
     {
         private GameState State;
-        private GetMouseWorldPointCallback GetMouseWorldPoint;
+        private Func<Vector3> GetMouseWorldPoint;
 
         private void Start()
         {
+            InitializationChecker.CheckDelegates(className: name,
+                new DelegateDTO() { Name = "GetMouseWorldPoint", Delegate = GetMouseWorldPoint }
+            );
+
             State = GameState.Playing;
-            CheckInitialized();
         }
 
-        override public void Initialize(InitializeGamePlayCallbackDto callbacks)
+        public void Initialize(InitializeGamePlayCallbackDto callbacks)
         {
-            Initialized = true;
             GetMouseWorldPoint = callbacks.GetMouseWorldPoint;
         }
 

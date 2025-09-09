@@ -1,5 +1,6 @@
 using UnityEngine;
 using Source.Shared;
+using Source.Shared.Utilities;
 
 namespace Source.GamePlay
 {
@@ -12,6 +13,17 @@ namespace Source.GamePlay
         [SerializeField]
         private CameraController CameraController;
         void Awake()
+        {
+            InitializationChecker.CheckDependencies(className: name,
+                InputManager,
+                GamePlayService,
+                CameraController
+            );
+
+            InjectDependencies();
+        }
+
+        private void InjectDependencies()
         {
             InputManager.Initialize(new()
             {

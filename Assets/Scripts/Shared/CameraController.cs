@@ -1,14 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Source.Shared.Utilities;
 
 namespace Source.Shared
 {
     public class CameraController : MonoBehaviour
     {
-        [SerializeField]
         private Rigidbody Rigidbody;
-
-        [SerializeField]
         private Camera Camera;
 
         private readonly float LinearDamping = 2f;
@@ -21,12 +19,13 @@ namespace Source.Shared
 
         void Start()
         {
+            InitializationChecker.CheckComponents(className: this.GetType().Name, Camera, Rigidbody);
             Rigidbody.linearDamping = LinearDamping;
         }
 
-        public void OnMove(float x, float y)
+        public void OnMove(Vector2 direction)
         {
-            Rigidbody.AddForce(new Vector3(x, 0f, y));
+            Rigidbody.AddForce(new Vector3(direction.x, 0f, direction.y));
         }
 
         public Vector3 GetMouseWorldPoint()

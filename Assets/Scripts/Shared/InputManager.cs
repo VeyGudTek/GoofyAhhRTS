@@ -1,40 +1,38 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Source.Shared.Utilities;
+using System;
 
 namespace Source.Shared
 {
-    public delegate void ButtonCallback();
-    public delegate void AxisCallback(float x, float y);
     public class InitializeInputCallbackDTO
     {
-        public ButtonCallback PrimaryClickEvent = null;
-        public ButtonCallback PrimaryHoldEvent = null;
-        public ButtonCallback PrimaryReleaseEvent = null;
-        public ButtonCallback SecondaryClickEvent = null;
-        public ButtonCallback SecondaryHoldEvent = null;
-        public ButtonCallback SecondaryReleaseEvent = null;
-        public AxisCallback MoveEvent = null;
+        public Action PrimaryClickEvent = null;
+        public Action PrimaryHoldEvent = null;
+        public Action PrimaryReleaseEvent = null;
+        public Action SecondaryClickEvent = null;
+        public Action SecondaryHoldEvent = null;
+        public Action SecondaryReleaseEvent = null;
+        public Action<Vector2> MoveEvent = null;
     }
 
-    public class InputManager : InitializationRequiredMonoBehavior<InitializeInputCallbackDTO>
+    public class InputManager : MonoBehaviour
     {
         private InputAction Primary;
-        private ButtonCallback PrimaryClickEvent = null;
-        private ButtonCallback PrimaryHoldEvent = null;
-        private ButtonCallback PrimaryReleaseEvent = null;
+        private Action PrimaryClickEvent = null;
+        private Action PrimaryHoldEvent = null;
+        private Action PrimaryReleaseEvent = null;
 
         private InputAction Secondary;
-        private ButtonCallback SecondaryClickEvent = null;
-        private ButtonCallback SecondaryHoldEvent = null;
-        private ButtonCallback SecondaryReleaseEvent = null;
+        private Action SecondaryClickEvent = null;
+        private Action SecondaryHoldEvent = null;
+        private Action SecondaryReleaseEvent = null;
 
         private InputAction Move;
-        private AxisCallback MoveEvent = null;
+        private Action<Vector2> MoveEvent = null;
 
-        override public void Initialize(InitializeInputCallbackDTO callbacks)
+        public void Initialize(InitializeInputCallbackDTO callbacks)
         {
-            Initialized = true;
             PrimaryClickEvent = callbacks.PrimaryClickEvent;
             PrimaryHoldEvent = callbacks.PrimaryHoldEvent;
             PrimaryReleaseEvent = callbacks.PrimaryReleaseEvent;
@@ -53,7 +51,15 @@ namespace Source.Shared
 
         private void Start()
         {
-            CheckInitialized();
+            InitializationChecker.CheckDelegates(className: name,
+                new() { Name = "PrimaryClickEvent", Delegate = PrimaryClickEvent },
+                new() { Name = "PrimaryHoldEvent", Delegate = PrimaryHoldEvent } ,
+                new() { Name = "PrimaryReleaseEvent", Delegate = PrimaryReleaseEvent },
+                new() { Name = "SecondaryClickEvent", Delegate = SecondaryClickEvent },
+                new() { Name = "SecondaryHoldEvent", Delegate = SecondaryHoldEvent } ,
+                new() { Name = "SecondaryReleaseEvent", Delegate = SecondaryReleaseEvent },
+                new() { Name = "MoveEvent", Delegate = MoveEvent }
+                );
         }
 
 
@@ -68,15 +74,15 @@ namespace Source.Shared
         {
             if (Primary.WasCompletedThisFrame())
             {
-                PrimaryClickEvent?.Invoke();
+                PrimaryClickEvent.Invoke();
             }
             if (Primary.inProgress)
             {
-                PrimaryHoldEvent?.Invoke();
+                PrimaryHoldEvent.Invoke();
             }
             if (Primary.WasPressedThisFrame())
             {
-                PrimaryReleaseEvent?.Invoke();
+                PrimaryReleaseEvent.Invoke();
             }
         }
 
@@ -84,22 +90,22 @@ namespace Source.Shared
         {
             if (Secondary.WasCompletedThisFrame())
             {
-                SecondaryClickEvent?.Invoke();
+                SecondaryClickEvent.Invoke();
             }
             if (Secondary.inProgress)
             {
-                SecondaryHoldEvent?.Invoke();
+                SecondaryHoldEvent.Invoke();
             }
             if (Secondary.WasPressedThisFrame())
             {
-                SecondaryReleaseEvent?.Invoke();
+                SecondaryReleaseEvent.Invoke();
             }
         }
 
         void UpdateMovement()
         {
             Vector2 moveVector = Move.ReadValue<Vector2>();
-            MoveEvent?.Invoke(moveVector.x, moveVector.y);
+            MoveEvent.Invoke(moveVector);
         }
     }
 }
