@@ -20,8 +20,12 @@ namespace Source.GamePlay
         private CameraController CameraController;
         void Awake()
         {
-            this.CheckInitializeRequired();
             InjectDependencies();
+        }
+
+        private void Start()
+        {
+            this.CheckInitializeRequired();
         }
 
         private void InjectDependencies()

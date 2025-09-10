@@ -12,74 +12,45 @@ namespace Source.Shared.Utilities
         public static void CheckInitializeRequired(this MonoBehaviour instance)
         {
             Type t = instance.GetType();
-            IEnumerable<FieldInfo> fieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(f => f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0);
+            IEnumerable<FieldInfo> nullFieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(f => 
+                    f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
+                    f.GetValue(instance) == null
+                );
 
-            string errorMessage = string.Empty;
-            foreach (FieldInfo field in fieldsWithInitialization)
+            if (nullFieldsWithInitialization.Count() == 0)
             {
-                if (field.FieldType.IsSubclassOf(typeof(Delegate)))
-                {
-                    errorMessage += CheckDependency(field.Name, (Delegate)field.GetValue(instance));
-                    continue;
-                }
-                if(field.FieldType.IsSubclassOf(typeof(MonoBehaviour)))
-                {
-                    errorMessage += CheckDependency(field.Name, (MonoBehaviour)field.GetValue(instance));
-                    continue;
-                }
-                if(field.FieldType == typeof(InputAction))
-                {
-                    errorMessage += CheckDependency(field.Name, (InputAction)field.GetValue(instance));
-                    continue;
-                }
-                if (field.FieldType.IsSubclassOf(typeof(Component)))
-                {
-                    errorMessage += CheckDependency(field.Name, (Component)field.GetValue(instance));
-                    continue;
-                }
+                return;
             }
 
-            if (errorMessage != string.Empty)
+            string errorMessage = $"[{t.Name}] is missing the following dependencies:\n";
+            foreach (FieldInfo field in nullFieldsWithInitialization)
             {
-                throw new InitializationException($"[Class] {t.Name} is missing the following dependencies: \n{errorMessage}");
+                errorMessage += $"\t[{GetFieldTypeName(field.FieldType)}] {field.Name}\n";
             }
+
+            throw new InitializationException(errorMessage);
         }
 
-        public static string CheckDependency(string fieldName, Component component)
+        private static string GetFieldTypeName(Type type)
         {
-            if (component == null)
+            if (type.IsSubclassOf(typeof(Delegate)))
             {
-                return $"\t[Component] {fieldName}\n";
+                return "CallBack";
             }
-            return string.Empty;
-        }
-
-        public static string CheckDependency(string fieldName, Delegate callback)
-        {
-            if (callback == null)
+            if (type.IsSubclassOf(typeof(MonoBehaviour)))
             {
-                return $"\t[Callback] {fieldName}\n";
+                return "Script";
             }
-            return string.Empty;
-        }
-
-        public static string CheckDependency(string fieldName, MonoBehaviour monoBehavior)
-        {
-            if (monoBehavior == null)
+            if (type == typeof(InputAction))
             {
-                return $"\t[Script] {fieldName}\n";
+                return "Input";
             }
-            return string.Empty;
-        }
-
-        public static string CheckDependency(string fieldName, InputAction inputAction)
-        {
-            if (inputAction == null)
+            if (type.IsSubclassOf(typeof(Component)))
             {
-                return $"\t[Input] {fieldName}\n";
+                return "Component";
             }
-            return string.Empty;
+            throw new NotImplementedException($"Dependency Type [{type.Name}] not recognized by initialization checker.");
         }
     }
 }
