@@ -1,5 +1,6 @@
 using Source.Shared.Utilities;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Source.GamePlay
@@ -18,13 +19,12 @@ namespace Source.GamePlay
     public class GamePlayService : MonoBehaviour
     {
         private GameState State;
-        private Func<Vector3> GetMouseWorldPoint;
 
+        [InitializationRequired]
+        private Func<Vector3> GetMouseWorldPoint;
         private void Start()
         {
-            InitializationChecker.CheckDelegates(className: this.GetType().Name,
-                new InitializeCheckDTO<Delegate>() { Name = "GetMouseWorldPoint", Dependency = GetMouseWorldPoint }
-            );
+            this.CheckInitializeRequired();
 
             State = GameState.Playing;
         }

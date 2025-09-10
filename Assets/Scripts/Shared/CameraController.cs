@@ -6,7 +6,9 @@ namespace Source.Shared
 {
     public class CameraController : MonoBehaviour
     {
+        [InitializationRequired]
         private Rigidbody Rigidbody;
+        [InitializationRequired]
         private Camera Camera;
 
         private readonly float LinearDamping = 2f;
@@ -19,13 +21,16 @@ namespace Source.Shared
 
         void Start()
         {
-            InitializationChecker.CheckComponents(className: this.GetType().Name, Camera, Rigidbody);
+            this.CheckInitializeRequired();
             Rigidbody.linearDamping = LinearDamping;
         }
 
         public void OnMove(Vector2 direction)
         {
-            Rigidbody.AddForce(new Vector3(direction.x, 0f, direction.y));
+            if (Rigidbody != null)
+            {
+                Rigidbody.AddForce(new Vector3(direction.x, 0f, direction.y));
+            }
         }
 
         public Vector3 GetMouseWorldPoint()

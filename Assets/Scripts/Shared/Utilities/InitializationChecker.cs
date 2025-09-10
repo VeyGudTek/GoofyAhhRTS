@@ -1,66 +1,85 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Source.Shared.Utilities
 {
-    public record InitializeCheckDTO<T>
-    {
-        public string Name;
-        public T Dependency;
-    }
-
     public static class InitializationChecker
     {
-        public static void CheckComponents(string className, params Component[] components)
+        public static void CheckInitializeRequired(this MonoBehaviour instance)
         {
-            string errors = string.Empty;
-            foreach (Component component in components)
+            Type t = instance.GetType();
+            IEnumerable<FieldInfo> fieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(f => f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0);
+
+            string errorMessage = string.Empty;
+            foreach (FieldInfo field in fieldsWithInitialization)
             {
-                if (component == null)
+                if (field.FieldType.IsSubclassOf(typeof(Delegate)))
                 {
-                    errors += $"[{className}] missing [{component.GetType().Name}]\n";
+                    errorMessage += CheckDependency(field.Name, (Delegate)field.GetValue(instance));
+                    continue;
+                }
+                if(field.FieldType.IsSubclassOf(typeof(MonoBehaviour)))
+                {
+                    errorMessage += CheckDependency(field.Name, (MonoBehaviour)field.GetValue(instance));
+                    continue;
+                }
+                if(field.FieldType == typeof(InputAction))
+                {
+                    errorMessage += CheckDependency(field.Name, (InputAction)field.GetValue(instance));
+                    continue;
+                }
+                if (field.FieldType.IsSubclassOf(typeof(Component)))
+                {
+                    errorMessage += CheckDependency(field.Name, (Component)field.GetValue(instance));
+                    continue;
                 }
             }
 
-            if (errors != string.Empty)
+            if (errorMessage != string.Empty)
             {
-                throw new MissingComponentException(errors);
+                throw new InitializationException($"[Class] {t.Name} is missing the following dependencies: \n{errorMessage}");
             }
         }
 
-        public static void CheckDelegates(string className, params InitializeCheckDTO<Delegate>[] dtos)
+        public static string CheckDependency(string fieldName, Component component)
         {
-            string errors = string.Empty;
-            foreach (InitializeCheckDTO<Delegate> dto in dtos)
+            if (component == null)
             {
-                if (dto.Dependency == null)
-                {
-                    errors += $"[{className}] missing [{dto.Name}]\n";
-                }
+                return $"\t[Component] {fieldName}\n";
             }
-
-            if (errors != string.Empty)
-            {
-                throw new MissingDelegateException(errors);
-            }
+            return string.Empty;
         }
 
-        public static void CheckMonoBehaviors(string className, params InitializeCheckDTO<MonoBehaviour>[] monoBehaviors)
+        public static string CheckDependency(string fieldName, Delegate callback)
         {
-            string errors = string.Empty;
-            foreach (InitializeCheckDTO<MonoBehaviour> monobehavior in monoBehaviors)
+            if (callback == null)
             {
-                if (monobehavior.Dependency == null)
-                {
-                    errors += $"[{className}] missing [{monobehavior.Name}]\n";
-                }
+                return $"\t[Callback] {fieldName}\n";
             }
+            return string.Empty;
+        }
 
-            if (errors != string.Empty)
+        public static string CheckDependency(string fieldName, MonoBehaviour monoBehavior)
+        {
+            if (monoBehavior == null)
             {
-                throw new MissingDependencyException(errors);
+                return $"\t[Script] {fieldName}\n";
             }
+            return string.Empty;
+        }
+
+        public static string CheckDependency(string fieldName, InputAction inputAction)
+        {
+            if (inputAction == null)
+            {
+                return $"\t[Input] {fieldName}\n";
+            }
+            return string.Empty;
         }
     }
 }

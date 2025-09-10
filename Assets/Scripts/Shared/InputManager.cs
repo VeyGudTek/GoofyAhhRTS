@@ -18,14 +18,22 @@ namespace Source.Shared
 
     public class InputManager : MonoBehaviour
     {
+        [InitializationRequired]
         private InputAction Primary;
+        [InitializationRequired]
         private Action PrimaryClickEvent = null;
+        [InitializationRequired]
         private Action PrimaryHoldEvent = null;
+        [InitializationRequired]
         private Action PrimaryReleaseEvent = null;
 
+        [InitializationRequired]
         private InputAction Secondary;
+        [InitializationRequired]
         private Action SecondaryClickEvent = null;
+        [InitializationRequired]
         private Action SecondaryHoldEvent = null;
+        [InitializationRequired]
         private Action SecondaryReleaseEvent = null;
 
         private InputAction Move;
@@ -51,15 +59,7 @@ namespace Source.Shared
 
         private void Start()
         {
-            InitializationChecker.CheckDelegates(className: this.GetType().Name,
-                new() { Name = "PrimaryClickEvent", Dependency = PrimaryClickEvent },
-                new() { Name = "PrimaryHoldEvent", Dependency = PrimaryHoldEvent } ,
-                new() { Name = "PrimaryReleaseEvent", Dependency = PrimaryReleaseEvent },
-                new() { Name = "SecondaryClickEvent", Dependency = SecondaryClickEvent },
-                new() { Name = "SecondaryHoldEvent", Dependency = SecondaryHoldEvent } ,
-                new() { Name = "SecondaryReleaseEvent", Dependency = SecondaryReleaseEvent },
-                new() { Name = "MoveEvent", Dependency = MoveEvent }
-                );
+            this.CheckInitializeRequired();
         }
 
 

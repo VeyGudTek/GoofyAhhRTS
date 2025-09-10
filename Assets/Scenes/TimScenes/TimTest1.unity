@@ -479,7 +479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InputManager: {fileID: 1654136892}
-  GamePlayService: {fileID: 0}
+  GamePlayService: {fileID: 690498331}
   CameraController: {fileID: 73509406}
 --- !u!4 &1066151762
 Transform:

@@ -10,39 +10,43 @@ namespace Source.GamePlay
         private readonly Action EmptyAction = () => { };
 
         [SerializeField]
+        [InitializationRequired]
         private InputManager InputManager;
         [SerializeField]
+        [InitializationRequired]
         private GamePlayService GamePlayService;
         [SerializeField]
+        [InitializationRequired]
         private CameraController CameraController;
         void Awake()
         {
-            InitializationChecker.CheckMonoBehaviors(className: this.GetType().Name,
-                new() { Name = "InputManager", Dependency = InputManager },
-                new() { Name = "GamePlayService", Dependency = GamePlayService },
-                new() { Name = "CameraController", Dependency = CameraController }
-            );
-
+            this.CheckInitializeRequired();
             InjectDependencies();
         }
 
         private void InjectDependencies()
         {
-            InputManager.Initialize(new()
+            if (InputManager != null)
             {
-                PrimaryClickEvent = GamePlayService.OnClick,
-                PrimaryHoldEvent = EmptyAction,
-                PrimaryReleaseEvent = EmptyAction,
-                SecondaryClickEvent = EmptyAction,
-                SecondaryHoldEvent = EmptyAction,
-                SecondaryReleaseEvent = EmptyAction,
-                MoveEvent = CameraController.OnMove
-            });
+                InputManager.Initialize(new()
+                {
+                    PrimaryClickEvent = GamePlayService.OnClick,
+                    PrimaryHoldEvent = EmptyAction,
+                    PrimaryReleaseEvent = EmptyAction,
+                    SecondaryClickEvent = EmptyAction,
+                    SecondaryHoldEvent = EmptyAction,
+                    SecondaryReleaseEvent = EmptyAction,
+                    MoveEvent = CameraController.OnMove
+                });
+            }
 
-            GamePlayService.Initialize(new()
+            if (GamePlayService != null)
             {
-                GetMouseWorldPoint = CameraController.GetMouseWorldPoint
-            });
+                GamePlayService.Initialize(new()
+                {
+                    GetMouseWorldPoint = CameraController.GetMouseWorldPoint
+                });
+            }
         }
     }
 }
