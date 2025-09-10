@@ -105,7 +105,10 @@ namespace Source.Shared
         void UpdateMovement()
         {
             Vector2 moveVector = Move.ReadValue<Vector2>();
-            MoveEvent?.Invoke(moveVector);
+            if (moveVector != Vector2.zero)
+            {
+                MoveEvent?.Invoke(moveVector);
+            }
         }
     }
 }
