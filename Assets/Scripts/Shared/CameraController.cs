@@ -1,6 +1,8 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
 using Source.Shared.Utilities;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace Source.Shared
 {
@@ -33,20 +35,9 @@ namespace Source.Shared
             }
         }
 
-        public Vector3 GetMouseWorldPoint()
+        public Camera GetCamera()
         {
-            Vector3 worldPoint = Vector3.zero;
-
-            int layersToHit = LayerMask.GetMask("Default");
-            RaycastHit hit;
-            Ray ray = Camera.ScreenPointToRay(Mouse.current.position.value);
-
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layersToHit))
-            {
-                worldPoint = hit.point;
-            }
-            
-            return worldPoint;
+            return Camera;
         }
     }
 }

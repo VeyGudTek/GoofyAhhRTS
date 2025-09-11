@@ -1,12 +1,16 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
 using Source.Shared.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace Source.Shared
 {
     public class InitializeInputCallbackDTO
     {
+        public Func<Camera> GetCamera = null;
         public Action PrimaryClickEvent = null;
         public Action PrimaryHoldEvent = null;
         public Action PrimaryReleaseEvent = null;
@@ -18,6 +22,9 @@ namespace Source.Shared
 
     public class InputManager : MonoBehaviour
     {
+        [InitializationRequired]
+        private Func<Camera> GetCamera = null;
+
         [InitializationRequired]
         private InputAction Primary;
         [InitializationRequired]
@@ -41,6 +48,7 @@ namespace Source.Shared
 
         public void Initialize(InitializeInputCallbackDTO callbacks)
         {
+            GetCamera = callbacks.GetCamera;
             PrimaryClickEvent = callbacks.PrimaryClickEvent;
             PrimaryHoldEvent = callbacks.PrimaryHoldEvent;
             PrimaryReleaseEvent = callbacks.PrimaryReleaseEvent;
@@ -68,6 +76,44 @@ namespace Source.Shared
             UpdatePrimary();
             UpdateSecondary();
             UpdateMovement();
+        }
+
+        public Vector3? GetMouseWorldPoint()
+        {
+            Vector3? worldPoint = null;
+            Vector2 mousePosition = Mouse.current.position.value;
+            Camera camera = GetCamera();
+            if (camera == null)
+            {
+                return worldPoint;
+            }
+
+            if (MouseIsOverUI(mousePosition))
+            {
+                return worldPoint;
+            }
+
+            int layerMaskToHit = LayerMask.GetMask("Default");
+            RaycastHit hit;
+            Ray ray = camera.ScreenPointToRay(mousePosition);
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMaskToHit))
+            {
+                worldPoint = hit.point;
+            }
+
+            return worldPoint;
+        }
+
+        private bool MouseIsOverUI(Vector2 mousePosition)
+        {
+            int uiLayer = LayerMask.NameToLayer("UI");
+
+            PointerEventData eventData = new PointerEventData(EventSystem.current);
+            eventData.position = Mouse.current.position.value;
+            List<RaycastResult> raycastResults = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventData, raycastResults);
+
+            return raycastResults.Where(r => r.gameObject.layer == uiLayer).Count() > 0;
         }
 
         void UpdatePrimary()

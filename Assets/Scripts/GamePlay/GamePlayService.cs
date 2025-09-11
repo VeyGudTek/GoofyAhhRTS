@@ -7,7 +7,7 @@ namespace Source.GamePlay
 {
     public class InitializeGamePlayCallbackDto
     {
-        public Func<Vector3> GetMouseWorldPoint;
+        public Func<Vector3?> GetMouseWorldPoint;
     }
 
     public enum GameState
@@ -21,7 +21,7 @@ namespace Source.GamePlay
         private GameState State;
 
         [InitializationRequired]
-        private Func<Vector3> GetMouseWorldPoint;
+        private Func<Vector3?> GetMouseWorldPoint;
         private void Start()
         {
             this.CheckInitializeRequired();

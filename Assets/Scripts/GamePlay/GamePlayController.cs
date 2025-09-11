@@ -34,6 +34,7 @@ namespace Source.GamePlay
             {
                 InputManager.Initialize(new()
                 {
+                    GetCamera = CameraController.GetCamera,
                     PrimaryClickEvent = GamePlayService.OnClick,
                     PrimaryHoldEvent = EmptyAction,
                     PrimaryReleaseEvent = EmptyAction,
@@ -48,7 +49,7 @@ namespace Source.GamePlay
             {
                 GamePlayService.Initialize(new()
                 {
-                    GetMouseWorldPoint = CameraController.GetMouseWorldPoint
+                    GetMouseWorldPoint = InputManager.GetMouseWorldPoint
                 });
             }
         }
