@@ -1,13 +1,13 @@
+using Source.Shared;
 using Source.Shared.Utilities;
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Source.GamePlay
 {
     public class InitializeGamePlayCallbackDto
     {
-        public Func<Vector3?> GetMouseWorldPoint;
+        public Func<ContactDto> GetMouseWorldPoint;
     }
 
     public enum GameState
@@ -21,7 +21,7 @@ namespace Source.GamePlay
         private GameState State;
 
         [InitializationRequired]
-        private Func<Vector3?> GetMouseWorldPoint;
+        private Func<ContactDto> GetMouseWorldPoint;
         private void Start()
         {
             this.CheckInitializeRequired();
@@ -36,7 +36,8 @@ namespace Source.GamePlay
 
         public void OnClick()
         {
-            Debug.Log(GetMouseWorldPoint?.Invoke());
+            ContactDto contact = GetMouseWorldPoint?.Invoke();
+            Debug.Log($"Hit GameObject: {contact.HitGameObject} | WorldPoint: {contact.Point} | GameObject: {contact.GameObject?.name}");
         }
 
         public void OnHold()

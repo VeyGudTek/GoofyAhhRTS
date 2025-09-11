@@ -1,8 +1,5 @@
 using Source.Shared.Utilities;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 namespace Source.Shared
 {
@@ -29,9 +26,11 @@ namespace Source.Shared
 
         public void OnMove(Vector2 direction)
         {
+            Vector3 velocity = (new Vector3(direction.x, 0f, direction.y)) * Time.deltaTime * 500f;
+
             if (Rigidbody != null)
             {
-                Rigidbody.AddForce(new Vector3(direction.x, 0f, direction.y));
+                Rigidbody.AddForce(velocity);
             }
         }
 

@@ -8,6 +8,13 @@ using UnityEngine.InputSystem;
 
 namespace Source.Shared
 {
+    public class ContactDto
+    {
+        public bool HitGameObject = false;
+        public Vector3? Point = null;
+        public GameObject GameObject = null;
+    }
+
     public class InitializeInputCallbackDTO
     {
         public Func<Camera> GetCamera = null;
@@ -77,19 +84,19 @@ namespace Source.Shared
             UpdateMovement();
         }
 
-        public Vector3? GetMouseWorldPoint()
+        public ContactDto GetMouseWorldPoint()
         {
-            Vector3? worldPoint = null;
+            ContactDto contact = new ContactDto();
             Vector2 mousePosition = Mouse.current.position.value;
             Camera camera = GetCamera?.Invoke();
             if (camera == null)
             {
-                return worldPoint;
+                return contact;
             }
 
             if (MouseIsOverUI(mousePosition))
             {
-                return worldPoint;
+                return contact;
             }
 
             int layerMaskToHit = LayerMask.GetMask("Default");
@@ -97,10 +104,12 @@ namespace Source.Shared
             Ray ray = camera.ScreenPointToRay(mousePosition);
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMaskToHit))
             {
-                worldPoint = hit.point;
+                contact.HitGameObject = true;
+                contact.Point = hit.point;
+                contact.GameObject = hit.collider.gameObject;
             }
 
-            return worldPoint;
+            return contact;
         }
 
         private bool MouseIsOverUI(Vector2 mousePosition)
