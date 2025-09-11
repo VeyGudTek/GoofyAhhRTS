@@ -70,7 +70,6 @@ namespace Source.Shared
             this.CheckInitializeRequired();
         }
 
-
         void Update()
         {
             UpdatePrimary();
@@ -82,7 +81,7 @@ namespace Source.Shared
         {
             Vector3? worldPoint = null;
             Vector2 mousePosition = Mouse.current.position.value;
-            Camera camera = GetCamera();
+            Camera camera = GetCamera?.Invoke();
             if (camera == null)
             {
                 return worldPoint;
@@ -118,6 +117,11 @@ namespace Source.Shared
 
         void UpdatePrimary()
         {
+            if (Primary == null)
+            {
+                return;
+            }
+
             if (Primary.WasCompletedThisFrame())
             {
                 PrimaryClickEvent?.Invoke();
@@ -134,6 +138,11 @@ namespace Source.Shared
 
         void UpdateSecondary()
         {
+            if (Secondary == null)
+            {
+                return;
+            }
+
             if (Secondary.WasCompletedThisFrame())
             {
                 SecondaryClickEvent?.Invoke();
@@ -150,6 +159,11 @@ namespace Source.Shared
 
         void UpdateMovement()
         {
+            if (Move == null)
+            {
+                return;
+            }
+
             Vector2 moveVector = Move.ReadValue<Vector2>();
             if (moveVector != Vector2.zero)
             {
