@@ -1,15 +1,10 @@
 using Source.Shared.Utilities;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Source.GamePlay
 {
-    public enum UnitOwner
-    {
-        Player,
-        Enemy
-    }
-
     public class Unit : MonoBehaviour
     {
         [InitializationRequired]
@@ -18,7 +13,8 @@ namespace Source.GamePlay
         private int Health;
         private int Range;
 
-        public UnitOwner Owner { get; private set; } = UnitOwner.Player;
+        [InitializationRequired]
+        public Guid? Player { get; private set; } = null;
         public bool Selected { get; private set; } = false;
 
         private void Awake()

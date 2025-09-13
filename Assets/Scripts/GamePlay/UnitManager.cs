@@ -9,24 +9,24 @@ namespace Source.GamePlay
     {
         private List<Unit> Units = new List<Unit>();
         
-        public void OnPrimaryClick(Unit selectedUnit)
+        public void SelectUnit(Unit selectedUnit, bool deselectUnits = true)
         {
-            foreach (Unit unit in Units.Where(u => u.Selected))
+            foreach (Unit unit in Units.Where(u => u.Selected && deselectUnits))
             {
                 unit.Deselect();
             }
-            selectedUnit.Select();
+            if (selectedUnit != null)
+            {
+                selectedUnit.Select();
+            }
         }
 
-        public void OnPrimaryHold(Vector2 selectionStart, Vector2 selectionEnd)
+        public void SelectUnits(Guid playerId, Vector2 selectionStart, Vector2 selectionEnd)
         {
-            IEnumerable<Unit> unitsToSelect = Units.Where(u => CheckSelectArea(u.transform.position, selectionStart, selectionEnd));
-
-            Unit SelectedUnit = Units.Where(u => u.Selected).FirstOrDefault();
-            if (SelectedUnit != null)
-            {
-                unitsToSelect = unitsToSelect.Where(u => u.Owner == SelectedUnit.Owner);
-            }
+            IEnumerable<Unit> unitsToSelect = Units.Where(u => 
+                CheckSelectArea(u.transform.position, selectionStart, selectionEnd) &&
+                u.Player == playerId
+            );
 
             foreach (Unit unit in unitsToSelect)
             {
@@ -47,10 +47,10 @@ namespace Source.GamePlay
             return true;
         }
 
-        public void OnSecondaryClick(Vector2 destination)
+        public void MoveUnits(Guid playerId, Vector2 destination)
         {
             IEnumerable<Unit> unitsToMove = Units.Where(u => 
-                u.Owner == UnitOwner.Player &&
+                u.Player == playerId &&
                 u.Selected
             );
 

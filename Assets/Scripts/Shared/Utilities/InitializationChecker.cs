@@ -50,7 +50,7 @@ namespace Source.Shared.Utilities
             {
                 return "Component";
             }
-            throw new NotImplementedException($"Dependency Type [{type.Name}] not recognized by initialization checker.");
+            return $"Property({type.Name})";
         }
     }
 }
