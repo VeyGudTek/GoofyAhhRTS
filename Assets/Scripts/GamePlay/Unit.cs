@@ -6,7 +6,6 @@ namespace Source.GamePlay
 {
     public class Unit : MonoBehaviour
     {
-        [SerializeField]
         private UnitMovement UnitMovement;
 
         [InitializationRequired]
@@ -14,6 +13,11 @@ namespace Source.GamePlay
         [InitializationRequired]
         public Guid? PlayerId { get; private set; } = null;
         public bool Selected { get; private set; } = false;
+
+        private void Awake()
+        {
+            UnitMovement = GetComponent<UnitMovement>();
+        }
 
         private void Start()
         {
