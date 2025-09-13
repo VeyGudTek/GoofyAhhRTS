@@ -12,13 +12,19 @@ namespace Source.Shared.Utilities
         public static void CheckInitializeRequired(this MonoBehaviour instance)
         {
             Type t = instance.GetType();
-            IEnumerable<FieldInfo> nullFieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+            IEnumerable<FieldInfo> nullFieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
                 .Where(f => 
                     f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
                     f.GetValue(instance) == null
                 );
 
-            if (nullFieldsWithInitialization.Count() == 0)
+            IEnumerable<PropertyInfo> nullPropertiesWithInitialization = t.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
+                .Where(f =>
+                    f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
+                    f.GetValue(instance) == null
+                );
+
+            if (nullFieldsWithInitialization.Count() == 0 && nullPropertiesWithInitialization.Count() == 0)
             {
                 return;
             }
@@ -27,6 +33,10 @@ namespace Source.Shared.Utilities
             foreach (FieldInfo field in nullFieldsWithInitialization)
             {
                 errorMessage += $"\t[{GetFieldTypeName(field.FieldType)}] {field.Name}\n";
+            }
+            foreach (PropertyInfo property in nullPropertiesWithInitialization)
+            {
+                errorMessage += $"\t[{GetFieldTypeName(property.PropertyType)}] {property.Name}\n";
             }
 
             throw new InitializationException(errorMessage);
@@ -50,7 +60,7 @@ namespace Source.Shared.Utilities
             {
                 return "Component";
             }
-            return $"Property({type.Name})";
+            return $"Property";
         }
     }
 }
