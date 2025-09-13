@@ -25,7 +25,7 @@ namespace Source.GamePlay
         {
             IEnumerable<Unit> unitsToSelect = Units.Where(u => 
                 CheckSelectArea(u.transform.position, selectionStart, selectionEnd) &&
-                u.Player == playerId
+                u.PlayerId == playerId
             );
 
             foreach (Unit unit in unitsToSelect)
@@ -50,7 +50,7 @@ namespace Source.GamePlay
         public void MoveUnits(Guid playerId, Vector2 destination)
         {
             IEnumerable<Unit> unitsToMove = Units.Where(u => 
-                u.Player == playerId &&
+                u.PlayerId == playerId &&
                 u.Selected
             );
 

@@ -14,7 +14,7 @@ namespace Source.GamePlay
         private int Range;
 
         [InitializationRequired]
-        public Guid? Player { get; private set; } = null;
+        public Guid? PlayerId { get; private set; } = null;
         public bool Selected { get; private set; } = false;
 
         private void Awake()
@@ -25,6 +25,11 @@ namespace Source.GamePlay
         private void Start()
         {
             this.CheckInitializeRequired();
+        }
+
+        public void Initialize(Guid playerId)
+        {
+            PlayerId = playerId;
         }
 
         public void MoveUnit(Vector3 destination)
