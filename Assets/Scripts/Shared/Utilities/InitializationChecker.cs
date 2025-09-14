@@ -60,7 +60,11 @@ namespace Source.Shared.Utilities
             {
                 return "Component";
             }
-            return $"Property";
+            if (Nullable.GetUnderlyingType(type) != null)
+            {
+                return $"Property({Nullable.GetUnderlyingType(type).Name})";
+            }
+            return $"Property({type.Name})";
         }
     }
 }
