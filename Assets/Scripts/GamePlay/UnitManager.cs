@@ -36,11 +36,11 @@ namespace Source.GamePlay
 
         private static bool CheckSelectArea(Vector3 unit, Vector3 selectionStart, Vector3 selectionEnd)
         {
-            if (unit.x < selectionStart.x || unit.x > selectionStart.x)
+            if (unit.x < selectionStart.x || unit.x > selectionEnd.x)
             {
                 return false;
             } 
-            if (unit.z < selectionEnd.z || unit.z > selectionEnd.z)
+            if (unit.z < selectionStart.z || unit.z > selectionEnd.z)
             {
                 return false;
             }
