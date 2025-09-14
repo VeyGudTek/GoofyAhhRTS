@@ -9,9 +9,9 @@ namespace Source.GamePlay
     {
         private List<Unit> Units = new List<Unit>();
         
-        public void SelectUnit(Unit selectedUnit, bool deselectUnits = true)
+        public void SelectUnit(Unit selectedUnit)
         {
-            foreach (Unit unit in Units.Where(u => u.Selected && deselectUnits))
+            foreach (Unit unit in Units.Where(u => u.Selected))
             {
                 unit.Deselect();
             }
@@ -47,7 +47,7 @@ namespace Source.GamePlay
             return true;
         }
 
-        public void MoveUnits(Guid playerId, Vector2 destination)
+        public void MoveUnits(Guid playerId, Vector3 destination)
         {
             IEnumerable<Unit> unitsToMove = Units.Where(u => 
                 u.PlayerId == playerId &&

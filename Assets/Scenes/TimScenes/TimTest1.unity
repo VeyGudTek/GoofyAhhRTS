@@ -607,7 +607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f64a0e9647c2f247b2de562d2079ffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputManager: {fileID: 1654136892}
+  InputManager: {fileID: 0}
   GamePlayService: {fileID: 690498331}
   CameraController: {fileID: 73509406}
 --- !u!4 &1066151762

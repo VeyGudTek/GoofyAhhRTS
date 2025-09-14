@@ -36,7 +36,7 @@ namespace Source.GamePlay
 
         public void MoveUnit(Vector3 destination)
         {
-            if (UnitMovement == null)
+            if (UnitMovement != null)
             {
                 UnitMovement.MoveUnit(destination);
             }

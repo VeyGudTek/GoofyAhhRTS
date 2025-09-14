@@ -30,7 +30,7 @@ namespace Source.GamePlay
 
         private void InjectDependencies()
         {
-            if (InputManager != null)
+            if (InputManager != null && GamePlayService != null && CameraController != null)
             {
                 InputManager.Initialize(new()
                 {
@@ -45,7 +45,7 @@ namespace Source.GamePlay
                 });
             }
 
-            if (GamePlayService != null)
+            if (GamePlayService != null && InputManager != null)
             {
                 GamePlayService.Initialize(new()
                 {
