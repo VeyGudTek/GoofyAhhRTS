@@ -21,7 +21,7 @@ namespace Source.GamePlay
             }
         }
 
-        public void SelectUnits(Guid playerId, Vector2 selectionStart, Vector2 selectionEnd)
+        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd)
         {
             IEnumerable<Unit> unitsToSelect = Units.Where(u => 
                 CheckSelectArea(u.transform.position, selectionStart, selectionEnd) &&
@@ -34,13 +34,13 @@ namespace Source.GamePlay
             }
         }
 
-        private static bool CheckSelectArea(Vector3 unit, Vector2 selectionStart, Vector2 selectionEnd)
+        private static bool CheckSelectArea(Vector3 unit, Vector3 selectionStart, Vector3 selectionEnd)
         {
             if (unit.x < selectionStart.x || unit.x > selectionStart.x)
             {
                 return false;
             } 
-            if (unit.y < selectionEnd.y || unit.y > selectionEnd.y)
+            if (unit.z < selectionEnd.z || unit.z > selectionEnd.z)
             {
                 return false;
             }
