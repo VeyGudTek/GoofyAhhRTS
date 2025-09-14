@@ -10,23 +10,14 @@ namespace Source.GamePlay
         public Func<ContactDto> GetMouseWorldPoint;
     }
 
-    public enum GameState
-    {
-        Paused,
-        Playing
-    }
-
     public class GamePlayService : MonoBehaviour
     {
-        private GameState State;
 
         [InitializationRequired]
         private Func<ContactDto> GetMouseWorldPoint;
         private void Start()
         {
             this.CheckInitializeRequired();
-
-            State = GameState.Playing;
         }
 
         public void Initialize(InitializeGamePlayCallbackDto callbacks)
