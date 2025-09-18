@@ -1,7 +1,7 @@
 using Source.Shared.Utilities;
 using UnityEngine;
 
-namespace Source.Shared.Services
+namespace Source.GamePlay.Services
 {
     public class CameraService : MonoBehaviour
     {
