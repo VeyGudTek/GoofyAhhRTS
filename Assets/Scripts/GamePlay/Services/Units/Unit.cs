@@ -2,7 +2,7 @@ using Source.Shared.Utilities;
 using System;
 using UnityEngine;
 
-namespace Source.GamePlay
+namespace Source.GamePlay.Services.Units
 {
     public class Unit : MonoBehaviour
     {

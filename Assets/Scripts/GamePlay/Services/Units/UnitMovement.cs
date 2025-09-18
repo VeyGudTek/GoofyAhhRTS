@@ -2,7 +2,7 @@ using Source.Shared.Utilities;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Source.GamePlay
+namespace Source.GamePlay.Services.Units
 {
     public class UnitMovement : MonoBehaviour
     {

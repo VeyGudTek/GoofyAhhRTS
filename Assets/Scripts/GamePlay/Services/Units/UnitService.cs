@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-namespace Source.GamePlay
+namespace Source.GamePlay.Services.Units
 {
     public class UnitService
     {
