@@ -5,35 +5,29 @@ using UnityEngine;
 
 namespace Source.GamePlay.Services
 {
-    public class GamePlayService : MonoBehaviour
+    public class GamePlayService
     {
+        private InputService InputService;
 
-        [InitializationRequired]
-        private Func<ContactDto> GetMouseWorldPoint;
-        private void Start()
+        public void InjectDependencies(InputService inputService)
         {
-            this.CheckInitializeRequired();
+            InputService = inputService;
         }
 
-        public void Initialize(Func<ContactDto> getMouseWorldPoint)
+        public void PrimaryClickEvent()
         {
-            GetMouseWorldPoint = getMouseWorldPoint;
+            ContactDto contact = InputService?.GetMouseWorldPoint();
+            if (contact != null)
+            {
+                Debug.Log($"Hit GameObject: {contact.HitGameObject} | WorldPoint: {contact.Point} | GameObject: {contact.GameObject?.name}");
+            }
         }
 
-        public void OnClick()
-        {
-            ContactDto contact = GetMouseWorldPoint?.Invoke();
-            Debug.Log($"Hit GameObject: {contact.HitGameObject} | WorldPoint: {contact.Point} | GameObject: {contact.GameObject?.name}");
-        }
-
-        public void OnHold()
-        {
-
-        }
-
-        public void OnRelease()
-        {
-
-        }
+        public Action PrimaryHoldEvent = () => { };
+        public Action PrimaryReleaseEvent = () => { };
+        public Action SecondaryClickEvent = () => { };
+        public Action SecondaryHoldEvent = () => { };
+        public Action SecondaryReleaseEvent = () => { };
+        public Action MoveEvent = () => { };
     }
 }

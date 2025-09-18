@@ -1,0 +1,54 @@
+using Source.GamePlay.Services;
+using Source.Shared.Utilities;
+using UnityEngine;
+
+namespace Source.GamePlay.Controllers
+{
+    public class CameraController : MonoBehaviour
+    {
+        [InitializationRequired]
+        [SerializeField]
+        private Rigidbody Rigidbody;
+        [InitializationRequired]
+        [SerializeField]
+        private Camera Camera;
+        [InitializationRequired]
+        public CameraService CameraService { get; private set; }
+
+        private void Awake()
+        {
+            CameraService = new CameraService(RigidBodyAddForce, RigidBodySetDamping, CameraScreenPointToRay);
+        }
+
+        void Start()
+        {
+            this.CheckInitializeRequired();
+        }
+
+        private Ray? CameraScreenPointToRay(Vector2 mousePosition)
+        {
+            if (Camera != null)
+            {
+                return Camera.ScreenPointToRay(mousePosition);
+            }
+            return null;
+        }
+
+        private void RigidBodySetDamping(float dampingForce)
+        {
+            if (Rigidbody != null)
+            {
+                Rigidbody.linearDamping = dampingForce;
+            }
+        }
+
+        private void RigidBodyAddForce(Vector3 velocity)
+        {
+            if (Rigidbody != null)
+            {
+                Rigidbody.AddForce(velocity);
+            }
+        }
+    }
+}
+

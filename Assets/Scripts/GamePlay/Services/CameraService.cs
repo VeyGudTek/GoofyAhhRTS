@@ -1,42 +1,34 @@
-using Source.Shared.Utilities;
+using System;
 using UnityEngine;
 
 namespace Source.GamePlay.Services
 {
-    public class CameraService : MonoBehaviour
+    public class CameraService
     {
-        [InitializationRequired]
-        private Rigidbody Rigidbody;
-        [InitializationRequired]
-        private Camera Camera;
+        private Func<Vector2, Ray?> CameraScreenToWorldPoint;
+        private Action<Vector3> RigidBodyAddForce = null;
+        private const float LinearDamping = 2f;
 
-        private readonly float LinearDamping = 2f;
-
-        void Awake()
+        public CameraService(Action<Vector3> rigidBodyAddForce, Action<float> rigidBodySetDamping, Func<Vector2, Ray?> cameraScreenToWorldPoint)
         {
-            Camera = GetComponent<Camera>();
-            Rigidbody = GetComponent<Rigidbody>();
+            RigidBodyAddForce = rigidBodyAddForce;
+            rigidBodySetDamping(LinearDamping);
+
         }
 
-        void Start()
+        public Ray? ScreenToWorldPoint(Vector2 mousePosition)
         {
-            this.CheckInitializeRequired();
-            Rigidbody.linearDamping = LinearDamping;
+            return CameraScreenToWorldPoint(mousePosition);
         }
 
         public void OnMove(Vector2 direction)
         {
             Vector3 velocity = (new Vector3(direction.x, 0f, direction.y)) * Time.deltaTime * 500f;
 
-            if (Rigidbody != null)
+            if (RigidBodyAddForce != null)
             {
-                Rigidbody.AddForce(velocity);
+                RigidBodyAddForce(velocity);
             }
-        }
-
-        public Camera GetCamera()
-        {
-            return Camera;
         }
     }
 }

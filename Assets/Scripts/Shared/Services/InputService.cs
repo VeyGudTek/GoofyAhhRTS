@@ -1,5 +1,5 @@
+using Source.GamePlay.Services;
 using Source.Shared.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,69 +15,31 @@ namespace Source.Shared.Services
         public GameObject GameObject = null;
     }
 
-    public class InitializeInputCallbackDTO
-    {
-        public Func<Camera> GetCamera = null;
-        public Action PrimaryClickEvent = null;
-        public Action PrimaryHoldEvent = null;
-        public Action PrimaryReleaseEvent = null;
-        public Action SecondaryClickEvent = null;
-        public Action SecondaryHoldEvent = null;
-        public Action SecondaryReleaseEvent = null;
-        public Action<Vector2> MoveEvent = null;
-    }
-
-    public class InputService : MonoBehaviour
+    public class InputService
     {
         [InitializationRequired]
-        private Func<Camera> GetCamera = null;
+        private CameraService CameraService; //CHANGE THIS TO INTERFACE
+        [InitializationRequired]
+        private GamePlayService InputProcessorService; //CHANGE THIS TO GENERIC INTERFACE
 
-        [InitializationRequired]
-        private InputAction Primary;
-        [InitializationRequired]
-        private Action PrimaryClickEvent = null;
-        [InitializationRequired]
-        private Action PrimaryHoldEvent = null;
-        [InitializationRequired]
-        private Action PrimaryReleaseEvent = null;
+        private InputAction Primary; //CHANGE THIS TO INTERFACE
+        private InputAction Secondary; //CHANGE THIS TO INTERFACE
+        private InputAction Move; //CHANGE THIS TO INTERFACE
 
-        [InitializationRequired]
-        private InputAction Secondary;
-        [InitializationRequired]
-        private Action SecondaryClickEvent = null;
-        [InitializationRequired]
-        private Action SecondaryHoldEvent = null;
-        [InitializationRequired]
-        private Action SecondaryReleaseEvent = null;
-
-        private InputAction Move;
-        private Action<Vector2> MoveEvent = null;
-
-        public void Initialize(InitializeInputCallbackDTO callbacks)
+        public InputService(InputAction primary, InputAction secondary, InputAction move)
         {
-            GetCamera = callbacks.GetCamera;
-            PrimaryClickEvent = callbacks.PrimaryClickEvent;
-            PrimaryHoldEvent = callbacks.PrimaryHoldEvent;
-            PrimaryReleaseEvent = callbacks.PrimaryReleaseEvent;
-            SecondaryClickEvent = callbacks.SecondaryClickEvent;
-            SecondaryHoldEvent = callbacks.SecondaryHoldEvent;
-            SecondaryReleaseEvent = callbacks.SecondaryReleaseEvent;
-            MoveEvent = callbacks.MoveEvent;
+            Primary = primary;
+            Secondary = secondary;
+            Move = move;
         }
 
-        void Awake()
+        public void InjectDependencies(CameraService cameraService, GamePlayService gamePlayService)
         {
-            Primary = InputSystem.actions.FindAction("Attack");
-            Secondary = InputSystem.actions.FindAction("RightClick");
-            Move = InputSystem.actions.FindAction("Move");
+            CameraService = cameraService;
+            InputProcessorService = gamePlayService;
         }
 
-        private void Start()
-        {
-            this.CheckInitializeRequired();
-        }
-
-        void Update()
+        public void OnUpdate()
         {
             UpdatePrimary();
             UpdateSecondary();
@@ -88,8 +50,7 @@ namespace Source.Shared.Services
         {
             ContactDto contact = new ContactDto();
             Vector2 mousePosition = Mouse.current.position.value;
-            Camera camera = GetCamera?.Invoke();
-            if (camera == null)
+            if (CameraService == null)
             {
                 return contact;
             }
@@ -101,8 +62,13 @@ namespace Source.Shared.Services
 
             int layerMaskToHit = LayerMask.GetMask("Default");
             RaycastHit hit;
-            Ray ray = camera.ScreenPointToRay(mousePosition);
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMaskToHit))
+            Ray? ray = CameraService.ScreenToWorldPoint(mousePosition);
+            if (ray == null)
+            {
+                return contact;
+            }
+
+            if (Physics.Raycast((Ray)ray, out hit, Mathf.Infinity, layerMaskToHit))
             {
                 contact.HitGameObject = true;
                 contact.Point = hit.point;
@@ -126,57 +92,42 @@ namespace Source.Shared.Services
 
         void UpdatePrimary()
         {
-            if (Primary == null)
-            {
-                return;
-            }
-
             if (Primary.WasCompletedThisFrame())
             {
-                PrimaryClickEvent?.Invoke();
+                InputProcessorService.PrimaryReleaseEvent();
             }
-            if (Primary.inProgress)
+            if (Primary.IsInProgress())
             {
-                PrimaryHoldEvent?.Invoke();
+                InputProcessorService.PrimaryHoldEvent();
             }
             if (Primary.WasPressedThisFrame())
             {
-                PrimaryReleaseEvent?.Invoke();
+                InputProcessorService.PrimaryClickEvent();
             }
         }
 
         void UpdateSecondary()
         {
-            if (Secondary == null)
-            {
-                return;
-            }
-
             if (Secondary.WasCompletedThisFrame())
             {
-                SecondaryClickEvent?.Invoke();
+                InputProcessorService.SecondaryReleaseEvent();
             }
-            if (Secondary.inProgress)
+            if (Secondary.IsInProgress())
             {
-                SecondaryHoldEvent?.Invoke();
+                InputProcessorService.SecondaryHoldEvent();
             }
             if (Secondary.WasPressedThisFrame())
             {
-                SecondaryReleaseEvent?.Invoke();
+                InputProcessorService.SecondaryReleaseEvent();
             }
         }
 
         void UpdateMovement()
         {
-            if (Move == null)
-            {
-                return;
-            }
-
             Vector2 moveVector = Move.ReadValue<Vector2>();
             if (moveVector != Vector2.zero)
             {
-                MoveEvent?.Invoke(moveVector);
+                InputProcessorService.MoveEvent();
             }
         }
     }
