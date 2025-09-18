@@ -9,7 +9,7 @@ namespace Source.Shared.Utilities
 {
     public static class InitializationChecker
     {
-        public static void CheckInitializeRequired(this MonoBehaviour instance)
+        public static void CheckInitializeRequired(this object instance)
         {
             Type t = instance.GetType();
             IEnumerable<FieldInfo> nullFieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)

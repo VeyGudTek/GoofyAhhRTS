@@ -27,7 +27,7 @@ namespace Source.Shared
         public Action<Vector2> MoveEvent = null;
     }
 
-    public class InputManager : MonoBehaviour
+    public class InputService : MonoBehaviour
     {
         [InitializationRequired]
         private Func<Camera> GetCamera = null;

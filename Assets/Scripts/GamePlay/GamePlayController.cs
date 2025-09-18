@@ -11,13 +11,13 @@ namespace Source.GamePlay
 
         [SerializeField]
         [InitializationRequired]
-        private InputManager InputManager;
+        private InputService InputService;
         [SerializeField]
         [InitializationRequired]
         private GamePlayService GamePlayService;
         [SerializeField]
         [InitializationRequired]
-        private CameraController CameraController;
+        private CameraService CameraService;
         void Awake()
         {
             InjectDependencies();
@@ -30,27 +30,24 @@ namespace Source.GamePlay
 
         private void InjectDependencies()
         {
-            if (InputManager != null && GamePlayService != null && CameraController != null)
+            if (InputService != null && GamePlayService != null && CameraService != null)
             {
-                InputManager.Initialize(new()
+                InputService.Initialize(new()
                 {
-                    GetCamera = CameraController.GetCamera,
+                    GetCamera = CameraService.GetCamera,
                     PrimaryClickEvent = GamePlayService.OnClick,
                     PrimaryHoldEvent = EmptyAction,
                     PrimaryReleaseEvent = EmptyAction,
                     SecondaryClickEvent = EmptyAction,
                     SecondaryHoldEvent = EmptyAction,
                     SecondaryReleaseEvent = EmptyAction,
-                    MoveEvent = CameraController.OnMove
+                    MoveEvent = CameraService.OnMove
                 });
             }
 
-            if (GamePlayService != null && InputManager != null)
+            if (GamePlayService != null && InputService != null)
             {
-                GamePlayService.Initialize(new()
-                {
-                    GetMouseWorldPoint = InputManager.GetMouseWorldPoint
-                });
+                GamePlayService.Initialize(InputService.GetMouseWorldPoint);
             }
         }
     }

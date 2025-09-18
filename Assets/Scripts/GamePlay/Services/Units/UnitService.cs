@@ -5,7 +5,7 @@ using System;
 
 namespace Source.GamePlay
 {
-    public class UnitManager : MonoBehaviour
+    public class UnitService
     {
         private List<Unit> Units = new List<Unit>();
         

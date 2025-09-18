@@ -5,11 +5,6 @@ using UnityEngine;
 
 namespace Source.GamePlay
 {
-    public class InitializeGamePlayCallbackDto
-    {
-        public Func<ContactDto> GetMouseWorldPoint;
-    }
-
     public class GamePlayService : MonoBehaviour
     {
 
@@ -20,9 +15,9 @@ namespace Source.GamePlay
             this.CheckInitializeRequired();
         }
 
-        public void Initialize(InitializeGamePlayCallbackDto callbacks)
+        public void Initialize(Func<ContactDto> getMouseWorldPoint)
         {
-            GetMouseWorldPoint = callbacks.GetMouseWorldPoint;
+            GetMouseWorldPoint = getMouseWorldPoint;
         }
 
         public void OnClick()

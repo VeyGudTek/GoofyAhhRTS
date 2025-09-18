@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Source.Shared
 {
-    public class CameraController : MonoBehaviour
+    public class CameraService : MonoBehaviour
     {
         [InitializationRequired]
         private Rigidbody Rigidbody;
