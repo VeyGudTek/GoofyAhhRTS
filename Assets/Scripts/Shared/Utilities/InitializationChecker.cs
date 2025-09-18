@@ -1,3 +1,4 @@
+using Source.GamePlay.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +14,15 @@ namespace Source.Shared.Utilities
         {
             Type t = instance.GetType();
             IEnumerable<FieldInfo> nullFieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
-                .Where(f => 
+                .Where(f =>
                     f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
-                    f.GetValue(instance) == null
+                    f.GetValue(instance).Equals(null)
                 );
 
             IEnumerable<PropertyInfo> nullPropertiesWithInitialization = t.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
                 .Where(f =>
                     f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
-                    f.GetValue(instance) == null
+                    f.GetValue(instance).Equals(null)
                 );
 
             if (nullFieldsWithInitialization.Count() == 0 && nullPropertiesWithInitialization.Count() == 0)
