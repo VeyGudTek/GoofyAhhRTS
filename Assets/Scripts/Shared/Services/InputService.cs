@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-namespace Source.Shared
+namespace Source.Shared.Services
 {
     public class ContactDto
     {
