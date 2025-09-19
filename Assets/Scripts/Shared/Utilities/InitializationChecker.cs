@@ -24,22 +24,40 @@ namespace Source.Shared.Utilities
                     f.GetValue(instance).Equals(null)
                 );
 
-            if (nullFieldsWithInitialization.Count() == 0 && nullPropertiesWithInitialization.Count() == 0)
+            try
             {
-                return;
-            }
+                if (nullFieldsWithInitialization.Count() == 0 && nullPropertiesWithInitialization.Count() == 0)
+                {
+                    return;
+                }
 
-            string errorMessage = $"[{t.Name}] is missing the following dependencies:\n";
-            foreach (FieldInfo field in nullFieldsWithInitialization)
-            {
-                errorMessage += $"\t[{GetFieldTypeName(field.FieldType)}] {field.Name}\n";
-            }
-            foreach (PropertyInfo property in nullPropertiesWithInitialization)
-            {
-                errorMessage += $"\t[{GetFieldTypeName(property.PropertyType)}] {property.Name}\n";
-            }
+                string errorMessage = $"[{t.Name}] is missing the following dependencies:\n";
+                foreach (FieldInfo field in nullFieldsWithInitialization)
+                {
+                    errorMessage += $"\t[{GetFieldTypeName(field.FieldType)}] {field.Name}\n";
+                }
+                foreach (PropertyInfo property in nullPropertiesWithInitialization)
+                {
+                    errorMessage += $"\t[{GetFieldTypeName(property.PropertyType)}] {property.Name}\n";
+                }
 
-            throw new InitializationException(errorMessage);
+                throw new InitializationException(errorMessage);
+            }
+            catch (Exception ex)
+            {
+                if (ex is InitializationException)
+                {
+                    throw new InitializationException(ex.Message);
+                }
+                else
+                {
+                    int index = t.Name.IndexOf("Controller");
+                    string cleanPath = (index < 0)
+                        ? t.Name
+                        : t.Name.Remove(index, "Controller".Length);
+                    throw new InitializationException($"[{t.Name}] is missing the following dependencies:\n\t[Service] {cleanPath}");
+                }
+            }
         }
 
         private static string GetFieldTypeName(Type type)
