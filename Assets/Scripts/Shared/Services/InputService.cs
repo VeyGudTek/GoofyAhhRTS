@@ -118,7 +118,7 @@ namespace Source.Shared.Services
             }
             if (Secondary.WasPressedThisFrame())
             {
-                InputProcessorService.SecondaryReleaseEvent();
+                InputProcessorService.SecondaryClickEvent();
             }
         }
 
