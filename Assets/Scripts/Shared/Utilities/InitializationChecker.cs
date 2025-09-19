@@ -15,49 +15,31 @@ namespace Source.Shared.Utilities
             IEnumerable<FieldInfo> nullFieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
                 .Where(f =>
                     f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
-                    f.GetValue(instance).Equals(null)
+                    (f.GetValue(instance) == null || f.GetValue(instance).Equals(null))
                 );
 
             IEnumerable<PropertyInfo> nullPropertiesWithInitialization = t.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
                 .Where(f =>
                     f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
-                    f.GetValue(instance).Equals(null)
+                    (f.GetValue(instance) == null || f.GetValue(instance).Equals(null))
                 );
 
-            try
+            if (nullFieldsWithInitialization.Count() == 0 && nullPropertiesWithInitialization.Count() == 0)
             {
-                if (nullFieldsWithInitialization.Count() == 0 && nullPropertiesWithInitialization.Count() == 0)
-                {
-                    return;
-                }
-
-                string errorMessage = $"[{t.Name}] is missing the following dependencies:\n";
-                foreach (FieldInfo field in nullFieldsWithInitialization)
-                {
-                    errorMessage += $"\t[{GetFieldTypeName(field.FieldType)}] {field.Name}\n";
-                }
-                foreach (PropertyInfo property in nullPropertiesWithInitialization)
-                {
-                    errorMessage += $"\t[{GetFieldTypeName(property.PropertyType)}] {property.Name}\n";
-                }
-
-                throw new InitializationException(errorMessage);
+                return;
             }
-            catch (Exception ex)
+
+            string errorMessage = $"[{t.Name}] is missing the following dependencies:\n";
+            foreach (FieldInfo field in nullFieldsWithInitialization)
             {
-                if (ex is InitializationException)
-                {
-                    throw new InitializationException(ex.Message);
-                }
-                else
-                {
-                    int index = t.Name.IndexOf("Controller");
-                    string cleanPath = (index < 0)
-                        ? t.Name
-                        : t.Name.Remove(index, "Controller".Length);
-                    throw new InitializationException($"[{t.Name}] is missing the following dependencies:\n\t[Service] {cleanPath}");
-                }
+                errorMessage += $"\t[{GetFieldTypeName(field.FieldType)}] {field.Name}\n";
             }
+            foreach (PropertyInfo property in nullPropertiesWithInitialization)
+            {
+                errorMessage += $"\t[{GetFieldTypeName(property.PropertyType)}] {property.Name}\n";
+            }
+
+            throw new InitializationException(errorMessage); 
         }
 
         private static string GetFieldTypeName(Type type)
@@ -80,9 +62,9 @@ namespace Source.Shared.Utilities
             }
             if (Nullable.GetUnderlyingType(type) != null)
             {
-                return $"Property({Nullable.GetUnderlyingType(type).Name})";
+                return $"{Nullable.GetUnderlyingType(type).Name}";
             }
-            return $"Property({type.Name})";
+            return $"{type.Name}";
         }
     }
 }
