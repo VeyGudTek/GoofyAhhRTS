@@ -1,3 +1,4 @@
+using Source.GamePlay.Services.Units;
 using Source.Shared.Services;
 using System;
 using UnityEngine;
@@ -7,10 +8,12 @@ namespace Source.GamePlay.Services
     public class GamePlayService
     {
         private InputService InputService;
+        private UnitService UnitService;
 
-        public void InjectDependencies(InputService inputService)
+        public void InjectDependencies(InputService inputService, UnitService unitService)
         {
             InputService = inputService;
+            UnitService = unitService;
         }
 
         public void PrimaryClickEvent()

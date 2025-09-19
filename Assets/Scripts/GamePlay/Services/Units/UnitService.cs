@@ -24,7 +24,7 @@ namespace Source.GamePlay.Services.Units
         public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd)
         {
             IEnumerable<Unit> unitsToSelect = Units.Where(u => 
-                CheckSelectArea(u.transform.position, selectionStart, selectionEnd) &&
+                CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
                 u.PlayerId == playerId
             );
 

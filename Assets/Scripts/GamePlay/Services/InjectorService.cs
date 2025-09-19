@@ -1,3 +1,4 @@
+using Source.GamePlay.Services.Units;
 using Source.Shared.Services;
 using Source.Shared.Utilities;
 
@@ -8,21 +9,22 @@ namespace Source.GamePlay.Services
         private InputService InputService; //CHANGE TO INTERFACE
         private GamePlayService GamePlayService; //CHANGE TO INTERFACE
         private CameraService CameraService; //CHANGE TO INTERFACE
+        private UnitService UnitService;
 
-        public void OnStart(InputService inputService, GamePlayService gameplayService, CameraService cameraService)
+        public void OnStart(InputService inputService, CameraService cameraService)
         {
             InputService = inputService;
-            GamePlayService = gameplayService;
             CameraService = cameraService;
+            GamePlayService = new();
+            UnitService = new();
 
-            this.CheckInitializeRequired();
             InjectDependencies();
         }
 
         private void InjectDependencies()
         {
             InputService.InjectDependencies(CameraService, GamePlayService);
-            GamePlayService.InjectDependencies(InputService);
+            GamePlayService.InjectDependencies(InputService, UnitService);
         }
     }
 }
