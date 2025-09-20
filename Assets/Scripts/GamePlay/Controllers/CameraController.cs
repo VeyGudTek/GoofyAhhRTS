@@ -1,10 +1,11 @@
+using Source.GamePlay.Controllers.Interfaces;
 using Source.GamePlay.Services;
 using Source.Shared.Utilities;
 using UnityEngine;
 
 namespace Source.GamePlay.Controllers
 {
-    public class CameraController : MonoBehaviour
+    public class CameraController : MonoBehaviour, ICameraController
     {
         [InitializationRequired]
         [SerializeField]
@@ -25,7 +26,7 @@ namespace Source.GamePlay.Controllers
             this.CheckInitializeRequired();
         }
 
-        private Ray? CameraScreenPointToRay(Vector2 mousePosition)
+        public Ray? CameraScreenPointToRay(Vector2 mousePosition)
         {
             if (Camera != null)
             {
@@ -34,7 +35,7 @@ namespace Source.GamePlay.Controllers
             return null;
         }
 
-        private void RigidBodySetDamping(float dampingForce)
+        public void RigidBodySetDamping(float dampingForce)
         {
             if (Rigidbody != null)
             {
@@ -42,7 +43,7 @@ namespace Source.GamePlay.Controllers
             }
         }
 
-        private void RigidBodyAddForce(Vector3 velocity)
+        public void RigidBodyAddForce(Vector3 velocity)
         {
             if (Rigidbody != null)
             {

@@ -1,3 +1,4 @@
+using Source.GamePlay.Controllers.Interfaces;
 using System;
 using UnityEngine;
 
@@ -5,26 +6,23 @@ namespace Source.GamePlay.Services
 {
     public class CameraService
     {
-        private Func<Vector2, Ray?> CameraScreenToWorldPoint;
-        private Action<Vector3> RigidBodyAddForce;
+        private ICameraController CameraController;
         private const float LinearDamping = 2f;
 
-        public CameraService(Action<Vector3> rigidBodyAddForce, Action<float> rigidBodySetDamping, Func<Vector2, Ray?> cameraScreenToWorldPoint)
+        public CameraService(ICameraController cameraController)
         {
-            RigidBodyAddForce = rigidBodyAddForce;
-            rigidBodySetDamping(LinearDamping);
-            CameraScreenToWorldPoint = cameraScreenToWorldPoint;
+            CameraController.RigidBodySetDamping(LinearDamping);
         }
 
         public Ray? ScreenToWorldPoint(Vector2 mousePosition)
         {
-            return CameraScreenToWorldPoint(mousePosition);
+            return CameraController.CameraScreenPointToRay(mousePosition);
         }
 
         public void OnMove(Vector2 direction)
         {
             Vector3 velocity = (new Vector3(direction.x, 0f, direction.y)) * Time.deltaTime * 500f;
-            RigidBodyAddForce(velocity);
+            CameraController.RigidBodyAddForce(velocity);
         }
     }
 }
