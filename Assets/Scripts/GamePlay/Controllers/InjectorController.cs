@@ -1,4 +1,5 @@
 using Source.GamePlay.Services;
+using Source.GamePlay.Services.Units;
 using Source.Shared.Controllers;
 using Source.Shared.Utilities;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace Source.GamePlay.Controllers
 
         void Start()
         {
-            InjectorService = new InjectorService(InputController.InputService, CameraController.CameraService, new GamePlayService());
+            InjectorService = new InjectorService(InputController.InputService, CameraController.CameraService, new GamePlayService(), new UnitService());
         }
     }
 }

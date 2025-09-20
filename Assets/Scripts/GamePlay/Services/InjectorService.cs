@@ -1,5 +1,6 @@
 using Source.GamePlay.Services.Interfaces;
 using Source.GamePlay.Services.Units;
+using Source.GamePlay.Services.Units.Interfaces;
 using Source.Shared.Services;
 
 namespace Source.GamePlay.Services
@@ -9,14 +10,14 @@ namespace Source.GamePlay.Services
         private InputService InputService; //CHANGE TO INTERFACE
         private IGamePlayService GamePlayService; 
         private ICameraService CameraService;
-        private UnitService UnitService;
+        private IUnitService UnitService;
 
-        public InjectorService(InputService inputService, ICameraService cameraService, IGamePlayService gamePlayService)
+        public InjectorService(InputService inputService, ICameraService cameraService, IGamePlayService gamePlayService, IUnitService unitService)
         {
             InputService = inputService;
             CameraService = cameraService;
             GamePlayService = gamePlayService;
-            UnitService = new();
+            UnitService = unitService;
 
             InjectDependencies();
         }
