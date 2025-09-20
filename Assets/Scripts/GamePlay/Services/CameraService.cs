@@ -15,9 +15,16 @@ namespace Source.GamePlay.Services
             cameraController.RigidBodySetDamping(LinearDamping);
         }
 
-        public Ray? ScreenToWorldPoint(Vector2 mousePosition)
+        public bool ScreenToWorldPoint(Vector2 mousePosition, out Ray ray)
         {
-            return CameraController.CameraScreenPointToRay(mousePosition);
+            Ray? result = CameraController.CameraScreenPointToRay(mousePosition);
+            if (result == null)
+            {
+                ray = new Ray();
+                return false;
+            }
+            ray = (Ray)result;
+            return true;
         }
 
         public void OnMove(Vector2 direction)

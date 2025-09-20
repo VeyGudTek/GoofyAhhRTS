@@ -57,15 +57,15 @@ namespace Source.Shared.Services
                 return contact;
             }
             
-            RaycastHit hit;
-            Ray? ray = CameraService.ScreenToWorldPoint(mousePosition);
-            if (ray == null)
+            Ray ray; 
+            if (!CameraService.ScreenToWorldPoint(mousePosition, out ray))
             {
                 return contact;
             }
 
+            RaycastHit hit;
             int layerMaskToHit = LayerMask.GetMask("Default");
-            if (Physics.Raycast((Ray)ray, out hit, Mathf.Infinity, layerMaskToHit))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMaskToHit))
             {
                 contact.HitGameObject = true;
                 contact.Point = hit.point;
