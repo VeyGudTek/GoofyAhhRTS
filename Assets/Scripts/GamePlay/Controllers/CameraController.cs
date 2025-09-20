@@ -13,13 +13,6 @@ namespace Source.GamePlay.Controllers
         [InitializationRequired]
         [SerializeField]
         private Camera Camera;
-        [InitializationRequired]
-        public CameraService CameraService { get; private set; }
-
-        private void Awake()
-        {
-            CameraService = new CameraService(this);
-        }
 
         void Start()
         {

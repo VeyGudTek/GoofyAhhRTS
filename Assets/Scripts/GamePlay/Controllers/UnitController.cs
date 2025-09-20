@@ -1,6 +1,5 @@
 using Source.GamePlay.Controllers.Interfaces;
 using Source.GamePlay.Services.Units;
-using Source.Shared.Utilities;
 using System;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,17 +10,10 @@ namespace Source.GamePlay.Controllers
     {
         [SerializeField]
         private NavMeshAgent NavMeshAgent;
-        [InitializationRequired]
-        private Unit Unit;
 
-        public void OnCreate(Guid playerId, float health, float? speed)
+        public Unit GetUnit(Guid playerId, float health, float? speed)
         {
-            Unit = new Unit(playerId, health, speed, this);
-        }
-
-        private void Start()
-        {
-            this.CheckInitializeRequired();
+            return new Unit(playerId, health, speed, this);
         }
 
         public Vector3 GetPosition()

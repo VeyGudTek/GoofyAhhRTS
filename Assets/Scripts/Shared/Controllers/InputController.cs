@@ -13,25 +13,17 @@ namespace Source.Shared.Controllers
         private InputAction Secondary;
         [InitializationRequired]
         private InputAction Move;
-        [InitializationRequired]
-        public InputService InputService { get; private set; }
 
         private void Awake()
         {
             Primary = InputSystem.actions.FindAction("Attack");
             Secondary = InputSystem.actions.FindAction("RightClick");
             Move = InputSystem.actions.FindAction("Move");
-            InputService = new InputService(this);
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
-        }
-
-        private void Update()
-        {
-            InputService.OnUpdate();
         }
 
         public bool PrimaryClicked()

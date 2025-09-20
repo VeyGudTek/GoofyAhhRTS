@@ -25,5 +25,10 @@ namespace Source.GamePlay.Services
             InputService.InjectDependencies(GamePlayService);
             GamePlayService.InjectDependencies(CameraService, UnitService);
         }
+
+        public void OnUpdate()
+        {
+            InputService.OnUpdate();
+        }
     }
 }

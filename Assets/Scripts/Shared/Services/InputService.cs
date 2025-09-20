@@ -1,16 +1,13 @@
 using Source.GamePlay.Services.Interfaces;
 using Source.Shared.Controllers;
 using Source.Shared.Services.Interfaces;
-using Source.Shared.Utilities;
 using UnityEngine;
 
 namespace Source.Shared.Services
 {
     public class InputService
     {
-        [InitializationRequired]
         private IInputProcessorService InputProcessorService;
-
         private IInputController InputController;
 
         public InputService(IInputController inputController)
