@@ -9,19 +9,19 @@ namespace Source.Shared.Utilities
 {
     public static class InitializationChecker
     {
-        public static void CheckInitializeRequired(this MonoBehaviour instance)
+        public static void CheckInitializeRequired(this object instance)
         {
             Type t = instance.GetType();
             IEnumerable<FieldInfo> nullFieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
-                .Where(f => 
+                .Where(f =>
                     f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
-                    f.GetValue(instance) == null
+                    (f.GetValue(instance) == null || f.GetValue(instance).Equals(null))
                 );
 
             IEnumerable<PropertyInfo> nullPropertiesWithInitialization = t.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
                 .Where(f =>
                     f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
-                    f.GetValue(instance) == null
+                    (f.GetValue(instance) == null || f.GetValue(instance).Equals(null))
                 );
 
             if (nullFieldsWithInitialization.Count() == 0 && nullPropertiesWithInitialization.Count() == 0)
@@ -39,7 +39,7 @@ namespace Source.Shared.Utilities
                 errorMessage += $"\t[{GetFieldTypeName(property.PropertyType)}] {property.Name}\n";
             }
 
-            throw new InitializationException(errorMessage);
+            throw new InitializationException(errorMessage); 
         }
 
         private static string GetFieldTypeName(Type type)
@@ -62,9 +62,9 @@ namespace Source.Shared.Utilities
             }
             if (Nullable.GetUnderlyingType(type) != null)
             {
-                return $"Property({Nullable.GetUnderlyingType(type).Name})";
+                return $"{Nullable.GetUnderlyingType(type).Name}";
             }
-            return $"Property({type.Name})";
+            return $"{type.Name}";
         }
     }
 }
