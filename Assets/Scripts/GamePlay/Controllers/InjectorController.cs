@@ -23,7 +23,7 @@ namespace Source.GamePlay.Controllers
 
         void Start()
         {
-            InjectorService = new InjectorService(InputController.InputService, CameraController.CameraService);
+            InjectorService = new InjectorService(InputController.InputService, CameraController.CameraService, new GamePlayService());
         }
     }
 }

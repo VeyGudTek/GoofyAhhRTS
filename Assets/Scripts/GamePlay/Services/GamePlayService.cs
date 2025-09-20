@@ -18,6 +18,7 @@ namespace Source.GamePlay.Services
     public class GamePlayService: IGamePlayService
     {
         private ICameraService CameraService;
+        private List<Unit> Units = new List<Unit>();
         private UnitService UnitService;
 
         public void InjectDependencies(ICameraService cameraService, UnitService unitService)
