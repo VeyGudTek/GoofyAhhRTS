@@ -1,10 +1,10 @@
 using Source.GamePlay.Controllers.Interfaces;
-using System;
+using Source.GamePlay.Services.Interfaces;
 using UnityEngine;
 
 namespace Source.GamePlay.Services
 {
-    public class CameraService
+    public class CameraService: ICameraService
     {
         private ICameraController CameraController;
         private const float LinearDamping = 2f;

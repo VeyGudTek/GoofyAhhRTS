@@ -1,3 +1,4 @@
+using Source.GamePlay.Services.Interfaces;
 using Source.GamePlay.Services.Units;
 using Source.Shared.Services;
 
@@ -7,7 +8,7 @@ namespace Source.GamePlay.Services
     {
         private InputService InputService; //CHANGE TO INTERFACE
         private GamePlayService GamePlayService; //CHANGE TO INTERFACE
-        private CameraService CameraService; //CHANGE TO INTERFACE
+        private ICameraService CameraService; //CHANGE TO INTERFACE
         private UnitService UnitService;
 
         public InjectorService(InputService inputService, CameraService cameraService)
@@ -22,8 +23,8 @@ namespace Source.GamePlay.Services
 
         private void InjectDependencies()
         {
-            InputService.InjectDependencies(CameraService, GamePlayService);
-            GamePlayService.InjectDependencies(InputService, UnitService);
+            InputService.InjectDependencies(GamePlayService);
+            GamePlayService.InjectDependencies(CameraService, UnitService);
         }
     }
 }
