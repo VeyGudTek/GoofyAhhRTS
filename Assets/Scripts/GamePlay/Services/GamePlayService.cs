@@ -1,6 +1,5 @@
 using Source.GamePlay.Services.Interfaces;
 using Source.GamePlay.Services.Units;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,7 +15,7 @@ namespace Source.GamePlay.Services
         public GameObject GameObject = null;
     }
 
-    public class GamePlayService
+    public class GamePlayService: IGamePlayService
     {
         private ICameraService CameraService;
         private UnitService UnitService;
@@ -80,11 +79,14 @@ namespace Source.GamePlay.Services
             return raycastResults.Where(r => r.gameObject.layer == uiLayer).Count() > 0;
         }
 
-        public Action PrimaryHoldEvent = () => { };
-        public Action PrimaryReleaseEvent = () => { };
-        public Action SecondaryClickEvent = () => { };
-        public Action SecondaryHoldEvent = () => { };
-        public Action SecondaryReleaseEvent = () => { };
-        public Action MoveEvent = () => { };
+        public void PrimaryHoldEvent() { }
+        public void PrimaryReleaseEvent() { }
+        public void SecondaryClickEvent() { }
+        public void SecondaryHoldEvent() { }
+        public void SecondaryReleaseEvent() { }
+        public void MoveEvent(Vector2 moveVector)
+        {
+            CameraService.OnMove(moveVector);
+        }
     }
 }

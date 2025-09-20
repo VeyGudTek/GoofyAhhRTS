@@ -7,15 +7,15 @@ namespace Source.GamePlay.Services
     public class InjectorService
     {
         private InputService InputService; //CHANGE TO INTERFACE
-        private GamePlayService GamePlayService; //CHANGE TO INTERFACE
-        private ICameraService CameraService; //CHANGE TO INTERFACE
+        private IGamePlayService GamePlayService; 
+        private ICameraService CameraService;
         private UnitService UnitService;
 
-        public InjectorService(InputService inputService, CameraService cameraService)
+        public InjectorService(InputService inputService, ICameraService cameraService, IGamePlayService gamePlayService)
         {
             InputService = inputService;
             CameraService = cameraService;
-            GamePlayService = new();
+            GamePlayService = gamePlayService;
             UnitService = new();
 
             InjectDependencies();

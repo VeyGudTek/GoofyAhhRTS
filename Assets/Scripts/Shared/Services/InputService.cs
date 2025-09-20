@@ -1,5 +1,7 @@
 using Source.GamePlay.Services;
+using Source.GamePlay.Services.Interfaces;
 using Source.Shared.Controllers;
+using Source.Shared.Services.Interfaces;
 using Source.Shared.Utilities;
 using UnityEngine;
 
@@ -8,7 +10,7 @@ namespace Source.Shared.Services
     public class InputService
     {
         [InitializationRequired]
-        private GamePlayService InputProcessorService; //CHANGE THIS TO GENERIC INTERFACE
+        private IInputProcessorService InputProcessorService;
 
         private IInputController InputController;
 
@@ -17,7 +19,7 @@ namespace Source.Shared.Services
             InputController = inputController;
         }
 
-        public void InjectDependencies(GamePlayService gamePlayService)
+        public void InjectDependencies(IGamePlayService gamePlayService)
         {
             InputProcessorService = gamePlayService;
         }
@@ -63,9 +65,10 @@ namespace Source.Shared.Services
 
         void UpdateMovement()
         {
-            if (InputController.GetMove() != Vector2.zero)
+            Vector2 result = InputController.GetMove();
+            if (result != Vector2.zero)
             {
-                InputProcessorService.MoveEvent();
+                InputProcessorService.MoveEvent(result);
             }
         }
     }
