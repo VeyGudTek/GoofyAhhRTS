@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Source.Shared.Services
 {
-    public class InputService
+    public class InputService: IInputService
     {
         private IInputProcessorService InputProcessorService;
         private IInputController InputController;

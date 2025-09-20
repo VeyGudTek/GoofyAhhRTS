@@ -1,16 +1,16 @@
 using Source.GamePlay.Services.Interfaces;
-using Source.Shared.Services;
+using Source.Shared.Services.Interfaces;
 
 namespace Source.GamePlay.Services
 {
     public class InjectorService
     {
-        private InputService InputService; //CHANGE TO INTERFACE
+        private IInputService InputService;
         private IGamePlayService GamePlayService; 
         private ICameraService CameraService;
         private IUnitService UnitService;
 
-        public InjectorService(InputService inputService, ICameraService cameraService, IGamePlayService gamePlayService, IUnitService unitService)
+        public InjectorService(IInputService inputService, ICameraService cameraService, IGamePlayService gamePlayService, IUnitService unitService)
         {
             InputService = inputService;
             CameraService = cameraService;
