@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using Source.GamePlay.Services.Units.Interfaces;
+using Source.GamePlay.Services.Interfaces;
 
 namespace Source.GamePlay.Services.Units
 {
