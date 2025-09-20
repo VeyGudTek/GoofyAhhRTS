@@ -1,3 +1,4 @@
+using Source.GamePlay.Controllers.Interfaces;
 using Source.GamePlay.Services.Units;
 using Source.Shared.Utilities;
 using System;
@@ -6,7 +7,7 @@ using UnityEngine.AI;
 
 namespace Source.GamePlay.Controllers
 {
-    public class UnitController : MonoBehaviour
+    public class UnitController : MonoBehaviour, IUnitController
     {
         [InitializationRequired]
         [SerializeField]
@@ -16,7 +17,7 @@ namespace Source.GamePlay.Controllers
 
         public void OnCreate(Guid playerId, float health, float? speed)
         {
-            Unit = new Unit(playerId, health, speed, MoveUnit, GetPosition, SetSpeed);
+            Unit = new Unit(playerId, health, speed, this);
         }
 
         private void Start()
@@ -24,12 +25,12 @@ namespace Source.GamePlay.Controllers
             this.CheckInitializeRequired();
         }
 
-        private Vector3 GetPosition()
+        public Vector3 GetPosition()
         {
             return this.transform.position;
         }
 
-        private void MoveUnit(Vector3 destination)
+        public void MoveUnit(Vector3 destination)
         {
             if (NavMeshAgent != null)
             {
@@ -37,7 +38,7 @@ namespace Source.GamePlay.Controllers
             }
         }
 
-        private void SetSpeed(float? speed)
+        public void SetSpeed(float? speed)
         {
             if (NavMeshAgent != null && speed != null)
             {

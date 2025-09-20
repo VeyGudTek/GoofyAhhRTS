@@ -1,4 +1,4 @@
-using Source.Shared.Utilities;
+using Source.GamePlay.Controllers.Interfaces;
 using System;
 using UnityEngine;
 
@@ -6,31 +6,29 @@ namespace Source.GamePlay.Services.Units
 {
     public class Unit
     {
-        private Action<Vector3> MoveUnitCallback;
-        private Func<Vector3> GetPositionCallback;
+        private IUnitController UnitController;
 
         private float Health;
         private float? Speed;
         public Guid PlayerId { get; private set; }
         public bool Selected { get; private set; } = false;
 
-        public Unit(Guid playerId, float health, float? speed, Action<Vector3> moveUnit, Func<Vector3> getPositionCallback, Action<float?> setSpeed)
+        public Unit(Guid playerId, float health, float? speed, IUnitController unitController)
         {
             PlayerId = playerId;
             Health = health;
-            MoveUnitCallback = moveUnit;
-            GetPositionCallback = getPositionCallback;
-            setSpeed(speed);
+            UnitController = unitController;
+            UnitController.SetSpeed(speed);
         }
 
         public void MoveUnit(Vector3 destination)
         {
-            MoveUnitCallback(destination);
+            UnitController.MoveUnit(destination);
         }
 
         public Vector3 GetPosition()
         {
-            return GetPositionCallback();
+            return UnitController.GetPosition();
         }
 
         public void Select()
