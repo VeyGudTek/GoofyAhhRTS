@@ -1,4 +1,5 @@
 using Source.GamePlay.Services;
+using Source.Shared.Controllers;
 using Source.Shared.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,15 +23,11 @@ namespace Source.Shared.Services
         [InitializationRequired]
         private GamePlayService InputProcessorService; //CHANGE THIS TO GENERIC INTERFACE
 
-        private InputAction Primary; //CHANGE THIS TO INTERFACE
-        private InputAction Secondary; //CHANGE THIS TO INTERFACE
-        private InputAction Move; //CHANGE THIS TO INTERFACE
+        private IInputController InputController;
 
-        public InputService(InputAction primary, InputAction secondary, InputAction move)
+        public InputService(IInputController inputController)
         {
-            Primary = primary;
-            Secondary = secondary;
-            Move = move;
+            InputController = inputController;
         }
 
         public void InjectDependencies(CameraService cameraService, GamePlayService gamePlayService)
@@ -59,8 +56,7 @@ namespace Source.Shared.Services
             {
                 return contact;
             }
-
-            int layerMaskToHit = LayerMask.GetMask("Default");
+            
             RaycastHit hit;
             Ray? ray = CameraService.ScreenToWorldPoint(mousePosition);
             if (ray == null)
@@ -68,6 +64,7 @@ namespace Source.Shared.Services
                 return contact;
             }
 
+            int layerMaskToHit = LayerMask.GetMask("Default");
             if (Physics.Raycast((Ray)ray, out hit, Mathf.Infinity, layerMaskToHit))
             {
                 contact.HitGameObject = true;
@@ -92,15 +89,15 @@ namespace Source.Shared.Services
 
         void UpdatePrimary()
         {
-            if (Primary.WasCompletedThisFrame())
+            if (InputController.PrimaryClicked())
             {
                 InputProcessorService.PrimaryReleaseEvent();
             }
-            if (Primary.IsInProgress())
+            if (InputController.PrimaryClicked())
             {
                 InputProcessorService.PrimaryHoldEvent();
             }
-            if (Primary.WasPressedThisFrame())
+            if (InputController.PrimaryClicked())
             {
                 InputProcessorService.PrimaryClickEvent();
             }
@@ -108,15 +105,15 @@ namespace Source.Shared.Services
 
         void UpdateSecondary()
         {
-            if (Secondary.WasCompletedThisFrame())
+            if (InputController.PrimaryClicked())
             {
                 InputProcessorService.SecondaryReleaseEvent();
             }
-            if (Secondary.IsInProgress())
+            if (InputController.PrimaryClicked())
             {
                 InputProcessorService.SecondaryHoldEvent();
             }
-            if (Secondary.WasPressedThisFrame())
+            if (InputController.PrimaryClicked())
             {
                 InputProcessorService.SecondaryClickEvent();
             }
@@ -124,8 +121,7 @@ namespace Source.Shared.Services
 
         void UpdateMovement()
         {
-            Vector2 moveVector = Move.ReadValue<Vector2>();
-            if (moveVector != Vector2.zero)
+            if (InputController.GetMove() != Vector2.zero)
             {
                 InputProcessorService.MoveEvent();
             }

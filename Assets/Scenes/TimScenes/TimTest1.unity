@@ -297,8 +297,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7849b2ba6e57644f9866ff769dba2ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rigidbody: {fileID: 0}
-  Camera: {fileID: 0}
+  Rigidbody: {fileID: 73509408}
+  Camera: {fileID: 73509404}
 --- !u!1 &197644245
 GameObject:
   m_ObjectHideFlags: 0
@@ -703,8 +703,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10fa0979f12c6554abc476bdefbdd9f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraController: {fileID: 0}
-  InputController: {fileID: 0}
+  CameraController: {fileID: 73509409}
+  InputController: {fileID: 1066151764}
 --- !u!114 &1066151764
 MonoBehaviour:
   m_ObjectHideFlags: 0

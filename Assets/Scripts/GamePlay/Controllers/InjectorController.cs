@@ -14,10 +14,9 @@ namespace Source.GamePlay.Controllers
         [SerializeField]
         private InputController InputController;
 
-        [InitializationRequired]
         private InjectorService InjectorService;
 
-        private void Awake()
+        void Awake()
         {
             this.CheckInitializeRequired();
         }

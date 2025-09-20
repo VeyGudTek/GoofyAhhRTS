@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 namespace Source.Shared.Controllers
 {
-    public class InputController : MonoBehaviour
+    public class InputController : MonoBehaviour, IInputController
     {
         [InitializationRequired]
         private InputAction Primary;
@@ -21,7 +21,7 @@ namespace Source.Shared.Controllers
             Primary = InputSystem.actions.FindAction("Attack");
             Secondary = InputSystem.actions.FindAction("RightClick");
             Move = InputSystem.actions.FindAction("Move");
-            InputService = new InputService(Primary, Secondary, Move);
+            InputService = new InputService(this);
         }
 
         private void Start()
@@ -32,6 +32,63 @@ namespace Source.Shared.Controllers
         private void Update()
         {
             InputService.OnUpdate();
+        }
+
+        public bool PrimaryClicked()
+        {
+            if (Primary != null)
+            {
+                Primary.WasPressedThisFrame();
+            }
+            return false;
+        }
+        public bool PrimaryHold()
+        {
+            if (Primary != null)
+            {
+                Primary.IsPressed();
+            }
+            return false;
+        }
+        public bool PrimaryReleased()
+        {
+            if (Primary != null)
+            {
+                Primary.WasReleasedThisFrame();
+            }
+            return false;
+        }
+        public bool SecondaryClicked()
+        {
+            if (Secondary != null)
+            {
+                Secondary.WasPressedThisFrame();
+            }
+            return false;
+        }
+        public bool SecondaryHold()
+        {
+            if (Secondary != null)
+            {
+                Secondary.WasPressedThisFrame();
+            }
+            return false;
+        }
+        public bool SecondaryReleased()
+        {
+            if (Secondary != null)
+            {
+                Secondary.WasReleasedThisFrame();
+            }
+            return false;
+        }
+        public Vector2 GetMove()
+        {
+            if (Move != null)
+            {
+                return Move.ReadValue<Vector2>();
+            }
+            return Vector2.zero;
         }
     }
 }

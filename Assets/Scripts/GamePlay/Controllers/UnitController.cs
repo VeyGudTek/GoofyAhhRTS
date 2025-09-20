@@ -9,7 +9,6 @@ namespace Source.GamePlay.Controllers
 {
     public class UnitController : MonoBehaviour, IUnitController
     {
-        [InitializationRequired]
         [SerializeField]
         private NavMeshAgent NavMeshAgent;
         [InitializationRequired]
