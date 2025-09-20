@@ -18,7 +18,7 @@ namespace Source.GamePlay.Controllers
 
         private void Awake()
         {
-            CameraService = new CameraService(RigidBodyAddForce, RigidBodySetDamping, CameraScreenPointToRay);
+            CameraService = new CameraService(this);
         }
 
         void Start()

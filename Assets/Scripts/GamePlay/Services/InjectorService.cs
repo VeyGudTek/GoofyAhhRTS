@@ -10,7 +10,7 @@ namespace Source.GamePlay.Services
         private CameraService CameraService; //CHANGE TO INTERFACE
         private UnitService UnitService;
 
-        public void OnStart(InputService inputService, CameraService cameraService)
+        public InjectorService(InputService inputService, CameraService cameraService)
         {
             InputService = inputService;
             CameraService = cameraService;

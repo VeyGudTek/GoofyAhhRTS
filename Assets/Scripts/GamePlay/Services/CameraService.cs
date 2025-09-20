@@ -11,7 +11,8 @@ namespace Source.GamePlay.Services
 
         public CameraService(ICameraController cameraController)
         {
-            CameraController.RigidBodySetDamping(LinearDamping);
+            CameraController = cameraController;
+            cameraController.RigidBodySetDamping(LinearDamping);
         }
 
         public Ray? ScreenToWorldPoint(Vector2 mousePosition)

@@ -19,13 +19,12 @@ namespace Source.GamePlay.Controllers
 
         private void Awake()
         {
-            InjectorService = new InjectorService();
+            this.CheckInitializeRequired();
         }
 
         void Start()
         {
-            this.CheckInitializeRequired();
-            InjectorService.OnStart(InputController.InputService, CameraController.CameraService);
+            InjectorService = new InjectorService(InputController.InputService, CameraController.CameraService);
         }
     }
 }
