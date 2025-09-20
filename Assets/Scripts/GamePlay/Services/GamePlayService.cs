@@ -82,7 +82,7 @@ namespace Source.GamePlay.Services
 
         public void PrimaryHoldEvent() { }
         public void PrimaryReleaseEvent() { }
-        public void SecondaryClickEvent() { }
+        public void SecondaryClickEvent() { Debug.Log("SecondaryClick"); }
         public void SecondaryHoldEvent() { }
         public void SecondaryReleaseEvent() { }
         public void MoveEvent(Vector2 moveVector)

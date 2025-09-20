@@ -30,7 +30,7 @@ namespace Source.Shared.Controllers
         {
             if (Primary != null)
             {
-                Primary.WasPressedThisFrame();
+                return Primary.WasPerformedThisFrame();
             }
             return false;
         }
@@ -38,7 +38,7 @@ namespace Source.Shared.Controllers
         {
             if (Primary != null)
             {
-                Primary.IsPressed();
+                return Primary.IsInProgress();
             }
             return false;
         }
@@ -46,7 +46,7 @@ namespace Source.Shared.Controllers
         {
             if (Primary != null)
             {
-                Primary.WasReleasedThisFrame();
+                return Primary.WasReleasedThisFrame();
             }
             return false;
         }
@@ -54,7 +54,7 @@ namespace Source.Shared.Controllers
         {
             if (Secondary != null)
             {
-                Secondary.WasPressedThisFrame();
+                return Secondary.WasPerformedThisFrame();
             }
             return false;
         }
@@ -62,7 +62,7 @@ namespace Source.Shared.Controllers
         {
             if (Secondary != null)
             {
-                Secondary.WasPressedThisFrame();
+                return Secondary.IsInProgress();
             }
             return false;
         }
@@ -70,7 +70,7 @@ namespace Source.Shared.Controllers
         {
             if (Secondary != null)
             {
-                Secondary.WasReleasedThisFrame();
+                return Secondary.WasReleasedThisFrame();
             }
             return false;
         }

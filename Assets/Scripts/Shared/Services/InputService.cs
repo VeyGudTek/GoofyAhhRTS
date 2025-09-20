@@ -29,11 +29,11 @@ namespace Source.Shared.Services
 
         void UpdatePrimary()
         {
-            if (InputController.PrimaryClicked())
+            if (InputController.PrimaryReleased())
             {
                 InputProcessorService.PrimaryReleaseEvent();
             }
-            if (InputController.PrimaryClicked())
+            if (InputController.PrimaryHold())
             {
                 InputProcessorService.PrimaryHoldEvent();
             }
@@ -45,15 +45,15 @@ namespace Source.Shared.Services
 
         void UpdateSecondary()
         {
-            if (InputController.PrimaryClicked())
+            if (InputController.SecondaryClicked())
             {
                 InputProcessorService.SecondaryReleaseEvent();
             }
-            if (InputController.PrimaryClicked())
+            if (InputController.SecondaryHold())
             {
                 InputProcessorService.SecondaryHoldEvent();
             }
-            if (InputController.PrimaryClicked())
+            if (InputController.SecondaryClicked())
             {
                 InputProcessorService.SecondaryClickEvent();
             }
