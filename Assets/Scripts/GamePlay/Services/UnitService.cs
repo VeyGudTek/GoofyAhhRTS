@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 using Source.GamePlay.Services.Interfaces;
 
-namespace Source.GamePlay.Services.Units
+namespace Source.GamePlay.Services
 {
     public class UnitService: IUnitService
     {

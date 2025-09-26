@@ -2,7 +2,7 @@ using Source.GamePlay.HumbleObjects.Interfaces;
 using System;
 using UnityEngine;
 
-namespace Source.GamePlay.Services.Units
+namespace Source.GamePlay.Services
 {
     public class Unit
     {
