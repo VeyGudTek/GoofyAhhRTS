@@ -1,24 +1,33 @@
 using System.Collections;
+using Moq;
 using NUnit.Framework;
+using Source.GamePlay.Services;
+using Source.GamePlay.Services.Interfaces;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class GamePlayServiceTests
+namespace Source.UnitTests.Gameplay.Services
 {
-    // A Test behaves as an ordinary method
-    [Test]
-    public void GamePlayServiceTestsSimplePasses()
+    public class GamePlayServiceTests
     {
-        // Use the Assert class to test conditions
-    }
+        private GamePlayService GamePlayService;
+        private Mock<ICameraService> _cameraService;
+        private Mock<IUnitManagerService> _unitManagerService;
 
-    // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-    // `yield return null;` to skip a frame.
-    [UnityTest]
-    public IEnumerator GamePlayServiceTestsWithEnumeratorPasses()
-    {
-        // Use the Assert class to test conditions.
-        // Use yield to skip a frame.
-        yield return null;
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _cameraService = new Mock<ICameraService>();
+            _unitManagerService = new Mock<IUnitManagerService>();
+
+            GamePlayService = new GamePlayService(_cameraService.Object, _unitManagerService.Object);
+        }
+
+        [Test]
+        public void CantDoThisYetCuzIForgotToMockTime()
+        {
+            // Use the Assert class to test conditions
+        }
     }
 }
+

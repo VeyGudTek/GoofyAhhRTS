@@ -1,29 +1,24 @@
 using Source.GamePlay.Services.Interfaces;
 using Source.Shared.Services.Interfaces;
+using Source.Shared.HumbleObjects.Interfaces;
+using Source.GamePlay.HumbleObjects.Interfaces;
+using Source.Shared.Services;
 
 namespace Source.GamePlay.Services
 {
     public class InjectorService
     {
         private IInputService InputService;
-        private IGamePlayService GamePlayService; 
+        private IInputProcessorService GamePlayService; 
         private ICameraService CameraService;
         private IUnitManagerService UnitManagerService;
 
-        public InjectorService(IInputService inputService, ICameraService cameraService, IGamePlayService gamePlayService, IUnitManagerService unitManagerService)
+        public InjectorService(IInputHumbleObject inputHumbleObject, ICameraHumbleObject cameraHumbleObject)
         {
-            InputService = inputService;
-            CameraService = cameraService;
-            GamePlayService = gamePlayService;
-            UnitManagerService = unitManagerService;
-
-            InjectDependencies();
-        }
-
-        private void InjectDependencies()
-        {
-            InputService.InjectDependencies(GamePlayService);
-            GamePlayService.InjectDependencies(CameraService, UnitManagerService);
+            UnitManagerService = new UnitManagerService();
+            CameraService = new CameraService(cameraHumbleObject);
+            GamePlayService = new GamePlayService(CameraService, UnitManagerService);
+            InputService = new InputService(inputHumbleObject, GamePlayService);
         }
 
         public void OnUpdate()

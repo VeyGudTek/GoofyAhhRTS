@@ -10,14 +10,10 @@ namespace Source.Shared.Services
         private IInputProcessorService InputProcessorService;
         private IInputHumbleObject InputHumbleObject;
 
-        public InputService(IInputHumbleObject inputHumbleObject)
+        public InputService(IInputHumbleObject inputHumbleObject, IInputProcessorService inputProcessorService)
         {
             InputHumbleObject = inputHumbleObject;
-        }
-
-        public void InjectDependencies(IGamePlayService gamePlayService)
-        {
-            InputProcessorService = gamePlayService;
+            InputProcessorService = inputProcessorService;
         }
 
         public void OnUpdate()

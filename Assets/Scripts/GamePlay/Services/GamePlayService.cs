@@ -1,4 +1,5 @@
 using Source.GamePlay.Services.Interfaces;
+using Source.Shared.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,13 +15,13 @@ namespace Source.GamePlay.Services
         public GameObject GameObject = null;
     }
 
-    public class GamePlayService: IGamePlayService
+    public class GamePlayService: IInputProcessorService
     {
         private ICameraService CameraService;
         private List<UnitService> Units = new List<UnitService>();
         private IUnitManagerService UnitManagerService;
 
-        public void InjectDependencies(ICameraService cameraService, IUnitManagerService unitManagerService)
+        public GamePlayService(ICameraService cameraService, IUnitManagerService unitManagerService)
         {
             CameraService = cameraService;
             UnitManagerService = unitManagerService;

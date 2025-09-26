@@ -4,7 +4,6 @@ namespace Source.Shared.Services.Interfaces
 {
     public interface IInputService
     {
-        void InjectDependencies(IGamePlayService gamePlayService);
         void OnUpdate();
     }
 }

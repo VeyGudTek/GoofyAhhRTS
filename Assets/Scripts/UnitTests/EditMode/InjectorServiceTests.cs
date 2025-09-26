@@ -1,47 +1,28 @@
-using System.Collections;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
-using Moq;
 using Source.GamePlay.Services;
-using Source.Shared.Services.Interfaces;
-using Source.GamePlay.Services.Interfaces;
+using Source.Shared.HumbleObjects;
+using Source.GamePlay.HumbleObjects;
+using UnityEngine;
 
-namespace Source.UnitTests.Services
+namespace Source.UnitTests.Gameplay.Services
 {
-    [TestFixture]
     public class InjectorServiceTests
     {
         private InjectorService InjectorService;
-        private Mock<IInputService> _inputService;
-        private Mock<ICameraService> _cameraService;
-        private Mock<IGamePlayService> _gamePlayService;
-        private Mock<IUnitManagerService> _unitManagerService;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _inputService = new Mock<IInputService>();
-            _cameraService = new Mock<ICameraService>();
-            _gamePlayService = new Mock<IGamePlayService>();
-            _unitManagerService = new Mock<IUnitManagerService>();
-
-            InjectorService = new(_inputService.Object, _cameraService.Object, _gamePlayService.Object, _unitManagerService.Object);
-        }
-
-        [Test]
-        public void Contructor_InjectsDependencies()
-        {
-            _inputService.Verify(m => m.InjectDependencies(_gamePlayService.Object), Times.Once);
-            _gamePlayService.Verify(m => m.InjectDependencies(_cameraService.Object, _unitManagerService.Object), Times.Once);
+            GameObject container = new GameObject();
+            container.AddComponent<InputHumbleObject>();
+            container.AddComponent<CameraHumbleObject>();
+            InjectorService = new(container.GetComponent<InputHumbleObject>(), container.GetComponent<CameraHumbleObject>());
         }
 
         [Test]
         public void Update()
         {
             InjectorService.OnUpdate();
-
-            _inputService.Verify(m => m.OnUpdate(), Times.Once);
         }
     }
 }
