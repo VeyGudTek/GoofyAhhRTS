@@ -2,16 +2,15 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Source.GamePlay.Services.Interfaces;
 
-namespace Source.GamePlay
+namespace Source.GamePlay.Services.Units
 {
-    public class UnitManager : MonoBehaviour
+    public class UnitService: IUnitService
     {
-        private List<Unit> Units = new List<Unit>();
-        
-        public void SelectUnit(Unit selectedUnit)
+        public void SelectUnit(Unit selectedUnit, List<Unit> units)
         {
-            foreach (Unit unit in Units.Where(u => u.Selected))
+            foreach (Unit unit in units.Where(u => u.Selected))
             {
                 unit.Deselect();
             }
@@ -21,10 +20,10 @@ namespace Source.GamePlay
             }
         }
 
-        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd)
+        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd, List<Unit> units)
         {
-            IEnumerable<Unit> unitsToSelect = Units.Where(u => 
-                CheckSelectArea(u.transform.position, selectionStart, selectionEnd) &&
+            IEnumerable<Unit> unitsToSelect = units.Where(u => 
+                CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
                 u.PlayerId == playerId
             );
 
@@ -47,9 +46,9 @@ namespace Source.GamePlay
             return true;
         }
 
-        public void MoveUnits(Guid playerId, Vector3 destination)
+        public void MoveUnits(Guid playerId, Vector3 destination, List<Unit> units)
         {
-            IEnumerable<Unit> unitsToMove = Units.Where(u => 
+            IEnumerable<Unit> unitsToMove = units.Where(u => 
                 u.PlayerId == playerId &&
                 u.Selected
             );
