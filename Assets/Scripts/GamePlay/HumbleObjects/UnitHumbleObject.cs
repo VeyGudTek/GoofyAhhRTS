@@ -11,9 +11,9 @@ namespace Source.GamePlay.Controllers
         [SerializeField]
         private NavMeshAgent NavMeshAgent;
 
-        public Unit GetUnit(Guid playerId, float health, float? speed)
+        public UnitService GetUnit(Guid playerId, float health, float? speed)
         {
-            return new Unit(playerId, health, speed, this);
+            return new UnitService(playerId, health, speed, this);
         }
 
         public Vector3 GetPosition()

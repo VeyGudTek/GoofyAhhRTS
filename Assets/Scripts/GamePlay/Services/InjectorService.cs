@@ -8,9 +8,9 @@ namespace Source.GamePlay.Services
         private IInputService InputService;
         private IGamePlayService GamePlayService; 
         private ICameraService CameraService;
-        private IUnitService UnitService;
+        private IUnitManagerService UnitService;
 
-        public InjectorService(IInputService inputService, ICameraService cameraService, IGamePlayService gamePlayService, IUnitService unitService)
+        public InjectorService(IInputService inputService, ICameraService cameraService, IGamePlayService gamePlayService, IUnitManagerService unitService)
         {
             InputService = inputService;
             CameraService = cameraService;

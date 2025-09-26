@@ -1,63 +1,44 @@
-using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
+using Source.GamePlay.HumbleObjects.Interfaces;
 using System;
-using Source.GamePlay.Services.Interfaces;
+using UnityEngine;
 
 namespace Source.GamePlay.Services
 {
-    public class UnitService: IUnitService
+    public class UnitService
     {
-        public void SelectUnit(Unit selectedUnit, List<Unit> units)
+        private IUnitHumbleObject UnitController;
+
+        private float Health;
+        private float? Speed;
+        public Guid PlayerId { get; private set; }
+        public bool Selected { get; private set; } = false;
+
+        public UnitService(Guid playerId, float health, float? speed, IUnitHumbleObject unitController)
         {
-            foreach (Unit unit in units.Where(u => u.Selected))
-            {
-                unit.Deselect();
-            }
-            if (selectedUnit != null)
-            {
-                selectedUnit.Select();
-            }
+            PlayerId = playerId;
+            Health = health;
+            UnitController = unitController;
+            UnitController.SetSpeed(speed);
         }
 
-        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd, List<Unit> units)
+        public void MoveUnit(Vector3 destination)
         {
-            IEnumerable<Unit> unitsToSelect = units.Where(u => 
-                CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
-                u.PlayerId == playerId
-            );
-
-            foreach (Unit unit in unitsToSelect)
-            {
-                unit.Select();
-            }
+            UnitController.MoveUnit(destination);
         }
 
-        private static bool CheckSelectArea(Vector3 unit, Vector3 selectionStart, Vector3 selectionEnd)
+        public Vector3 GetPosition()
         {
-            if (unit.x < selectionStart.x || unit.x > selectionEnd.x)
-            {
-                return false;
-            } 
-            if (unit.z < selectionStart.z || unit.z > selectionEnd.z)
-            {
-                return false;
-            }
-            return true;
+            return UnitController.GetPosition();
         }
 
-        public void MoveUnits(Guid playerId, Vector3 destination, List<Unit> units)
+        public void Select()
         {
-            IEnumerable<Unit> unitsToMove = units.Where(u => 
-                u.PlayerId == playerId &&
-                u.Selected
-            );
+            Selected = true;
+        }
 
-            foreach (Unit unit in unitsToMove)
-            {
-                unit.MoveUnit(destination);
-            }
+        public void Deselect()
+        {
+            Selected = false;
         }
     }
 }
-

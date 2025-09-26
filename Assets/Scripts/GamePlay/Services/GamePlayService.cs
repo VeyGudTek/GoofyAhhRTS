@@ -17,10 +17,10 @@ namespace Source.GamePlay.Services
     public class GamePlayService: IGamePlayService
     {
         private ICameraService CameraService;
-        private List<Unit> Units = new List<Unit>();
-        private IUnitService UnitService;
+        private List<UnitService> Units = new List<UnitService>();
+        private IUnitManagerService UnitService;
 
-        public void InjectDependencies(ICameraService cameraService, IUnitService unitService)
+        public void InjectDependencies(ICameraService cameraService, IUnitManagerService unitService)
         {
             CameraService = cameraService;
             UnitService = unitService;

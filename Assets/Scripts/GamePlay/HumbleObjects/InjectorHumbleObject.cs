@@ -28,7 +28,7 @@ namespace Source.GamePlay.Controllers
                 new InputService(InputController), 
                 new CameraService(CameraController), 
                 new GamePlayService(), 
-                new UnitService()
+                new UnitManagerService()
             );
         }
 
