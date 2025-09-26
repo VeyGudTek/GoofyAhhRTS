@@ -3,7 +3,7 @@ using Source.Shared.HumbleObjects.Interfaces;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Source.Shared.Controllers
+namespace Source.Shared.HumbleObjects
 {
     public class InputHumbleObject : MonoBehaviour, IInputHumbleObject
     {

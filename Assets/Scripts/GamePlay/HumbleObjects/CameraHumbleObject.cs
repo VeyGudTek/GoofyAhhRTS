@@ -2,7 +2,7 @@ using Source.GamePlay.HumbleObjects.Interfaces;
 using Source.Shared.Utilities;
 using UnityEngine;
 
-namespace Source.GamePlay.Controllers
+namespace Source.GamePlay.HumbleObjects
 {
     public class CameraHumbleObject : MonoBehaviour, ICameraHumbleObject
     {

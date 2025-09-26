@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Source.GamePlay.Controllers
+namespace Source.GamePlay.HumbleObjects
 {
     public class UnitHumbleObject : MonoBehaviour, IUnitHumbleObject
     {

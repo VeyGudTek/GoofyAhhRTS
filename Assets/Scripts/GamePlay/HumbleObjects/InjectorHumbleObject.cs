@@ -1,10 +1,10 @@
 using Source.GamePlay.Services;
-using Source.Shared.Controllers;
+using Source.Shared.HumbleObjects;
 using Source.Shared.Services;
 using Source.Shared.Utilities;
 using UnityEngine;
 
-namespace Source.GamePlay.Controllers
+namespace Source.GamePlay.HumbleObjects
 {
     public class InjectorHumbleObject : MonoBehaviour
     {
