@@ -13,16 +13,20 @@ namespace Source.Shared.Utilities
         {
             Type t = instance.GetType();
             IEnumerable<FieldInfo> nullFieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
-                .Where(f =>
-                    f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
-                    (f.GetValue(instance) == null || f.GetValue(instance).Equals(null))
-                );
+                .Where(f => {
+                    if (!(f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0))
+                        return false;
+                    object value = f.GetValue(instance);
+                    return (value == null || value.Equals(null));
+                });
 
             IEnumerable<PropertyInfo> nullPropertiesWithInitialization = t.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
-                .Where(f =>
-                    f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
-                    (f.GetValue(instance) == null || f.GetValue(instance).Equals(null))
-                );
+                .Where(p => {
+                    if (!(p.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0))
+                        return false;
+                    object value = p.GetValue(instance);
+                    return (value == null || value.Equals(null));
+                });
 
             if (nullFieldsWithInitialization.Count() == 0 && nullPropertiesWithInitialization.Count() == 0)
             {
