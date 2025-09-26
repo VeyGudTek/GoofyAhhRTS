@@ -1,4 +1,4 @@
-using Source.GamePlay.Controllers.Interfaces;
+using Source.GamePlay.HumbleObjects.Interfaces;
 using Source.GamePlay.Services.Interfaces;
 using UnityEngine;
 

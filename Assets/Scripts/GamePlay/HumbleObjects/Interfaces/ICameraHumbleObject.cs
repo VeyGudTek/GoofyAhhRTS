@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Source.GamePlay.Controllers.Interfaces
+namespace Source.GamePlay.HumbleObjects.Interfaces
 {
     public interface ICameraHumbleObject
     {

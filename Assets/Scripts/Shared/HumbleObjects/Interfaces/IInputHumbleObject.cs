@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Source.Shared.Controllers.Interfaces
+namespace Source.Shared.HumbleObjects.Interfaces
 {
     public interface IInputHumbleObject
     {

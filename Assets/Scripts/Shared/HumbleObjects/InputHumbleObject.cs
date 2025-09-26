@@ -1,5 +1,5 @@
 using Source.Shared.Utilities;
-using Source.Shared.Controllers.Interfaces;
+using Source.Shared.HumbleObjects.Interfaces;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

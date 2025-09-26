@@ -1,5 +1,5 @@
 using Source.GamePlay.Services.Interfaces;
-using Source.Shared.Controllers.Interfaces;
+using Source.Shared.HumbleObjects.Interfaces;
 using Source.Shared.Services.Interfaces;
 using UnityEngine;
 
