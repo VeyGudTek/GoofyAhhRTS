@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Source.GamePlay.Controllers.Interfaces
+namespace Source.GamePlay.HumbleObjects.Interfaces
 {
-    public interface IUnitController
+    public interface IUnitHumbleObject
     {
         Vector3 GetPosition();
         void MoveUnit(Vector3 destination);

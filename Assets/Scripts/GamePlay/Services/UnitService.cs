@@ -1,34 +1,34 @@
-using Source.GamePlay.Controllers.Interfaces;
+using Source.GamePlay.HumbleObjects.Interfaces;
 using System;
 using UnityEngine;
 
-namespace Source.GamePlay.Services.Units
+namespace Source.GamePlay.Services
 {
-    public class Unit
+    public class UnitService
     {
-        private IUnitController UnitController;
+        private IUnitHumbleObject UnitHumbleObject;
 
         private float Health;
         private float? Speed;
         public Guid PlayerId { get; private set; }
         public bool Selected { get; private set; } = false;
 
-        public Unit(Guid playerId, float health, float? speed, IUnitController unitController)
+        public UnitService(Guid playerId, float health, float? speed, IUnitHumbleObject unitHumbleObject)
         {
             PlayerId = playerId;
             Health = health;
-            UnitController = unitController;
-            UnitController.SetSpeed(speed);
+            UnitHumbleObject = unitHumbleObject;
+            UnitHumbleObject.SetSpeed(speed);
         }
 
         public void MoveUnit(Vector3 destination)
         {
-            UnitController.MoveUnit(destination);
+            UnitHumbleObject.MoveUnit(destination);
         }
 
         public Vector3 GetPosition()
         {
-            return UnitController.GetPosition();
+            return UnitHumbleObject.GetPosition();
         }
 
         public void Select()

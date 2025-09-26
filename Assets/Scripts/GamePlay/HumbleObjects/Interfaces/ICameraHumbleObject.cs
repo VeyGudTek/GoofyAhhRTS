@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Source.GamePlay.Controllers.Interfaces
+namespace Source.GamePlay.HumbleObjects.Interfaces
 {
-    public interface ICameraController
+    public interface ICameraHumbleObject
     {
         Ray? CameraScreenPointToRay(Vector2 mousePosition);
         void RigidBodySetDamping(float dampingForce);

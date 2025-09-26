@@ -1,5 +1,4 @@
 using Source.GamePlay.Services.Interfaces;
-using Source.GamePlay.Services.Units;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -18,13 +17,13 @@ namespace Source.GamePlay.Services
     public class GamePlayService: IGamePlayService
     {
         private ICameraService CameraService;
-        private List<Unit> Units = new List<Unit>();
-        private IUnitService UnitService;
+        private List<UnitService> Units = new List<UnitService>();
+        private IUnitManagerService UnitManagerService;
 
-        public void InjectDependencies(ICameraService cameraService, IUnitService unitService)
+        public void InjectDependencies(ICameraService cameraService, IUnitManagerService unitManagerService)
         {
             CameraService = cameraService;
-            UnitService = unitService;
+            UnitManagerService = unitManagerService;
         }
 
         public void PrimaryClickEvent()

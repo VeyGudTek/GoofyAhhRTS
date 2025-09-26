@@ -1,10 +1,11 @@
 using Source.Shared.Utilities;
+using Source.Shared.HumbleObjects.Interfaces;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Source.Shared.Controllers
+namespace Source.Shared.HumbleObjects
 {
-    public class InputController : MonoBehaviour, IInputController
+    public class InputHumbleObject : MonoBehaviour, IInputHumbleObject
     {
         [InitializationRequired]
         private InputAction Primary;

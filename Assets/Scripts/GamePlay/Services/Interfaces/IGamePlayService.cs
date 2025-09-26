@@ -4,6 +4,6 @@ namespace Source.GamePlay.Services.Interfaces
 {
     public interface IGamePlayService : IInputProcessorService
     {
-        void InjectDependencies(ICameraService cameraService, IUnitService unitService);
+        void InjectDependencies(ICameraService cameraService, IUnitManagerService unitManagerService);
     }
 }

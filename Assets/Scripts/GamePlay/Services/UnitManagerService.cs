@@ -4,13 +4,13 @@ using System.Linq;
 using System;
 using Source.GamePlay.Services.Interfaces;
 
-namespace Source.GamePlay.Services.Units
+namespace Source.GamePlay.Services
 {
-    public class UnitService: IUnitService
+    public class UnitManagerService: IUnitManagerService
     {
-        public void SelectUnit(Unit selectedUnit, List<Unit> units)
+        public void SelectUnit(UnitService selectedUnit, List<UnitService> units)
         {
-            foreach (Unit unit in units.Where(u => u.Selected))
+            foreach (UnitService unit in units.Where(u => u.Selected))
             {
                 unit.Deselect();
             }
@@ -20,14 +20,14 @@ namespace Source.GamePlay.Services.Units
             }
         }
 
-        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd, List<Unit> units)
+        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd, List<UnitService> units)
         {
-            IEnumerable<Unit> unitsToSelect = units.Where(u => 
+            IEnumerable<UnitService> unitsToSelect = units.Where(u => 
                 CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
                 u.PlayerId == playerId
             );
 
-            foreach (Unit unit in unitsToSelect)
+            foreach (UnitService unit in unitsToSelect)
             {
                 unit.Select();
             }
@@ -46,14 +46,14 @@ namespace Source.GamePlay.Services.Units
             return true;
         }
 
-        public void MoveUnits(Guid playerId, Vector3 destination, List<Unit> units)
+        public void MoveUnits(Guid playerId, Vector3 destination, List<UnitService> units)
         {
-            IEnumerable<Unit> unitsToMove = units.Where(u => 
+            IEnumerable<UnitService> unitsToMove = units.Where(u => 
                 u.PlayerId == playerId &&
                 u.Selected
             );
 
-            foreach (Unit unit in unitsToMove)
+            foreach (UnitService unit in unitsToMove)
             {
                 unit.MoveUnit(destination);
             }

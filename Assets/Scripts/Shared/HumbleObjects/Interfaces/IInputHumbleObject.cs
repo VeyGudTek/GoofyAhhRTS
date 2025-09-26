@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Source.Shared.Controllers
+namespace Source.Shared.HumbleObjects.Interfaces
 {
-    public interface IInputController
+    public interface IInputHumbleObject
     {
         bool PrimaryClicked();
         bool PrimaryHold();
