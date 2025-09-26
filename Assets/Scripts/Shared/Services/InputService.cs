@@ -45,7 +45,7 @@ namespace Source.Shared.Services
 
         void UpdateSecondary()
         {
-            if (InputController.SecondaryClicked())
+            if (InputController.SecondaryReleased())
             {
                 InputProcessorService.SecondaryReleaseEvent();
             }
