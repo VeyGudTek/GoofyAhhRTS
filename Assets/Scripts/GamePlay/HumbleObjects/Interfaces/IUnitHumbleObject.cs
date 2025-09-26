@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Source.GamePlay.Controllers.Interfaces
 {
-    public interface IUnitController
+    public interface IUnitHumbleObject
     {
         Vector3 GetPosition();
         void MoveUnit(Vector3 destination);

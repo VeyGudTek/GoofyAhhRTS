@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Source.GamePlay.Controllers
 {
-    public class CameraController : MonoBehaviour, ICameraController
+    public class CameraHumbleObject : MonoBehaviour, ICameraHumbleObject
     {
         [InitializationRequired]
         [SerializeField]

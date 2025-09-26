@@ -1,5 +1,5 @@
 using Source.GamePlay.Services.Interfaces;
-using Source.Shared.Controllers;
+using Source.Shared.Controllers.Interfaces;
 using Source.Shared.Services.Interfaces;
 using UnityEngine;
 
@@ -8,9 +8,9 @@ namespace Source.Shared.Services
     public class InputService: IInputService
     {
         private IInputProcessorService InputProcessorService;
-        private IInputController InputController;
+        private IInputHumbleObject InputController;
 
-        public InputService(IInputController inputController)
+        public InputService(IInputHumbleObject inputController)
         {
             InputController = inputController;
         }

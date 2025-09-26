@@ -6,14 +6,14 @@ namespace Source.GamePlay.Services.Units
 {
     public class Unit
     {
-        private IUnitController UnitController;
+        private IUnitHumbleObject UnitController;
 
         private float Health;
         private float? Speed;
         public Guid PlayerId { get; private set; }
         public bool Selected { get; private set; } = false;
 
-        public Unit(Guid playerId, float health, float? speed, IUnitController unitController)
+        public Unit(Guid playerId, float health, float? speed, IUnitHumbleObject unitController)
         {
             PlayerId = playerId;
             Health = health;

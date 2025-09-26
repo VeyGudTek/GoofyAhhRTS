@@ -6,10 +6,10 @@ namespace Source.GamePlay.Services
 {
     public class CameraService: ICameraService
     {
-        private ICameraController CameraController;
+        private ICameraHumbleObject CameraController;
         private const float LinearDamping = 2f;
 
-        public CameraService(ICameraController cameraController)
+        public CameraService(ICameraHumbleObject cameraController)
         {
             CameraController = cameraController;
             cameraController.RigidBodySetDamping(LinearDamping);

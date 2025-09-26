@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 namespace Source.GamePlay.Controllers
 {
-    public class UnitController : MonoBehaviour, IUnitController
+    public class UnitHumbleObject : MonoBehaviour, IUnitHumbleObject
     {
         [SerializeField]
         private NavMeshAgent NavMeshAgent;

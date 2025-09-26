@@ -7,14 +7,14 @@ using UnityEngine;
 
 namespace Source.GamePlay.Controllers
 {
-    public class InjectorController : MonoBehaviour
+    public class InjectorHumbleObject : MonoBehaviour
     {
         [InitializationRequired]
         [SerializeField]
-        private CameraController CameraController;
+        private CameraHumbleObject CameraController;
         [InitializationRequired]
         [SerializeField]
-        private InputController InputController;
+        private InputHumbleObject InputController;
 
         private InjectorService InjectorService;
 
