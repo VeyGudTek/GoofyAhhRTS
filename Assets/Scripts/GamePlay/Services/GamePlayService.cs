@@ -18,12 +18,12 @@ namespace Source.GamePlay.Services
     {
         private ICameraService CameraService;
         private List<UnitService> Units = new List<UnitService>();
-        private IUnitManagerService UnitService;
+        private IUnitManagerService UnitManagerService;
 
-        public void InjectDependencies(ICameraService cameraService, IUnitManagerService unitService)
+        public void InjectDependencies(ICameraService cameraService, IUnitManagerService unitManagerService)
         {
             CameraService = cameraService;
-            UnitService = unitService;
+            UnitManagerService = unitManagerService;
         }
 
         public void PrimaryClickEvent()
