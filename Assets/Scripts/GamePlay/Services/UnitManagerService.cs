@@ -2,16 +2,15 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Source.GamePlay.Services.Interfaces;
 
-namespace Source.GamePlay
+namespace Source.GamePlay.Services
 {
-    public class UnitManager : MonoBehaviour
+    public class UnitManagerService: IUnitManagerService
     {
-        private List<Unit> Units = new List<Unit>();
-        
-        public void SelectUnit(Unit selectedUnit)
+        public void SelectUnit(UnitService selectedUnit, List<UnitService> units)
         {
-            foreach (Unit unit in Units.Where(u => u.Selected))
+            foreach (UnitService unit in units.Where(u => u.Selected))
             {
                 unit.Deselect();
             }
@@ -21,14 +20,14 @@ namespace Source.GamePlay
             }
         }
 
-        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd)
+        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd, List<UnitService> units)
         {
-            IEnumerable<Unit> unitsToSelect = Units.Where(u => 
-                CheckSelectArea(u.transform.position, selectionStart, selectionEnd) &&
+            IEnumerable<UnitService> unitsToSelect = units.Where(u => 
+                CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
                 u.PlayerId == playerId
             );
 
-            foreach (Unit unit in unitsToSelect)
+            foreach (UnitService unit in unitsToSelect)
             {
                 unit.Select();
             }
@@ -47,14 +46,14 @@ namespace Source.GamePlay
             return true;
         }
 
-        public void MoveUnits(Guid playerId, Vector3 destination)
+        public void MoveUnits(Guid playerId, Vector3 destination, List<UnitService> units)
         {
-            IEnumerable<Unit> unitsToMove = Units.Where(u => 
+            IEnumerable<UnitService> unitsToMove = units.Where(u => 
                 u.PlayerId == playerId &&
                 u.Selected
             );
 
-            foreach (Unit unit in unitsToMove)
+            foreach (UnitService unit in unitsToMove)
             {
                 unit.MoveUnit(destination);
             }

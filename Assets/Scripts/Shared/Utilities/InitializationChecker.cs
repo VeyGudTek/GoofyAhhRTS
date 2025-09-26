@@ -9,20 +9,24 @@ namespace Source.Shared.Utilities
 {
     public static class InitializationChecker
     {
-        public static void CheckInitializeRequired(this MonoBehaviour instance)
+        public static void CheckInitializeRequired(this object instance)
         {
             Type t = instance.GetType();
             IEnumerable<FieldInfo> nullFieldsWithInitialization = t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
-                .Where(f => 
-                    f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
-                    f.GetValue(instance) == null
-                );
+                .Where(f => {
+                    if (!(f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0))
+                        return false;
+                    object value = f.GetValue(instance);
+                    return (value == null || value.Equals(null));
+                });
 
             IEnumerable<PropertyInfo> nullPropertiesWithInitialization = t.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
-                .Where(f =>
-                    f.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0 &&
-                    f.GetValue(instance) == null
-                );
+                .Where(p => {
+                    if (!(p.GetCustomAttributes(typeof(InitializationRequiredAttribute)).Count() != 0))
+                        return false;
+                    object value = p.GetValue(instance);
+                    return (value == null || value.Equals(null));
+                });
 
             if (nullFieldsWithInitialization.Count() == 0 && nullPropertiesWithInitialization.Count() == 0)
             {
@@ -39,7 +43,7 @@ namespace Source.Shared.Utilities
                 errorMessage += $"\t[{GetFieldTypeName(property.PropertyType)}] {property.Name}\n";
             }
 
-            throw new InitializationException(errorMessage);
+            throw new InitializationException(errorMessage); 
         }
 
         private static string GetFieldTypeName(Type type)
@@ -62,9 +66,9 @@ namespace Source.Shared.Utilities
             }
             if (Nullable.GetUnderlyingType(type) != null)
             {
-                return $"Property({Nullable.GetUnderlyingType(type).Name})";
+                return $"{Nullable.GetUnderlyingType(type).Name}";
             }
-            return $"Property({type.Name})";
+            return $"{type.Name}";
         }
     }
 }
