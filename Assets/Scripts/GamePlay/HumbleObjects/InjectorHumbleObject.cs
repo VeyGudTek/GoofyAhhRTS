@@ -10,10 +10,10 @@ namespace Source.GamePlay.HumbleObjects
     {
         [InitializationRequired]
         [SerializeField]
-        private CameraHumbleObject CameraController;
+        private CameraHumbleObject CameraHumbleObject;
         [InitializationRequired]
         [SerializeField]
-        private InputHumbleObject InputController;
+        private InputHumbleObject InputHumbleObject;
 
         private InjectorService InjectorService;
 
@@ -25,8 +25,8 @@ namespace Source.GamePlay.HumbleObjects
         void Start()
         {
             InjectorService = new InjectorService(
-                new InputService(InputController), 
-                new CameraService(CameraController), 
+                new InputService(InputHumbleObject), 
+                new CameraService(CameraHumbleObject), 
                 new GamePlayService(), 
                 new UnitManagerService()
             );

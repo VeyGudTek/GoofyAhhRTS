@@ -6,18 +6,18 @@ namespace Source.GamePlay.Services
 {
     public class CameraService: ICameraService
     {
-        private ICameraHumbleObject CameraController;
+        private ICameraHumbleObject CameraHumbleObject;
         private const float LinearDamping = 2f;
 
-        public CameraService(ICameraHumbleObject cameraController)
+        public CameraService(ICameraHumbleObject cameraHumbleObject)
         {
-            CameraController = cameraController;
-            cameraController.RigidBodySetDamping(LinearDamping);
+            CameraHumbleObject = cameraHumbleObject;
+            cameraHumbleObject.RigidBodySetDamping(LinearDamping);
         }
 
         public bool ScreenToWorldPoint(Vector2 mousePosition, out Ray ray)
         {
-            Ray? result = CameraController.CameraScreenPointToRay(mousePosition);
+            Ray? result = CameraHumbleObject.CameraScreenPointToRay(mousePosition);
             if (result == null)
             {
                 ray = new Ray();
@@ -30,7 +30,7 @@ namespace Source.GamePlay.Services
         public void OnMove(Vector2 direction)
         {
             Vector3 velocity = (new Vector3(direction.x, 0f, direction.y)) * Time.deltaTime * 500f;
-            CameraController.RigidBodyAddForce(velocity);
+            CameraHumbleObject.RigidBodyAddForce(velocity);
         }
     }
 }

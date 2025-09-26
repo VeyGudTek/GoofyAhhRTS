@@ -8,11 +8,11 @@ namespace Source.Shared.Services
     public class InputService: IInputService
     {
         private IInputProcessorService InputProcessorService;
-        private IInputHumbleObject InputController;
+        private IInputHumbleObject InputHumbleObject;
 
-        public InputService(IInputHumbleObject inputController)
+        public InputService(IInputHumbleObject inputHumbleObject)
         {
-            InputController = inputController;
+            InputHumbleObject = inputHumbleObject;
         }
 
         public void InjectDependencies(IGamePlayService gamePlayService)
@@ -29,15 +29,15 @@ namespace Source.Shared.Services
 
         void UpdatePrimary()
         {
-            if (InputController.PrimaryReleased())
+            if (InputHumbleObject.PrimaryReleased())
             {
                 InputProcessorService.PrimaryReleaseEvent();
             }
-            if (InputController.PrimaryHold())
+            if (InputHumbleObject.PrimaryHold())
             {
                 InputProcessorService.PrimaryHoldEvent();
             }
-            if (InputController.PrimaryClicked())
+            if (InputHumbleObject.PrimaryClicked())
             {
                 InputProcessorService.PrimaryClickEvent();
             }
@@ -45,15 +45,15 @@ namespace Source.Shared.Services
 
         void UpdateSecondary()
         {
-            if (InputController.SecondaryReleased())
+            if (InputHumbleObject.SecondaryReleased())
             {
                 InputProcessorService.SecondaryReleaseEvent();
             }
-            if (InputController.SecondaryHold())
+            if (InputHumbleObject.SecondaryHold())
             {
                 InputProcessorService.SecondaryHoldEvent();
             }
-            if (InputController.SecondaryClicked())
+            if (InputHumbleObject.SecondaryClicked())
             {
                 InputProcessorService.SecondaryClickEvent();
             }
@@ -61,7 +61,7 @@ namespace Source.Shared.Services
 
         void UpdateMovement()
         {
-            Vector2 result = InputController.GetMove();
+            Vector2 result = InputHumbleObject.GetMove();
             if (result != Vector2.zero)
             {
                 InputProcessorService.MoveEvent(result);
