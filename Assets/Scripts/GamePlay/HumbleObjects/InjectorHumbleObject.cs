@@ -24,12 +24,7 @@ namespace Source.GamePlay.HumbleObjects
 
         void Start()
         {
-            InjectorService = new InjectorService(
-                new InputService(InputHumbleObject), 
-                new CameraService(CameraHumbleObject), 
-                new GamePlayService(), 
-                new UnitManagerService()
-            );
+            InjectorService = new InjectorService(InputHumbleObject, CameraHumbleObject);
         }
 
         private void Update()
