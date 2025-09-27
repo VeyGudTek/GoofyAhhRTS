@@ -1,17 +1,18 @@
 using Source.GamePlay.HumbleObjects.Interfaces;
+using Source.GamePlay.Services.Interfaces;
 using System;
 using UnityEngine;
 
 namespace Source.GamePlay.Services
 {
-    public class UnitService
+    public class UnitService: IUnitService
     {
         private IUnitHumbleObject UnitHumbleObject;
 
         private float Health;
         private float? Speed;
         public Guid PlayerId { get; private set; }
-        public bool Selected { get; private set; } = false;
+        public bool Selected { get; set; } = false;
 
         public UnitService(Guid playerId, float health, float? speed, IUnitHumbleObject unitHumbleObject)
         {
@@ -29,16 +30,6 @@ namespace Source.GamePlay.Services
         public Vector3 GetPosition()
         {
             return UnitHumbleObject.GetPosition();
-        }
-
-        public void Select()
-        {
-            Selected = true;
-        }
-
-        public void Deselect()
-        {
-            Selected = false;
         }
     }
 }

@@ -8,52 +8,52 @@ namespace Source.GamePlay.Services
 {
     public class UnitManagerService: IUnitManagerService
     {
-        public void SelectUnit(UnitService selectedUnit, List<UnitService> units)
+        public void SelectUnit(IUnitService selectedUnit, List<IUnitService> units)
         {
             foreach (UnitService unit in units.Where(u => u.Selected))
             {
-                unit.Deselect();
+                unit.Selected = false;
             }
             if (selectedUnit != null)
             {
-                selectedUnit.Select();
+                selectedUnit.Selected = true;
             }
         }
 
-        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd, List<UnitService> units)
+        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd, List<IUnitService> units)
         {
-            IEnumerable<UnitService> unitsToSelect = units.Where(u => 
+            IEnumerable<IUnitService> unitsToSelect = units.Where(u => 
                 CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
                 u.PlayerId == playerId
             );
 
-            foreach (UnitService unit in unitsToSelect)
+            foreach (IUnitService unit in unitsToSelect)
             {
-                unit.Select();
+                unit.Selected = true;
             }
         }
 
-        private static bool CheckSelectArea(Vector3 unit, Vector3 selectionStart, Vector3 selectionEnd)
+        private static bool CheckSelectArea(Vector3 unitPosition, Vector3 selectionStart, Vector3 selectionEnd)
         {
-            if (unit.x < selectionStart.x || unit.x > selectionEnd.x)
+            if (unitPosition.x < selectionStart.x || unitPosition.x > selectionEnd.x)
             {
                 return false;
             } 
-            if (unit.z < selectionStart.z || unit.z > selectionEnd.z)
+            if (unitPosition.z < selectionStart.z || unitPosition.z > selectionEnd.z)
             {
                 return false;
             }
             return true;
         }
 
-        public void MoveUnits(Guid playerId, Vector3 destination, List<UnitService> units)
+        public void MoveUnits(Guid playerId, Vector3 destination, List<IUnitService> units)
         {
-            IEnumerable<UnitService> unitsToMove = units.Where(u => 
+            IEnumerable<IUnitService> unitsToMove = units.Where(u => 
                 u.PlayerId == playerId &&
                 u.Selected
             );
 
-            foreach (UnitService unit in unitsToMove)
+            foreach (IUnitService unit in unitsToMove)
             {
                 unit.MoveUnit(destination);
             }
