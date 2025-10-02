@@ -28,18 +28,18 @@ namespace Source.GamePlay.Services
 
         public bool ScreenToWorldPoint(Vector2 mousePosition, out Ray ray)
         {
-            Ray? result = Camera.ScreenPointToRay(mousePosition);
-            if (result == null)
-            {
-                ray = new Ray();
-                return false;
-            }
-            ray = (Ray)result;
+            ray = new Ray();
+
+            if (Camera == null) return false;
+
+            ray = Camera.ScreenPointToRay(mousePosition);
             return true;
         }
 
         public void OnMove(Vector2 direction)
         {
+            if (Rigidbody == null) return;
+
             Vector3 velocity = (new Vector3(direction.x, 0f, direction.y)) * Time.deltaTime * 500f;
             Rigidbody.AddForce(velocity);
         }

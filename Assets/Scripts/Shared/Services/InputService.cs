@@ -35,6 +35,8 @@ namespace Source.Shared.Services
 
         private void Update()
         {
+            if (InputProcessorService == null) return;
+
             UpdatePrimary();
             UpdateSecondary();
             UpdateMovement();
