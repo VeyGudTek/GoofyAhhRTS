@@ -5,9 +5,12 @@ namespace Source.GamePlay.Services
 {
     public class InjectorService: MonoBehaviour
     {
-        private InputService InputService { get; set; }
-        private GamePlayService GamePlayService { get; set; }
-        private CameraService CameraService { get; set; }
+        [SerializeField]
+        private InputService InputService;
+        [SerializeField]
+        private GamePlayService GamePlayService;
+        [SerializeField]
+        private CameraService CameraService;
         private UnitManagerService UnitManagerService { get; set; }
 
         private void Awake()
