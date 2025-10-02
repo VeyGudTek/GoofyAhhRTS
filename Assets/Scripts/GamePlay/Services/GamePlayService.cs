@@ -1,4 +1,5 @@
-using Source.GamePlay.Services.Interfaces;
+using Source.Shared.Services.Interfaces;
+using Source.Shared.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,16 +15,27 @@ namespace Source.GamePlay.Services
         public GameObject GameObject = null;
     }
 
-    public class GamePlayService: IGamePlayService
+    public class GamePlayService: MonoBehaviour, IInputProcessorService
     {
-        private ICameraService CameraService;
-        private List<UnitService> Units = new List<UnitService>();
-        private IUnitManagerService UnitManagerService;
+        [InitializationRequired]
+        private CameraService CameraService { get; set; }
+        [InitializationRequired]
+        private UnitManagerService UnitManagerService { get; set; }
 
-        public void InjectDependencies(ICameraService cameraService, IUnitManagerService unitManagerService)
+        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService)
         {
             CameraService = cameraService;
             UnitManagerService = unitManagerService;
+        }
+
+        private void Awake()
+        {
+            UnitManagerService = new UnitManagerService();
+        }
+
+        private void Start()
+        {
+            this.CheckInitializeRequired();
         }
 
         public void PrimaryClickEvent()

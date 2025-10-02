@@ -1,23 +1,34 @@
-using Source.GamePlay.HumbleObjects.Interfaces;
-using Source.GamePlay.Services.Interfaces;
+using Source.Shared.Utilities;
 using UnityEngine;
 
 namespace Source.GamePlay.Services
 {
-    public class CameraService: ICameraService
+    public class CameraService: MonoBehaviour
     {
-        private ICameraHumbleObject CameraHumbleObject;
-        private const float LinearDamping = 2f;
+        [InitializationRequired]
+        [SerializeField]
+        private Rigidbody Rigidbody { get; set; }
+        [InitializationRequired]
+        [SerializeField]
+        private Camera Camera { get; set; }
 
-        public CameraService(ICameraHumbleObject cameraHumbleObject)
+        private const float LINEAR_DAMPING = 2f;
+
+        private void Awake()
         {
-            CameraHumbleObject = cameraHumbleObject;
-            cameraHumbleObject.RigidBodySetDamping(LinearDamping);
+            Rigidbody = GetComponent<Rigidbody>();
+            Camera = GetComponent<Camera>();
+            Rigidbody.linearDamping = LINEAR_DAMPING;
+        }
+
+        private void Start()
+        {
+            this.CheckInitializeRequired();
         }
 
         public bool ScreenToWorldPoint(Vector2 mousePosition, out Ray ray)
         {
-            Ray? result = CameraHumbleObject.CameraScreenPointToRay(mousePosition);
+            Ray? result = Camera.ScreenPointToRay(mousePosition);
             if (result == null)
             {
                 ray = new Ray();
@@ -30,7 +41,7 @@ namespace Source.GamePlay.Services
         public void OnMove(Vector2 direction)
         {
             Vector3 velocity = (new Vector3(direction.x, 0f, direction.y)) * Time.deltaTime * 500f;
-            CameraHumbleObject.RigidBodyAddForce(velocity);
+            Rigidbody.AddForce(velocity);
         }
     }
 }

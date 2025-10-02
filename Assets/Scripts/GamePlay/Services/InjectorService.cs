@@ -1,21 +1,18 @@
-using Source.GamePlay.Services.Interfaces;
-using Source.Shared.Services.Interfaces;
+using Source.Shared.Services;
+using UnityEngine;
 
 namespace Source.GamePlay.Services
 {
-    public class InjectorService
+    public class InjectorService: MonoBehaviour
     {
-        private IInputService InputService;
-        private IGamePlayService GamePlayService; 
-        private ICameraService CameraService;
-        private IUnitManagerService UnitManagerService;
+        private InputService InputService { get; set; }
+        private GamePlayService GamePlayService { get; set; }
+        private CameraService CameraService { get; set; }
+        private UnitManagerService UnitManagerService { get; set; }
 
-        public InjectorService(IInputService inputService, ICameraService cameraService, IGamePlayService gamePlayService, IUnitManagerService unitManagerService)
+        private void Awake()
         {
-            InputService = inputService;
-            CameraService = cameraService;
-            GamePlayService = gamePlayService;
-            UnitManagerService = unitManagerService;
+            UnitManagerService = new UnitManagerService();
 
             InjectDependencies();
         }
@@ -24,11 +21,6 @@ namespace Source.GamePlay.Services
         {
             InputService.InjectDependencies(GamePlayService);
             GamePlayService.InjectDependencies(CameraService, UnitManagerService);
-        }
-
-        public void OnUpdate()
-        {
-            InputService.OnUpdate();
         }
     }
 }

@@ -1,25 +1,12 @@
-using Source.GamePlay.HumbleObjects.Interfaces;
-using Source.GamePlay.Services;
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Source.GamePlay.HumbleObjects
+namespace Source.GamePlay.Services
 {
-    public class UnitHumbleObject : MonoBehaviour, IUnitHumbleObject
+    public class UnitMovementService : MonoBehaviour
     {
         [SerializeField]
         private NavMeshAgent NavMeshAgent;
-
-        public UnitService GetUnit(Guid playerId, float health, float? speed)
-        {
-            return new UnitService(playerId, health, speed, this);
-        }
-
-        public Vector3 GetPosition()
-        {
-            return this.transform.position;
-        }
 
         public void MoveUnit(Vector3 destination)
         {
