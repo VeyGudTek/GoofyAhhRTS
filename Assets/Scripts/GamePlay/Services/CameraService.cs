@@ -18,12 +18,12 @@ namespace Source.GamePlay.Services
         {
             Rigidbody = GetComponent<Rigidbody>();
             Camera = GetComponent<Camera>();
-            Rigidbody.linearDamping = LINEAR_DAMPING;
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
+            Rigidbody.linearDamping = LINEAR_DAMPING;
         }
 
         public bool ScreenToWorldPoint(Vector2 mousePosition, out Ray ray)
