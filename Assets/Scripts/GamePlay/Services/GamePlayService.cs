@@ -38,8 +38,18 @@ namespace Source.GamePlay.Services
             Debug.Log($"Hit GameObject: {contact.HitGameObject} | WorldPoint: {contact.Point} | GameObject: {contact.GameObject?.name}");
         }
 
-        public void PrimaryHoldEvent() { }
-        public void PrimaryReleaseEvent() { }
+        public void PrimaryHoldEvent() 
+        {
+            if ( SelectionService == null) return;
+
+            SelectionDto selection = SelectionService.ContinueSelection();
+        }
+
+        public void PrimaryReleaseEvent() 
+        {
+            if (SelectionService == null) return;
+            SelectionService.EndSelection();
+        }
         public void SecondaryClickEvent() { Debug.Log("SecondaryClick"); }
         public void SecondaryHoldEvent() { }
         public void SecondaryReleaseEvent() { }

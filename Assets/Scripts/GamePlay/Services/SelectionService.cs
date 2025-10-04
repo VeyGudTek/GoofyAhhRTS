@@ -34,7 +34,7 @@ namespace Source.GamePlay.Services
 
         private const string UILayerName = "UI";
         private const string UnitLayerName = "Unit";
-        private const string GroundLayerName = "Ground";
+        private const string EnvironmentLayerName = "Environment";
 
         public void InjectDependencies(CameraService cameraService, GameObject selectorObject)
         {
@@ -45,6 +45,7 @@ namespace Source.GamePlay.Services
         private void Start()
         {
             this.CheckInitializeRequired();
+            SelectorObject.SetActive(false);
         }
 
         public ContactDto StartSelection()
@@ -77,6 +78,7 @@ namespace Source.GamePlay.Services
         public void EndSelection()
         {
             StoredSelectionPoint = null;
+            SelectorObject.SetActive(false);
         }
 
         private ContactDto GetUnitSelection()
@@ -87,7 +89,7 @@ namespace Source.GamePlay.Services
 
         private ContactDto GetGroundSelection()
         {
-            int layerMaskToHit = LayerMask.GetMask(GroundLayerName);
+            int layerMaskToHit = LayerMask.GetMask(EnvironmentLayerName);
             return GetMouseWorldPoint(layerMaskToHit);
         }
 

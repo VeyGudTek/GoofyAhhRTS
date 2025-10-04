@@ -50,7 +50,7 @@ namespace Source.Shared.Services
             }
             if (Primary.WasPerformedThisFrame())
             {
-                InputProcessorService.PrimaryReleaseEvent();
+                InputProcessorService.PrimaryClickEvent();
             }
             if (Primary.IsInProgress())
             {
@@ -58,7 +58,7 @@ namespace Source.Shared.Services
             }
             if (Primary.WasReleasedThisFrame())
             {
-                InputProcessorService.PrimaryClickEvent();
+                InputProcessorService.PrimaryReleaseEvent();
             }
         }
 
@@ -70,7 +70,7 @@ namespace Source.Shared.Services
             }
             if (Secondary.WasPerformedThisFrame())
             {
-                InputProcessorService.SecondaryReleaseEvent();
+                InputProcessorService.SecondaryClickEvent();
             }
             if (Secondary.IsInProgress())
             {
@@ -78,7 +78,7 @@ namespace Source.Shared.Services
             }
             if (Secondary.WasReleasedThisFrame())
             {
-                InputProcessorService.SecondaryClickEvent();
+                InputProcessorService.SecondaryReleaseEvent();
             }
         }
 
