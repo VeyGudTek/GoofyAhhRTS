@@ -2,34 +2,35 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using Source.GamePlay.Services.Interfaces;
 
 namespace Source.GamePlay.Services
 {
-    public class UnitManagerService: IUnitManagerService
+    public class UnitManagerService
     {
-        public void SelectUnit(UnitService selectedUnit, List<UnitService> units)
+        private List<UnitService> Units { get; set; } = new List<UnitService>();
+
+        public void SelectUnit(UnitService selectedUnit)
         {
-            foreach (UnitService unit in units.Where(u => u.Selected))
+            foreach (UnitService unit in Units.Where(u => u.Selected))
             {
-                unit.Deselect();
+                unit.Selected = false;
             }
             if (selectedUnit != null)
             {
-                selectedUnit.Select();
+                selectedUnit.Selected = true;
             }
         }
 
-        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd, List<UnitService> units)
+        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd)
         {
-            IEnumerable<UnitService> unitsToSelect = units.Where(u => 
+            IEnumerable<UnitService> unitsToSelect = Units.Where(u => 
                 CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
                 u.PlayerId == playerId
             );
 
             foreach (UnitService unit in unitsToSelect)
             {
-                unit.Select();
+                unit.Selected = true;
             }
         }
 
@@ -46,9 +47,9 @@ namespace Source.GamePlay.Services
             return true;
         }
 
-        public void MoveUnits(Guid playerId, Vector3 destination, List<UnitService> units)
+        public void MoveUnits(Guid playerId, Vector3 destination)
         {
-            IEnumerable<UnitService> unitsToMove = units.Where(u => 
+            IEnumerable<UnitService> unitsToMove = Units.Where(u => 
                 u.PlayerId == playerId &&
                 u.Selected
             );

@@ -130,9 +130,9 @@ GameObject:
   - component: {fileID: 73509405}
   - component: {fileID: 73509404}
   - component: {fileID: 73509403}
-  - component: {fileID: 73509409}
   - component: {fileID: 73509407}
   - component: {fileID: 73509408}
+  - component: {fileID: 73509409}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -294,11 +294,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 73509402}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7849b2ba6e57644f9866ff769dba2ac, type: 3}
+  m_Script: {fileID: 11500000, guid: 5857e56a6f3a5ef409e0656fa0cc4636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rigidbody: {fileID: 73509408}
-  Camera: {fileID: 73509404}
 --- !u!1 &197644245
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,6 +665,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1066151762}
+  - component: {fileID: 1066151765}
   - component: {fileID: 1066151764}
   - component: {fileID: 1066151763}
   m_Layer: 0
@@ -700,11 +699,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1066151760}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10fa0979f12c6554abc476bdefbdd9f2, type: 3}
+  m_Script: {fileID: 11500000, guid: f3f0dc1892f22aa41b705b93910c4798, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraHumbleObject: {fileID: 73509409}
-  InputHumbleObject: {fileID: 1066151764}
 --- !u!114 &1066151764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,9 +711,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1066151760}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56a0c19a7f569b44d800ca9f4c4c2182, type: 3}
+  m_Script: {fileID: 11500000, guid: 07331c22b77cc5449870f7219f032e23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1066151765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066151760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f64a0e9647c2f247b2de562d2079ffb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InputService: {fileID: 1066151763}
+  GamePlayService: {fileID: 1066151764}
+  CameraService: {fileID: 73509409}
 --- !u!1 &1074222702
 GameObject:
   m_ObjectHideFlags: 0
