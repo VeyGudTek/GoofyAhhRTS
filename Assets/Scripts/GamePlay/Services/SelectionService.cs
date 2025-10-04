@@ -1,4 +1,5 @@
 using Source.Shared.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -35,15 +36,15 @@ namespace Source.GamePlay.Services
         private const string UnitLayerName = "Unit";
         private const string GroundLayerName = "Ground";
 
-        private void Awake()
-        {
-            this.CheckInitializeRequired();
-        }
-
         public void InjectDependencies(CameraService cameraService, GameObject selectorObject)
         {
             CameraService = cameraService;
             SelectorObject = selectorObject;
+        }
+
+        private void Start()
+        {
+            this.CheckInitializeRequired();
         }
 
         public ContactDto StartSelection()
@@ -56,19 +57,26 @@ namespace Source.GamePlay.Services
             return GetUnitSelection();
         }
 
-        public SelectionDto EndSelection()
+        public SelectionDto ContinueSelection()
         {
             SelectionDto selectionDto = new SelectionDto();
-            if (StoredSelectionPoint == null) return selectionDto;
-
             ContactDto groundContact = GetGroundSelection();
-            if (!groundContact.HitGameObject) return selectionDto;
 
-            selectionDto.SuccessfulSelect = true;
-            selectionDto.Corner1 = (Vector3)StoredSelectionPoint;
-            selectionDto.Corner2 = groundContact.Point;
+            if (StoredSelectionPoint != null && groundContact.HitGameObject)
+            {
+                selectionDto.SuccessfulSelect = true;
+                selectionDto.Corner1 = (Vector3)StoredSelectionPoint;
+                selectionDto.Corner2 = groundContact.Point;
+            }
+
+            UpdateSelectorObject(selectionDto);
 
             return selectionDto;
+        }
+
+        public void EndSelection()
+        {
+            StoredSelectionPoint = null;
         }
 
         private ContactDto GetUnitSelection()
@@ -114,6 +122,28 @@ namespace Source.GamePlay.Services
             EventSystem.current.RaycastAll(eventData, raycastResults);
 
             return raycastResults.Where(r => r.gameObject.layer == uiLayer).Count() > 0;
+        }
+
+        private void UpdateSelectorObject(SelectionDto selection)
+        {
+            if (SelectorObject == null) return;
+
+            if (!selection.SuccessfulSelect)
+            {
+                SelectorObject.SetActive(false);
+                return;
+            }
+
+            float length = Mathf.Abs(selection.Corner1.x - selection.Corner2.x);
+            float height = Mathf.Abs(selection.Corner1.z - selection.Corner2.z);
+
+            float midX = (selection.Corner1.x + selection.Corner2.x) / 2;
+            float prevY = SelectorObject.transform.position.y;
+            float midZ = (selection.Corner1.z + selection.Corner2.z) / 2;
+
+            SelectorObject.SetActive(true);
+            SelectorObject.transform.position = new Vector3(midX, prevY, midZ);
+            SelectorObject.transform.localScale = new Vector3(length, 1, height);
         }
     }
 }
