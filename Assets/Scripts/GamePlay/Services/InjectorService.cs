@@ -6,6 +6,12 @@ namespace Source.GamePlay.Services
 {
     public class InjectorService: MonoBehaviour
     {
+        [InitializationRequired]
+        [SerializeField]
+        GameObject SelectorObject;
+        [SerializeField]
+        [InitializationRequired]
+        SelectionService SelectionService;
         [SerializeField]
         [InitializationRequired]
         private InputService InputService;
@@ -27,8 +33,9 @@ namespace Source.GamePlay.Services
 
         private void InjectDependencies()
         {
+            SelectionService.InjectDependencies(CameraService, SelectorObject);
             InputService.InjectDependencies(GamePlayService);
-            GamePlayService.InjectDependencies(CameraService, UnitManagerService);
+            GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService);
         }
     }
 }

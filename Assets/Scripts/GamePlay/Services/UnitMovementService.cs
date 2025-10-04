@@ -5,8 +5,11 @@ namespace Source.GamePlay.Services
 {
     public class UnitMovementService : MonoBehaviour
     {
-        [SerializeField]
         private NavMeshAgent NavMeshAgent;
+        private void Awake()
+        {
+            NavMeshAgent = GetComponent<NavMeshAgent>();
+        }
 
         public void MoveUnit(Vector3 destination)
         {

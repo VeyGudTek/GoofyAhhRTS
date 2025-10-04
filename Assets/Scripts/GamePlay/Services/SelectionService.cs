@@ -1,4 +1,3 @@
-using Source.GamePlay.Services;
 using Source.Shared.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,9 +40,10 @@ namespace Source.GamePlay.Services
             this.CheckInitializeRequired();
         }
 
-        public void InjectDependencies(CameraService cameraService)
+        public void InjectDependencies(CameraService cameraService, GameObject selectorObject)
         {
             CameraService = cameraService;
+            SelectorObject = selectorObject;
         }
 
         public ContactDto StartSelection()

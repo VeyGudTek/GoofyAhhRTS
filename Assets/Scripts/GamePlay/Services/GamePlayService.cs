@@ -1,10 +1,6 @@
 using Source.Shared.Services.Interfaces;
 using Source.Shared.Utilities;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 namespace Source.GamePlay.Services
 {
@@ -17,10 +13,11 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         private SelectionService SelectionService { get; set; }
 
-        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService)
+        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService)
         {
             CameraService = cameraService;
             UnitManagerService = unitManagerService;
+            SelectionService = selectionService;
         }
 
         private void Awake()
@@ -35,6 +32,8 @@ namespace Source.GamePlay.Services
 
         public void PrimaryClickEvent()
         {
+            if (SelectionService == null) return;
+
             ContactDto contact = SelectionService.StartSelection();
             Debug.Log($"Hit GameObject: {contact.HitGameObject} | WorldPoint: {contact.Point} | GameObject: {contact.GameObject?.name}");
         }
