@@ -1,5 +1,4 @@
 using Source.Shared.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,7 +24,7 @@ namespace Source.GamePlay.Services
     public class SelectionService : MonoBehaviour
     {
         [InitializationRequired]
-        private GameObject SelectorObject { get; set; }
+        private GameObject SelectionObject { get; set; }
 
         [InitializationRequired]
         private CameraService CameraService { get; set; }
@@ -36,16 +35,16 @@ namespace Source.GamePlay.Services
         private const string UnitLayerName = "Unit";
         private const string EnvironmentLayerName = "Environment";
 
-        public void InjectDependencies(CameraService cameraService, GameObject selectorObject)
+        public void InjectDependencies(CameraService cameraService, GameObject selectionObject)
         {
             CameraService = cameraService;
-            SelectorObject = selectorObject;
+            SelectionObject = selectionObject;
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
-            SelectorObject.SetActive(false);
+            SelectionObject.SetActive(false);
         }
 
         public ContactDto StartSelection()
@@ -78,7 +77,7 @@ namespace Source.GamePlay.Services
         public void EndSelection()
         {
             StoredSelectionPoint = null;
-            SelectorObject.SetActive(false);
+            SelectionObject.SetActive(false);
         }
 
         private ContactDto GetUnitSelection()
@@ -128,11 +127,11 @@ namespace Source.GamePlay.Services
 
         private void UpdateSelectorObject(SelectionDto selection)
         {
-            if (SelectorObject == null) return;
+            if (SelectionObject == null) return;
 
             if (!selection.SuccessfulSelect)
             {
-                SelectorObject.SetActive(false);
+                SelectionObject.SetActive(false);
                 return;
             }
 
@@ -140,12 +139,12 @@ namespace Source.GamePlay.Services
             float height = Mathf.Abs(selection.Corner1.z - selection.Corner2.z);
 
             float midX = (selection.Corner1.x + selection.Corner2.x) / 2;
-            float prevY = SelectorObject.transform.position.y;
+            float prevY = SelectionObject.transform.position.y;
             float midZ = (selection.Corner1.z + selection.Corner2.z) / 2;
-
-            SelectorObject.SetActive(true);
-            SelectorObject.transform.position = new Vector3(midX, prevY, midZ);
-            SelectorObject.transform.localScale = new Vector3(length, 1, height);
+                
+            SelectionObject.SetActive(true);
+            SelectionObject.transform.position = new Vector3(midX, prevY, midZ);
+            SelectionObject.transform.localScale = new Vector3(length, 1, height);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Source.GamePlay.Services
     {
         [InitializationRequired]
         [SerializeField]
-        GameObject SelectorObject;
+        GameObject SelectionObject;
         [SerializeField]
         [InitializationRequired]
         SelectionService SelectionService;
@@ -33,7 +33,7 @@ namespace Source.GamePlay.Services
 
         private void InjectDependencies()
         {
-            SelectionService.InjectDependencies(CameraService, SelectorObject);
+            SelectionService.InjectDependencies(CameraService, SelectionObject);
             InputService.InjectDependencies(GamePlayService);
             GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService);
         }

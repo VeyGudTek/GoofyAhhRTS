@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 197644248}
   - component: {fileID: 197644247}
   - component: {fileID: 197644246}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: NonMovable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -728,7 +728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f64a0e9647c2f247b2de562d2079ffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectorObject: {fileID: 1440845059}
+  SelectionObject: {fileID: 1440845059}
   SelectionService: {fileID: 1066151766}
   InputService: {fileID: 1066151763}
   GamePlayService: {fileID: 1066151764}
