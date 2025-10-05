@@ -31,22 +31,22 @@ namespace Source.GamePlay.Services
             }
         }
 
-        public void PrimaryClickEvent()
+        public void PrimaryClickEvent(bool isShift)
         {
             if (SelectionService == null) return;
 
             ContactDto contact = SelectionService.StartSelection();
-            UnitManagerService.SelectUnit(contact.Unit);
+            UnitManagerService.SelectUnit(contact.Unit, !isShift);
         }
 
-        public void PrimaryHoldEvent() 
+        public void PrimaryHoldEvent(bool isShift) 
         {
             if ( SelectionService == null) return;
 
             SelectionDto selection = SelectionService.ContinueSelection();
             if ( !selection.SuccessfulSelect ) return;
 
-            UnitManagerService.SelectUnits(Guid.Empty, selection.Corner1, selection.Corner2);
+            UnitManagerService.SelectUnits(Guid.Empty, selection.Corner1, selection.Corner2, !isShift);
         }
 
         public void PrimaryReleaseEvent() 

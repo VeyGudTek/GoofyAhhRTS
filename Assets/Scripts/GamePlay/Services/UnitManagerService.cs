@@ -16,7 +16,7 @@ namespace Source.GamePlay.Services
         private const string EnvironmentLayerName = "Environment";
 
         private List<UnitService> Units { get; set; } = new List<UnitService>();
-        private UnitService OriginalSelectedUnit = null;
+        private List<UnitService> ManuallySelectedUnits = new List<UnitService>();
 
         private void Start()
         {
@@ -40,30 +40,45 @@ namespace Source.GamePlay.Services
             }
         }
 
-        public void SelectUnit(UnitService selectedUnit)
+        public void SelectUnit(UnitService selectedUnit, bool deselectPrevious)
         {
-            OriginalSelectedUnit = null;
-            foreach (UnitService unit in Units)
+            if (deselectPrevious)
             {
-                unit.DeSelect();
+                ManuallySelectedUnits.Clear();
+                foreach (UnitService unit in Units)
+                {
+                    unit.DeSelect();
+                }
             }
+            
             if (selectedUnit != null)
             {
-                OriginalSelectedUnit = selectedUnit;
-                selectedUnit.Select();
+                if (selectedUnit.Selected)
+                {
+                    ManuallySelectedUnits.Remove(selectedUnit);
+                    selectedUnit.DeSelect();
+                }
+                else
+                {
+                    ManuallySelectedUnits.Add(selectedUnit);
+                    selectedUnit.Select();
+                }
             }
         }
 
-        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd)
+        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd, bool deselectUnits)
         {
             IEnumerable<UnitService> unitsToSelect = Units.Where(u => 
                 CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
                 u.PlayerId == playerId
             );
 
-            foreach (UnitService unit in Units.Where(u => u != OriginalSelectedUnit && !unitsToSelect.Contains(u)))
+            if (deselectUnits)
             {
-                unit.DeSelect();
+                foreach (UnitService unit in Units.Where(u => !ManuallySelectedUnits.Contains(u) && !unitsToSelect.Contains(u)))
+                {
+                    unit.DeSelect();
+                }
             }
 
             foreach (UnitService unit in unitsToSelect)

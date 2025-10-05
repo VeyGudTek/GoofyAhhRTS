@@ -4,8 +4,8 @@ namespace Source.Shared.Services.Interfaces
 {
     public interface IInputProcessorService
     {
-        void PrimaryClickEvent();
-        void PrimaryHoldEvent();
+        void PrimaryClickEvent(bool isShift);
+        void PrimaryHoldEvent(bool isShift);
         void PrimaryReleaseEvent();
         void SecondaryClickEvent();
         void SecondaryHoldEvent();
