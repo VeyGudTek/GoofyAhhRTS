@@ -52,13 +52,12 @@ namespace Source.GamePlay.Services
 
         public void SecondaryClickEvent() 
         { 
-            //All Temp Code
             if (SelectionService == null) return;
 
             ContactDto contact = SelectionService.GetGroundSelection();
             if (!contact.HitGameObject) return;
 
-            UnitManagerService.TempSpawnUnit(contact.Point);
+            UnitManagerService.MoveUnits(Guid.Empty, contact.Point);
         }
 
         public void SecondaryHoldEvent() { }

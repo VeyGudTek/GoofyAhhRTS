@@ -12,19 +12,34 @@ namespace Source.GamePlay.Services
         [SerializeField]
         GameObject TempUnit;
 
+        private const float SpawnRayYOrigin = 100f;
+        private const string EnvironmentLayerName = "Environment";
+
         private List<UnitService> Units { get; set; } = new List<UnitService>();
 
         private void Start()
         {
             this.CheckInitializeRequired();
+
+            for (int i = -7; i < 7; i++)
+            {
+                SpawnUnit(new Vector2(i, i));
+            }
         }
 
-        public void TempSpawnUnit(Vector3 spawnLocation)
+        private void SpawnUnit(Vector2 spawnLocation)
         {
             if (TempUnit == null) return;
 
-            GameObject newUnit = Instantiate(TempUnit, spawnLocation, Quaternion.identity, this.transform);
-            Units.Add(newUnit.GetComponent<UnitService>());
+            RaycastHit hit;
+            int layerMaskToHit = LayerMask.GetMask(EnvironmentLayerName);
+            Vector3 origin = new Vector3(spawnLocation.x, SpawnRayYOrigin, spawnLocation.y);
+
+            if (Physics.Raycast(origin, Vector3.down, out hit, Mathf.Infinity, layerMaskToHit))
+            {
+                GameObject newUnit = Instantiate(TempUnit, hit.point, Quaternion.identity, this.transform);
+                Units.Add(newUnit.GetComponent<UnitService>());
+            }
         }
 
         public void SelectUnit(UnitService selectedUnit)
