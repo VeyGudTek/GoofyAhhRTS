@@ -34,7 +34,7 @@ namespace Source.GamePlay.Services.Unit
             {
                 GameObject newUnit = Instantiate(TempUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
-                Units.Add(newUnit.GetComponent<UnitService>());
+                Units.Add(unitService);
                 unitService.PlayerId = playerId;
             }
         }
