@@ -20,14 +20,9 @@ namespace Source.GamePlay.Services
         private void Start()
         {
             this.CheckInitializeRequired();
-
-            for (int i = -7; i < 7; i++)
-            {
-                SpawnUnit(new Vector2(i, i));
-            }
         }
 
-        private void SpawnUnit(Vector2 spawnLocation)
+        public void SpawnUnit(Guid playerId, Vector2 spawnLocation)
         {
             if (TempUnit == null) return;
 
@@ -38,7 +33,9 @@ namespace Source.GamePlay.Services
             if (Physics.Raycast(origin, Vector3.down, out hit, Mathf.Infinity, layerMaskToHit))
             {
                 GameObject newUnit = Instantiate(TempUnit, hit.point, Quaternion.identity, this.transform);
+                UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(newUnit.GetComponent<UnitService>());
+                unitService.PlayerId = playerId;
             }
         }
 

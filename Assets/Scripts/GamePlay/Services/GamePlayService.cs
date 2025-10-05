@@ -24,6 +24,11 @@ namespace Source.GamePlay.Services
         private void Start()
         {
             this.CheckInitializeRequired();
+
+            for (int i = -7; i < 7; i++)
+            {
+                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, i));
+            }
         }
 
         public void PrimaryClickEvent()
