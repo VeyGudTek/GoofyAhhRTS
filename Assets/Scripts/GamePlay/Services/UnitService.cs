@@ -4,25 +4,49 @@ using UnityEngine;
 
 namespace Source.GamePlay.Services
 {
-    public class UnitService: MonoBehaviour
+    public class UnitService : MonoBehaviour
     {
         [SerializeField]
         [InitializationRequired]
-        UnitMovementService UnitMovementService { get; set; }
+        private UnitMovementService UnitMovementService;
+
+        [SerializeField]
+        [InitializationRequired]
+        private GameObject SelectionIdicator;
 
         private float Health { get; set; }
         private float? Speed { get; set; }
         public Guid PlayerId { get; private set; }
-        public bool Selected { get; set; } = false;
+        public bool Selected { get; private set; } = false;
+
+        private void Start()
+        {
+            this.CheckInitializeRequired();
+            SelectionIdicator.SetActive(false);
+        }
 
         public void MoveUnit(Vector3 destination)
         {
+            if (UnitMovementService == null) return;
+
             UnitMovementService.MoveUnit(destination);
         }
 
         public Vector3 GetPosition()
         {
             return transform.position;
+        }
+
+        public void Select()
+        {
+            Selected = true;
+            SelectionIdicator.SetActive(true);
+        }
+
+        public void DeSelect()
+        {
+            Selected = false;
+            SelectionIdicator.SetActive(false);
         }
     }
 }

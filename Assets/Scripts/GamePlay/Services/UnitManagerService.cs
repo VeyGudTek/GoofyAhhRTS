@@ -2,22 +2,40 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Source.Shared.Utilities;
 
 namespace Source.GamePlay.Services
 {
-    public class UnitManagerService
+    public class UnitManagerService : MonoBehaviour
     {
+        [InitializationRequired]
+        [SerializeField]
+        GameObject TempUnit;
+
         private List<UnitService> Units { get; set; } = new List<UnitService>();
+
+        private void Start()
+        {
+            this.CheckInitializeRequired();
+        }
+
+        public void TempSpawnUnit(Vector3 spawnLocation)
+        {
+            if (TempUnit == null) return;
+
+            GameObject newUnit = Instantiate(TempUnit, spawnLocation, Quaternion.identity, this.transform);
+            Units.Add(newUnit.GetComponent<UnitService>());
+        }
 
         public void SelectUnit(UnitService selectedUnit)
         {
             foreach (UnitService unit in Units.Where(u => u.Selected))
             {
-                unit.Selected = false;
+                unit.DeSelect();
             }
             if (selectedUnit != null)
             {
-                selectedUnit.Selected = true;
+                selectedUnit.Select();
             }
         }
 
@@ -30,7 +48,7 @@ namespace Source.GamePlay.Services
 
             foreach (UnitService unit in unitsToSelect)
             {
-                unit.Selected = true;
+                unit.Select();
             }
         }
 
