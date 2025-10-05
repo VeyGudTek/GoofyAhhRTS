@@ -12,7 +12,7 @@ namespace Source.GamePlay.Services
 
         [SerializeField]
         [InitializationRequired]
-        private GameObject SelectionIdicator;
+        private GameObject SelectionIndicator;
 
         private float Health { get; set; }
         private float? Speed { get; set; }
@@ -22,7 +22,7 @@ namespace Source.GamePlay.Services
         private void Start()
         {
             this.CheckInitializeRequired();
-            SelectionIdicator.SetActive(false);
+            SelectionIndicator.SetActive(false);
         }
 
         public void MoveUnit(Vector3 destination)
@@ -40,13 +40,13 @@ namespace Source.GamePlay.Services
         public void Select()
         {
             Selected = true;
-            SelectionIdicator.SetActive(true);
+            SelectionIndicator.SetActive(true);
         }
 
         public void DeSelect()
         {
             Selected = false;
-            SelectionIdicator.SetActive(false);
+            SelectionIndicator.SetActive(false);
         }
     }
 }
