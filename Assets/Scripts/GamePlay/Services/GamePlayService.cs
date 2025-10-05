@@ -1,5 +1,6 @@
 using Source.Shared.Services.Interfaces;
 using Source.Shared.Utilities;
+using System;
 using UnityEngine;
 
 namespace Source.GamePlay.Services
@@ -38,6 +39,9 @@ namespace Source.GamePlay.Services
             if ( SelectionService == null) return;
 
             SelectionDto selection = SelectionService.ContinueSelection();
+            if ( !selection.SuccessfulSelect ) return;
+
+            UnitManagerService.SelectUnits(Guid.Empty, selection.Corner1, selection.Corner2);
         }
 
         public void PrimaryReleaseEvent() 

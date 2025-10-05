@@ -29,7 +29,7 @@ namespace Source.GamePlay.Services
 
         public void SelectUnit(UnitService selectedUnit)
         {
-            foreach (UnitService unit in Units.Where(u => u.Selected))
+            foreach (UnitService unit in Units)
             {
                 unit.DeSelect();
             }
@@ -41,6 +41,11 @@ namespace Source.GamePlay.Services
 
         public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd)
         {
+            foreach (UnitService unit in Units)
+            {
+                unit.DeSelect();
+            }
+
             IEnumerable<UnitService> unitsToSelect = Units.Where(u => 
                 CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
                 u.PlayerId == playerId
@@ -54,15 +59,23 @@ namespace Source.GamePlay.Services
 
         private static bool CheckSelectArea(Vector3 unit, Vector3 selectionStart, Vector3 selectionEnd)
         {
-            if (unit.x < selectionStart.x || unit.x > selectionEnd.x)
+            if (!ValueIsBetween(unit.x, selectionStart.x, selectionEnd.x))
             {
                 return false;
             } 
-            if (unit.z < selectionStart.z || unit.z > selectionEnd.z)
+            if (!ValueIsBetween(unit.z, selectionStart.z, selectionEnd.z))
             {
                 return false;
             }
             return true;
+        }
+
+        private static bool ValueIsBetween(float value, float end1, float end2)
+        {
+            float max = Mathf.Max(end1, end2);
+            float min = Mathf.Min(end1, end2);
+
+            return (value >= min && value <= max);
         }
 
         public void MoveUnits(Guid playerId, Vector3 destination)

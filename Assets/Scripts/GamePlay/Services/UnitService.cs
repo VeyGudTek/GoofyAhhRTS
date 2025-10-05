@@ -17,7 +17,7 @@ namespace Source.GamePlay.Services
 
         private float Health { get; set; }
         private float? Speed { get; set; }
-        public Guid PlayerId { get; private set; }
+        public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
 
         private void Awake()
