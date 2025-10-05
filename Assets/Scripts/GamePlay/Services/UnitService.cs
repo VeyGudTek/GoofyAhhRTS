@@ -45,11 +45,16 @@ namespace Source.GamePlay.Services
             this.transform.position = newPos;
         }
 
-        public void MoveUnit(Vector3 destination)
+        public void MoveUnit(Vector3 destination, float stoppingDistance)
         {
             if (UnitMovementService == null) return;
 
-            UnitMovementService.MoveUnit(destination);
+            UnitMovementService.MoveUnit(destination, stoppingDistance);
+        }
+
+        public float GetArea()
+        {
+            return HitBox == null ? 0f : HitBox.size.x * HitBox.size.z;
         }
 
         public PositionDto GetPosition()

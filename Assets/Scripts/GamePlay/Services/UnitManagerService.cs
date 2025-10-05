@@ -14,7 +14,6 @@ namespace Source.GamePlay.Services
 
         private const float SpawnRayYOrigin = 100f;
         private const string EnvironmentLayerName = "Environment";
-
         private List<UnitService> Units { get; set; } = new List<UnitService>();
         private List<UnitService> ManuallySelectedUnits = new List<UnitService>();
 
@@ -115,9 +114,14 @@ namespace Source.GamePlay.Services
                 u.Selected
             );
 
+            float stoppingDistance = unitsToMove.Aggregate(0f, 
+                (total, currUnit) => total + currUnit.GetArea(), 
+                total => Mathf.Sqrt(total / 4f)
+            );
+
             foreach (UnitService unit in unitsToMove)
             {
-                unit.MoveUnit(destination);
+                unit.MoveUnit(destination, stoppingDistance);
             }
         }
     }
