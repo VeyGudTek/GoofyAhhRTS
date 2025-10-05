@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2782183844700607878}
   - component: {fileID: 7116302771280120886}
   - component: {fileID: 8202670452493377245}
+  - component: {fileID: -384323498120774872}
   m_Layer: 6
   m_Name: Unit
   m_TagString: Untagged
@@ -63,6 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b71f4648a5ca9c4478ef0b9d41213876, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Movement: 1
 --- !u!65 &8202670452493377245
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -84,6 +86,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.5806873, z: 1}
   m_Center: {x: 0, y: -0.02871263, z: 0}
+--- !u!195 &-384323498120774872
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4590323852618973426}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 0
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &5301969090425376558
 GameObject:
   m_ObjectHideFlags: 0
