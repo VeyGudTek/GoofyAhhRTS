@@ -9,20 +9,34 @@ namespace Source.GamePlay.Services
         [SerializeField]
         [InitializationRequired]
         private UnitMovementService UnitMovementService;
-
         [SerializeField]
         [InitializationRequired]
         private GameObject SelectionIndicator;
+        [InitializationRequired]
+        private BoxCollider HitBox;
 
         private float Health { get; set; }
         private float? Speed { get; set; }
         public Guid PlayerId { get; private set; }
         public bool Selected { get; private set; } = false;
 
+        private void Awake()
+        {
+            HitBox = GetComponent<BoxCollider>();
+        }
+
         private void Start()
         {
             this.CheckInitializeRequired();
             SelectionIndicator.SetActive(false);
+            SetPosition();
+        }
+
+        private void SetPosition()
+        {
+            Vector3 newPos = this.transform.position;
+            newPos.y += HitBox.size.y / 2f;
+            this.transform.position = newPos;
         }
 
         public void MoveUnit(Vector3 destination)
