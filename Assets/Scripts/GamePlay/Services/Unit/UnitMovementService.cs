@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Source.GamePlay.Services
+namespace Source.GamePlay.Services.Unit
 {
     public class UnitMovementService : MonoBehaviour
     {

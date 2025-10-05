@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4319329158920336560}
-  - component: {fileID: 2782183844700607878}
-  - component: {fileID: 7116302771280120886}
   - component: {fileID: 8202670452493377245}
   - component: {fileID: -384323498120774872}
+  - component: {fileID: 4925235821277857539}
+  - component: {fileID: 807173054178468924}
   m_Layer: 6
   m_Name: Unit
   m_TagString: Untagged
@@ -38,32 +38,6 @@ Transform:
   - {fileID: 5492989343691070169}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2782183844700607878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4590323852618973426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 178cd087173e781459adf14fa9b1589f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UnitMovementService: {fileID: 7116302771280120886}
-  SelectionIndicator: {fileID: 7562840356624071233}
---- !u!114 &7116302771280120886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4590323852618973426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b71f4648a5ca9c4478ef0b9d41213876, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &8202670452493377245
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -107,6 +81,32 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4925235821277857539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4590323852618973426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cfb869cdc224454b81544351349887b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UnitMovementService: {fileID: 807173054178468924}
+  SelectionIndicator: {fileID: 7562840356624071233}
+--- !u!114 &807173054178468924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4590323852618973426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dee2fae8c1cd1104aa502d5aae576ca7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5301969090425376558
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 using Source.Shared.Utilities;
 
-namespace Source.GamePlay.Services
+namespace Source.GamePlay.Services.Unit
 {
     public class UnitManagerService : MonoBehaviour
     {
