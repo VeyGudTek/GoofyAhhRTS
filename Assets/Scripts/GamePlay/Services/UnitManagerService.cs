@@ -57,25 +57,25 @@ namespace Source.GamePlay.Services
             }
         }
 
-        private static bool CheckSelectArea(Vector3 unit, Vector3 selectionStart, Vector3 selectionEnd)
+        private static bool CheckSelectArea(PositionDto unitPosition, Vector3 selectionStart, Vector3 selectionEnd)
         {
-            if (!ValueIsBetween(unit.x, selectionStart.x, selectionEnd.x))
+            if (!ValueIsBetween(unitPosition.Position.x, unitPosition.Radius, selectionStart.x, selectionEnd.x))
             {
                 return false;
             } 
-            if (!ValueIsBetween(unit.z, selectionStart.z, selectionEnd.z))
+            if (!ValueIsBetween(unitPosition.Position.z, unitPosition.Radius, selectionStart.z, selectionEnd.z))
             {
                 return false;
             }
             return true;
         }
 
-        private static bool ValueIsBetween(float value, float end1, float end2)
+        private static bool ValueIsBetween(float value, float radius, float end1, float end2)
         {
             float max = Mathf.Max(end1, end2);
             float min = Mathf.Min(end1, end2);
 
-            return (value >= min && value <= max);
+            return (value + radius >= min && value - radius <= max);
         }
 
         public void MoveUnits(Guid playerId, Vector3 destination)

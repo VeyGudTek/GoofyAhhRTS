@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace Source.GamePlay.Services
 {
+    public class PositionDto
+    {
+        public Vector3 Position { get; set; }
+        public float Radius { get; set; }
+    }
+
     public class UnitService : MonoBehaviour
     {
         [SerializeField]
@@ -46,9 +52,13 @@ namespace Source.GamePlay.Services
             UnitMovementService.MoveUnit(destination);
         }
 
-        public Vector3 GetPosition()
+        public PositionDto GetPosition()
         {
-            return transform.position;
+            return new PositionDto()
+            {
+                Position = this.transform.position,
+                Radius = HitBox == null ? 0f : HitBox.size.x / 2f
+            };
         }
 
         public void Select()
