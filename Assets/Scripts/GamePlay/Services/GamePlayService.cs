@@ -20,11 +20,6 @@ namespace Source.GamePlay.Services
             SelectionService = selectionService;
         }
 
-        private void Awake()
-        {
-            UnitManagerService = new UnitManagerService();
-        }
-
         private void Start()
         {
             this.CheckInitializeRequired();

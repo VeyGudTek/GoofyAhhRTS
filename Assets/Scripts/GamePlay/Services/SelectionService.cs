@@ -24,7 +24,8 @@ namespace Source.GamePlay.Services
     public class SelectionService : MonoBehaviour
     {
         [InitializationRequired]
-        private GameObject SelectionObject { get; set; }
+        [SerializeField]
+        private GameObject SelectionObject;
 
         [InitializationRequired]
         private CameraService CameraService { get; set; }
@@ -35,10 +36,9 @@ namespace Source.GamePlay.Services
         private const string UnitLayerName = "Unit";
         private const string EnvironmentLayerName = "Environment";
 
-        public void InjectDependencies(CameraService cameraService, GameObject selectionObject)
+        public void InjectDependencies(CameraService cameraService)
         {
             CameraService = cameraService;
-            SelectionObject = selectionObject;
         }
 
         private void Start()
