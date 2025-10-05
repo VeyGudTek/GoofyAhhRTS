@@ -138,6 +138,12 @@ namespace Source.GamePlay.Services
             float length = Mathf.Abs(selection.Corner1.x - selection.Corner2.x);
             float height = Mathf.Abs(selection.Corner1.z - selection.Corner2.z);
 
+            if ( length < .05f || height < .05f)
+            {
+                SelectionObject.SetActive(false);
+                return;
+            }
+
             float midX = (selection.Corner1.x + selection.Corner2.x) / 2;
             float prevY = SelectionObject.transform.position.y;
             float midZ = (selection.Corner1.z + selection.Corner2.z) / 2;
