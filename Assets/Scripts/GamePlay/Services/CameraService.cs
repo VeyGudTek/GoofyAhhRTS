@@ -6,10 +6,8 @@ namespace Source.GamePlay.Services
     public class CameraService: MonoBehaviour
     {
         [InitializationRequired]
-        [SerializeField]
         private Rigidbody Rigidbody { get; set; }
         [InitializationRequired]
-        [SerializeField]
         private Camera Camera { get; set; }
 
         private const float LINEAR_DAMPING = 2f;

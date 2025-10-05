@@ -1,99 +1,70 @@
 using Source.Shared.Services.Interfaces;
 using Source.Shared.Utilities;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 namespace Source.GamePlay.Services
 {
-    public class ContactDto
-    {
-        public bool HitGameObject = false;
-        public Vector3? Point = null;
-        public GameObject GameObject = null;
-    }
-
     public class GamePlayService: MonoBehaviour, IInputProcessorService
     {
         [InitializationRequired]
         private CameraService CameraService { get; set; }
         [InitializationRequired]
         private UnitManagerService UnitManagerService { get; set; }
+        [InitializationRequired]
+        private SelectionService SelectionService { get; set; }
 
-        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService)
+        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService)
         {
             CameraService = cameraService;
             UnitManagerService = unitManagerService;
-        }
-
-        private void Awake()
-        {
-            UnitManagerService = new UnitManagerService();
+            SelectionService = selectionService;
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
+
+            for (int i = -7; i < 7; i++)
+            {
+                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, i));
+            }
         }
 
-        public void PrimaryClickEvent()
+        public void PrimaryClickEvent(bool isShift)
         {
-            ContactDto contact = GetMouseWorldPoint();
-            if (contact != null)
-            {
-                Debug.Log($"Hit GameObject: {contact.HitGameObject} | WorldPoint: {contact.Point} | GameObject: {contact.GameObject?.name}");
-            }
+            if (SelectionService == null) return;
+
+            ContactDto contact = SelectionService.StartSelection();
+            UnitManagerService.SelectUnit(contact.Unit, !isShift);
         }
 
-        private ContactDto GetMouseWorldPoint()
+        public void PrimaryHoldEvent(bool isShift) 
         {
-            ContactDto contact = new ContactDto();
-            Vector2 mousePosition = Mouse.current.position.value;
-            if (CameraService == null)
-            {
-                return contact;
-            }
+            if ( SelectionService == null) return;
 
-            if (MouseIsOverUI(mousePosition))
-            {
-                return contact;
-            }
+            SelectionDto selection = SelectionService.ContinueSelection();
+            if ( !selection.SuccessfulSelect ) return;
 
-            Ray ray;
-            if (!CameraService.ScreenToWorldPoint(mousePosition, out ray))
-            {
-                return contact;
-            }
-
-            RaycastHit hit;
-            int layerMaskToHit = LayerMask.GetMask("Default");
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMaskToHit))
-            {
-                contact.HitGameObject = true;
-                contact.Point = hit.point;
-                contact.GameObject = hit.collider.gameObject;
-            }
-
-            return contact;
+            UnitManagerService.SelectUnits(Guid.Empty, selection.Corner1, selection.Corner2, !isShift);
         }
 
-        private bool MouseIsOverUI(Vector2 mousePosition)
+        public void PrimaryReleaseEvent() 
         {
-            int uiLayer = LayerMask.NameToLayer("UI");
-
-            PointerEventData eventData = new PointerEventData(EventSystem.current);
-            eventData.position = Mouse.current.position.value;
-            List<RaycastResult> raycastResults = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(eventData, raycastResults);
-
-            return raycastResults.Where(r => r.gameObject.layer == uiLayer).Count() > 0;
+            if (SelectionService == null) return;
+            SelectionService.EndSelection();
         }
 
-        public void PrimaryHoldEvent() { }
-        public void PrimaryReleaseEvent() { }
-        public void SecondaryClickEvent() { Debug.Log("SecondaryClick"); }
+        public void SecondaryClickEvent() 
+        { 
+            if (SelectionService == null) return;
+
+            ContactDto contact = SelectionService.GetGroundSelection();
+            if (!contact.HitGameObject) return;
+
+            UnitManagerService.MoveUnits(Guid.Empty, contact.Point);
+        }
+
         public void SecondaryHoldEvent() { }
         public void SecondaryReleaseEvent() { }
         public void MoveEvent(Vector2 moveVector)
