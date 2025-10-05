@@ -14,12 +14,14 @@ namespace Source.GamePlay.Services
         }
 
         [SerializeField]
-        private MovementType Movement;
+        private MovementType Movement { get; set; }
 
         [InitializationRequired]
-        private NavMeshAgent NavMeshAgent;
+        private NavMeshAgent NavMeshAgent { get; set; }
         [InitializationRequired]
-        private BoxCollider HitBox;
+        private BoxCollider HitBox { get; set; }
+
+        private int BasePriority { get; set; } = 99;
 
         private void Awake()
         {
@@ -52,6 +54,23 @@ namespace Source.GamePlay.Services
         {
             if (NavMeshAgent == null || HitBox == null) return;
             NavMeshAgent.baseOffset = HitBox.size.y / 2f;
+            NavMeshAgent.stoppingDistance = HitBox.size.x / 2f;
+        }
+
+        private void Update()
+        {
+            CheckReachedPath();
+        }
+
+        private void CheckReachedPath()
+        {
+            if (NavMeshAgent == null) return;
+
+            if (!NavMeshAgent.pathPending && NavMeshAgent.remainingDistance <= NavMeshAgent.stoppingDistance)
+            {
+                NavMeshAgent.ResetPath();
+                NavMeshAgent.avoidancePriority = BasePriority;
+            }
         }
 
         public void MoveUnit(Vector3 destination)
@@ -59,6 +78,7 @@ namespace Source.GamePlay.Services
             if (NavMeshAgent != null)
             {
                 NavMeshAgent.SetDestination(destination);
+                NavMeshAgent.avoidancePriority = BasePriority - 1;
             }
         }
 
