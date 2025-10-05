@@ -30,7 +30,7 @@ namespace Source.GamePlay.Services
             if (SelectionService == null) return;
 
             ContactDto contact = SelectionService.StartSelection();
-            Debug.Log($"Hit GameObject: {contact.HitGameObject} | WorldPoint: {contact.Point} | GameObject: {contact.GameObject?.name}");
+            UnitManagerService.SelectUnit(contact.Unit);
         }
 
         public void PrimaryHoldEvent() 
@@ -45,7 +45,18 @@ namespace Source.GamePlay.Services
             if (SelectionService == null) return;
             SelectionService.EndSelection();
         }
-        public void SecondaryClickEvent() { Debug.Log("SecondaryClick"); }
+
+        public void SecondaryClickEvent() 
+        { 
+            //All Temp Code
+            if (SelectionService == null) return;
+
+            ContactDto contact = SelectionService.GetGroundSelection();
+            if (!contact.HitGameObject) return;
+
+            UnitManagerService.TempSpawnUnit(contact.Point);
+        }
+
         public void SecondaryHoldEvent() { }
         public void SecondaryReleaseEvent() { }
         public void MoveEvent(Vector2 moveVector)

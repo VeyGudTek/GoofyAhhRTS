@@ -11,7 +11,7 @@ namespace Source.GamePlay.Services
     {
         public bool HitGameObject = false;
         public Vector3 Point = Vector3.zero;
-        public GameObject GameObject = null;
+        public UnitService Unit = null;
     }
 
     public class SelectionDto
@@ -86,7 +86,7 @@ namespace Source.GamePlay.Services
             return GetMouseWorldPoint(layerMaskToHit);
         }
 
-        private ContactDto GetGroundSelection()
+        public ContactDto GetGroundSelection()
         {
             int layerMaskToHit = LayerMask.GetMask(EnvironmentLayerName);
             return GetMouseWorldPoint(layerMaskToHit);
@@ -107,7 +107,7 @@ namespace Source.GamePlay.Services
             {
                 contact.HitGameObject = true;
                 contact.Point = hit.point;
-                contact.GameObject = hit.collider.gameObject;
+                contact.Unit = hit.collider.gameObject.GetComponent<UnitService>();
             }
 
             return contact;
