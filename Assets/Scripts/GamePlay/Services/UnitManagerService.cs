@@ -16,6 +16,7 @@ namespace Source.GamePlay.Services
         private const string EnvironmentLayerName = "Environment";
 
         private List<UnitService> Units { get; set; } = new List<UnitService>();
+        private UnitService OriginalSelectedUnit = null;
 
         private void Start()
         {
@@ -41,27 +42,29 @@ namespace Source.GamePlay.Services
 
         public void SelectUnit(UnitService selectedUnit)
         {
+            OriginalSelectedUnit = null;
             foreach (UnitService unit in Units)
             {
                 unit.DeSelect();
             }
             if (selectedUnit != null)
             {
+                OriginalSelectedUnit = selectedUnit;
                 selectedUnit.Select();
             }
         }
 
         public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd)
         {
-            foreach (UnitService unit in Units)
-            {
-                unit.DeSelect();
-            }
-
             IEnumerable<UnitService> unitsToSelect = Units.Where(u => 
                 CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
                 u.PlayerId == playerId
             );
+
+            foreach (UnitService unit in Units.Where(u => u != OriginalSelectedUnit && !unitsToSelect.Contains(u)))
+            {
+                unit.DeSelect();
+            }
 
             foreach (UnitService unit in unitsToSelect)
             {
