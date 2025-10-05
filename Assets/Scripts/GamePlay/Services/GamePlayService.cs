@@ -1,5 +1,6 @@
 using Source.Shared.Services.Interfaces;
 using Source.Shared.Utilities;
+using Source.GamePlay.Services.Unit;
 using System;
 using UnityEngine;
 
@@ -27,7 +28,8 @@ namespace Source.GamePlay.Services
 
             for (int i = -7; i < 7; i++)
             {
-                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, i));
+                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, -3));
+                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, 3));
             }
         }
 

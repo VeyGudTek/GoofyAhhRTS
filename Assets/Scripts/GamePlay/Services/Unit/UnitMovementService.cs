@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Source.GamePlay.Services
+namespace Source.GamePlay.Services.Unit
 {
     public class UnitMovementService : MonoBehaviour
     {
@@ -73,12 +73,13 @@ namespace Source.GamePlay.Services
             }
         }
 
-        public void MoveUnit(Vector3 destination)
+        public void MoveUnit(Vector3 destination, float stoppingDistance)
         {
             if (NavMeshAgent != null)
             {
                 NavMeshAgent.SetDestination(destination);
                 NavMeshAgent.avoidancePriority = BasePriority - 1;
+                NavMeshAgent.stoppingDistance = stoppingDistance;
             }
         }
 

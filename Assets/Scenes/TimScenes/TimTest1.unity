@@ -611,7 +611,7 @@ MonoBehaviour:
   InputService: {fileID: 1066151763}
   GamePlayService: {fileID: 1066151764}
   CameraService: {fileID: 73509409}
-  UnitManagerService: {fileID: 1251777543}
+  UnitManagerService: {fileID: 1251777545}
 --- !u!1 &1074222702
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,7 +723,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1251777544}
-  - component: {fileID: 1251777543}
+  - component: {fileID: 1251777545}
   m_Layer: 0
   m_Name: UnitManager
   m_TagString: Untagged
@@ -731,19 +731,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1251777543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251777542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0bb385f65bcc514781abbe7085909b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TempUnit: {fileID: 4590323852618973426, guid: b07dcdf6f2eaf924182a03c50d1f1f9d, type: 3}
 --- !u!4 &1251777544
 Transform:
   m_ObjectHideFlags: 0
@@ -759,6 +746,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1066151762}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1251777545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1251777542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 022c56dc27c9bef46af3882e5a121e47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TempUnit: {fileID: 4590323852618973426, guid: b07dcdf6f2eaf924182a03c50d1f1f9d, type: 3}
 --- !u!1 &1440845059
 GameObject:
   m_ObjectHideFlags: 0
@@ -770,7 +770,6 @@ GameObject:
   - component: {fileID: 1440845063}
   - component: {fileID: 1440845062}
   - component: {fileID: 1440845061}
-  - component: {fileID: 1440845060}
   m_Layer: 0
   m_Name: Selector
   m_TagString: Untagged
@@ -778,27 +777,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &1440845060
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440845059}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1440845061
 MeshRenderer:
   m_ObjectHideFlags: 0
