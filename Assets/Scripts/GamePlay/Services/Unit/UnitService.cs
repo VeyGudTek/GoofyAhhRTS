@@ -26,7 +26,7 @@ namespace Source.GamePlay.Services.Unit
         [InitializationRequired]
         private UnitManagerService UnitManagerService;
 
-        private float Health { get; set; } = 20f;
+        private float Health { get; set; } = 50f;
         private UnitService Target { get; set; }
 
         public Guid PlayerId { get; private set; } = Guid.Empty;
@@ -42,7 +42,8 @@ namespace Source.GamePlay.Services.Unit
         {
             HitBox = GetComponent<BoxCollider>();
 
-            if (UnitAttackService != null) UnitAttackService.InjectDependencies(this, 5f, 1f, 10f);
+            if (UnitAttackService != null) 
+                UnitAttackService.InjectDependencies(this, 5f, 1f, 10f);
         }
 
         private void Start()
@@ -78,6 +79,13 @@ namespace Source.GamePlay.Services.Unit
                 Position = this.transform.position,
                 Radius = HitBox == null ? 0f : HitBox.size.x / 2f
             };
+        }
+
+        public void RemoveDestroyedUnit(UnitService unit)
+        {
+            Target = null;
+            if (UnitAttackService != null) 
+                UnitAttackService.RemoveUnitInRange(unit);
         }
 
         public void Damage(float damage)

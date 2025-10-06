@@ -126,11 +126,15 @@ namespace Source.GamePlay.Services.Unit
             }
         }
 
-        public void DestroyUnit(UnitService unit)
+        public void DestroyUnit(UnitService unitToDestroy)
         {
-            Units.Remove(unit);
-            ManuallySelectedUnits.Remove(unit);
-            Destroy(unit.gameObject);
+            Units.Remove(unitToDestroy);
+            ManuallySelectedUnits.Remove(unitToDestroy);
+            foreach(UnitService currentUnit in Units)
+            {
+                currentUnit.RemoveDestroyedUnit(unitToDestroy);
+            }
+            Destroy(unitToDestroy.gameObject);
         }
     }
 }

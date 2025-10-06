@@ -43,8 +43,6 @@ namespace Source.GamePlay.Services.Unit
         {
             if (CanAttack && HasAttack && UnitsInRange.Count > 0)
             {
-                CleanUnitList();
-
                 UnitService target = UnitsInRange
                     .OrderBy(u => Mathf.Abs(u.gameObject.transform.position.magnitude - gameObject.transform.position.magnitude))
                     .First();
@@ -52,13 +50,6 @@ namespace Source.GamePlay.Services.Unit
                 target.Damage(Damage);
                 CanAttack = false;
                 StartCoroutine(ResetCooldown());
-            }
-        }
-        private void CleanUnitList()
-        {
-            foreach (UnitService unit in UnitsInRange.Where(u => u == null).ToList())
-            {
-                UnitsInRange.Remove(unit);
             }
         }
 
@@ -88,6 +79,11 @@ namespace Source.GamePlay.Services.Unit
             {
                 UnitsInRange.Remove(newUnit);
             }
+        }
+
+        public void RemoveUnitInRange(UnitService unit)
+        {
+            UnitsInRange.Remove(unit);
         }
     }
 }
