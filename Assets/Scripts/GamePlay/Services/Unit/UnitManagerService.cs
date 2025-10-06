@@ -121,7 +121,7 @@ namespace Source.GamePlay.Services.Unit
 
             foreach (UnitService unit in unitsToMove)
             {
-                unit.MoveUnit(destination, stoppingDistance);
+                unit.MoveUnit(destination, stoppingDistance, null);
             }
         }
     }

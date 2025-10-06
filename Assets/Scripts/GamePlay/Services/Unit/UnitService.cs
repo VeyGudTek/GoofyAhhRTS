@@ -17,23 +17,29 @@ namespace Source.GamePlay.Services.Unit
         private UnitMovementService UnitMovementService;
         [SerializeField]
         [InitializationRequired]
+        private UnitAttackService UnitAttackService;
+        [SerializeField]
+        [InitializationRequired]
         private GameObject SelectionIndicator;
         [InitializationRequired]
         private BoxCollider HitBox;
 
         private float Health { get; set; }
         private float? Speed { get; set; }
+        private UnitService Target { get; set; }
+
         public Guid PlayerId { get; set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
 
         private void Awake()
         {
             HitBox = GetComponent<BoxCollider>();
+            this.CheckInitializeRequired();
+            UnitAttackService.InjectDependencies(this, 2f);
         }
 
         private void Start()
         {
-            this.CheckInitializeRequired();
             SelectionIndicator.SetActive(false);
             SetPosition();
         }
@@ -45,7 +51,7 @@ namespace Source.GamePlay.Services.Unit
             this.transform.position = newPos;
         }
 
-        public void MoveUnit(Vector3 destination, float stoppingDistance)
+        public void MoveUnit(Vector3 destination, float stoppingDistance, UnitService target)
         {
             if (UnitMovementService == null) return;
 
@@ -64,6 +70,11 @@ namespace Source.GamePlay.Services.Unit
                 Position = this.transform.position,
                 Radius = HitBox == null ? 0f : HitBox.size.x / 2f
             };
+        }
+
+        public void Damage(float damage)
+        {
+           Health -= damage;
         }
 
         public void Select()
