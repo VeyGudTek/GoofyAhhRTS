@@ -23,22 +23,31 @@ namespace Source.GamePlay.Services.Unit
         private GameObject SelectionIndicator;
         [InitializationRequired]
         private BoxCollider HitBox;
+        [InitializationRequired]
+        private UnitManagerService UnitManagerService;
 
-        private float Health { get; set; }
+        private float Health { get; set; } = 20f;
         private UnitService Target { get; set; }
 
-        public Guid PlayerId { get; set; } = Guid.Empty;
+        public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
+
+        public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId)
+        {
+            UnitManagerService = unitManagerService;
+            PlayerId = playerId;
+        }
 
         private void Awake()
         {
             HitBox = GetComponent<BoxCollider>();
-            this.CheckInitializeRequired();
-            UnitAttackService.InjectDependencies(this, 2f, 5f);
+
+            if (UnitAttackService != null) UnitAttackService.InjectDependencies(this, 5f, 1f, 10f);
         }
 
         private void Start()
         {
+            this.CheckInitializeRequired();
             SelectionIndicator.SetActive(false);
             SetPosition();
         }
@@ -73,7 +82,11 @@ namespace Source.GamePlay.Services.Unit
 
         public void Damage(float damage)
         {
-           Health -= damage;
+            Health -= damage;
+            if (Health < 0f)
+            {
+                UnitManagerService.DestroyUnit(this);
+            }
         }
 
         public void Select()

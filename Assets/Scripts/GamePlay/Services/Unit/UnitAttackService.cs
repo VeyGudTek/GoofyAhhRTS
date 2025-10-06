@@ -16,21 +16,22 @@ namespace Source.GamePlay.Services.Unit
         [SerializeField]
         private bool HasAttack;
         private float Cooldown { get; set; }
+        private float Damage { get; set; }
         private bool CanAttack { get; set; } = true;
 
         private List<UnitService> UnitsInRange = new List<UnitService>();
 
-        public void InjectDependencies(UnitService self, float range, float coolDown)
+        public void InjectDependencies(UnitService self, float range, float coolDown, float damage)
         {
             Self = self;
             Cooldown = coolDown;
+            Damage = damage;
             transform.localScale = new Vector3(range, transform.localScale.y, range);
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
-
         }
 
         private void Update()
@@ -42,13 +43,22 @@ namespace Source.GamePlay.Services.Unit
         {
             if (CanAttack && HasAttack && UnitsInRange.Count > 0)
             {
+                CleanUnitList();
+
                 UnitService target = UnitsInRange
                     .OrderBy(u => Mathf.Abs(u.gameObject.transform.position.magnitude - gameObject.transform.position.magnitude))
                     .First();
-
+                
+                target.Damage(Damage);
                 CanAttack = false;
-                Debug.Log("Shoot");
                 StartCoroutine(ResetCooldown());
+            }
+        }
+        private void CleanUnitList()
+        {
+            foreach (UnitService unit in UnitsInRange.Where(u => u == null).ToList())
+            {
+                UnitsInRange.Remove(unit);
             }
         }
 

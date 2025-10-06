@@ -39,7 +39,7 @@ namespace Source.GamePlay.Services.Unit
                 GameObject newUnit = Instantiate(unitToCreate, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.PlayerId = playerId;
+                unitService.InjectDependencies(this, playerId);
             }
         }
 
@@ -124,6 +124,13 @@ namespace Source.GamePlay.Services.Unit
             {
                 unit.MoveUnit(destination, stoppingDistance, null);
             }
+        }
+
+        public void DestroyUnit(UnitService unit)
+        {
+            Units.Remove(unit);
+            ManuallySelectedUnits.Remove(unit);
+            Destroy(unit.gameObject);
         }
     }
 }

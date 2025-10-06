@@ -15,6 +15,8 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         private SelectionService SelectionService { get; set; }
 
+        private Guid PlayerId { get; set; } = Guid.NewGuid();
+
         public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService)
         {
             CameraService = cameraService;
@@ -25,13 +27,12 @@ namespace Source.GamePlay.Services
         private void Start()
         {
             this.CheckInitializeRequired();
-            Guid playerGuid = Guid.NewGuid();
             Guid enemyGuid = Guid.NewGuid();
 
-            for (int i = -7; i < 7; i++)
+            for (int i = -7; i < 7; i += 2)
             {
-                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, -3), true);
-                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, 3), false);
+                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -4), true);
+                UnitManagerService.SpawnUnit(enemyGuid, new Vector2(i, 2), false);
             }
         }
 
@@ -66,7 +67,7 @@ namespace Source.GamePlay.Services
             ContactDto contact = SelectionService.GetGroundSelection();
             if (!contact.HitGameObject) return;
 
-            UnitManagerService.MoveUnits(Guid.Empty, contact.Point);
+            UnitManagerService.MoveUnits(PlayerId, contact.Point);
         }
 
         public void SecondaryHoldEvent() { }
