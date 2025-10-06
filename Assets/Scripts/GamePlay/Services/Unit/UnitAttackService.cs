@@ -1,5 +1,6 @@
 using Source.GamePlay.Services.Unit;
 using Source.Shared.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,7 @@ namespace Source.GamePlay.Services.Unit
                     .First();
 
                 CanAttack = false;
+                Debug.Log("Shoot");
                 StartCoroutine(ResetCooldown());
             }
         }

@@ -25,11 +25,13 @@ namespace Source.GamePlay.Services
         private void Start()
         {
             this.CheckInitializeRequired();
+            Guid playerGuid = Guid.NewGuid();
+            Guid enemyGuid = Guid.NewGuid();
 
             for (int i = -7; i < 7; i++)
             {
-                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, -3));
-                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, 3));
+                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, -3), true);
+                UnitManagerService.SpawnUnit(Guid.Empty, new Vector2(i, 3), false);
             }
         }
 
@@ -48,7 +50,7 @@ namespace Source.GamePlay.Services
             SelectionDto selection = SelectionService.ContinueSelection();
             if ( !selection.SuccessfulSelect ) return;
 
-            UnitManagerService.SelectUnits(Guid.Empty, selection.Corner1, selection.Corner2, !isShift);
+            UnitManagerService.SelectUnits(selection.Corner1, selection.Corner2, !isShift);
         }
 
         public void PrimaryReleaseEvent() 

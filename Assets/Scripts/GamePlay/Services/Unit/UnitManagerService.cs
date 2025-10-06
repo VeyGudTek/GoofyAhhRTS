@@ -10,7 +10,10 @@ namespace Source.GamePlay.Services.Unit
     {
         [InitializationRequired]
         [SerializeField]
-        GameObject TempUnit;
+        GameObject TempUnitBlue;
+        [InitializationRequired]
+        [SerializeField]
+        GameObject TempUnitRed;
 
         private const float SpawnRayYOrigin = 100f;
         private const string EnvironmentLayerName = "Environment";
@@ -22,9 +25,10 @@ namespace Source.GamePlay.Services.Unit
             this.CheckInitializeRequired();
         }
 
-        public void SpawnUnit(Guid playerId, Vector2 spawnLocation)
+        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, bool isBlue)
         {
-            if (TempUnit == null) return;
+            if (TempUnitRed == null || TempUnitBlue == null) return;
+            GameObject unitToCreate = isBlue ? TempUnitBlue : TempUnitRed;
 
             RaycastHit hit;
             int layerMaskToHit = LayerMask.GetMask(EnvironmentLayerName);
@@ -32,7 +36,7 @@ namespace Source.GamePlay.Services.Unit
 
             if (Physics.Raycast(origin, Vector3.down, out hit, Mathf.Infinity, layerMaskToHit))
             {
-                GameObject newUnit = Instantiate(TempUnit, hit.point, Quaternion.identity, this.transform);
+                GameObject newUnit = Instantiate(unitToCreate, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
                 unitService.PlayerId = playerId;
@@ -65,12 +69,9 @@ namespace Source.GamePlay.Services.Unit
             }
         }
 
-        public void SelectUnits(Guid playerId, Vector3 selectionStart, Vector3 selectionEnd, bool deselectUnits)
+        public void SelectUnits(Vector3 selectionStart, Vector3 selectionEnd, bool deselectUnits)
         {
-            IEnumerable<UnitService> unitsToSelect = Units.Where(u => 
-                CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd) &&
-                u.PlayerId == playerId
-            );
+            IEnumerable<UnitService> unitsToSelect = Units.Where(u => CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd));
 
             if (deselectUnits)
             {
