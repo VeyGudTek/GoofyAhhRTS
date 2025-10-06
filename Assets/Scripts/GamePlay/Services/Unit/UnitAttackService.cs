@@ -5,73 +5,77 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class UnitAttackService : MonoBehaviour
+namespace Source.GamePlay.Services.Unit
 {
-    [InitializationRequired]
-    private UnitService Self;
-
-    [SerializeField]
-    private bool HasAttack;
-    private float Cooldown { get; set; }
-    private bool CanAttack { get; set; } = true;
-
-    private List<UnitService> UnitsInRange = new List<UnitService>();
-
-    public void InjectDependencies(UnitService self, float range)
+    public class UnitAttackService : MonoBehaviour
     {
-        Self = self;
-        transform.localScale = new Vector3(range, transform.localScale.y, range);
-    }
+        [InitializationRequired]
+        private UnitService Self;
 
-    private void Start()
-    {
-        this.CheckInitializeRequired();
-        
-    }
+        [SerializeField]
+        private bool HasAttack;
+        private float Cooldown { get; set; }
+        private bool CanAttack { get; set; } = true;
 
-    private void Update()
-    {
-        Attack();
-    }
+        private List<UnitService> UnitsInRange = new List<UnitService>();
 
-    private void Attack()
-    {
-        if (CanAttack && HasAttack && UnitsInRange.Count > 0)
+        public void InjectDependencies(UnitService self, float range, float coolDown)
         {
-            UnitService target = UnitsInRange
-                .OrderBy(u => Mathf.Abs(u.gameObject.transform.position.magnitude - gameObject.transform.position.magnitude))
-                .First();
-
-            CanAttack = false;
-            StartCoroutine(ResetCooldown());
+            Self = self;
+            Cooldown = coolDown;
+            transform.localScale = new Vector3(range, transform.localScale.y, range);
         }
-    }
 
-    IEnumerator ResetCooldown()
-    {
-        yield return new WaitForSeconds(Cooldown);
-        CanAttack = true;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (Self == null || HasAttack == false) return;
-        UnitService newUnit = other.gameObject.GetComponent<UnitService>();
-
-        if (newUnit != null && newUnit.PlayerId != Self.PlayerId)
+        private void Start()
         {
-            UnitsInRange.Add(newUnit);
+            this.CheckInitializeRequired();
+
         }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (Self == null || HasAttack == false) return;
-        UnitService newUnit = other.gameObject.GetComponent<UnitService>();
-
-        if (newUnit != null)
+        private void Update()
         {
-            UnitsInRange.Remove(newUnit);
+            Attack();
+        }
+
+        private void Attack()
+        {
+            if (CanAttack && HasAttack && UnitsInRange.Count > 0)
+            {
+                UnitService target = UnitsInRange
+                    .OrderBy(u => Mathf.Abs(u.gameObject.transform.position.magnitude - gameObject.transform.position.magnitude))
+                    .First();
+
+                CanAttack = false;
+                StartCoroutine(ResetCooldown());
+            }
+        }
+
+        IEnumerator ResetCooldown()
+        {
+            yield return new WaitForSeconds(Cooldown);
+            CanAttack = true;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (Self == null || HasAttack == false) return;
+            UnitService newUnit = other.gameObject.GetComponent<UnitService>();
+
+            if (newUnit != null && newUnit.PlayerId != Self.PlayerId)
+            {
+                UnitsInRange.Add(newUnit);
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (Self == null || HasAttack == false) return;
+            UnitService newUnit = other.gameObject.GetComponent<UnitService>();
+
+            if (newUnit != null)
+            {
+                UnitsInRange.Remove(newUnit);
+            }
         }
     }
 }

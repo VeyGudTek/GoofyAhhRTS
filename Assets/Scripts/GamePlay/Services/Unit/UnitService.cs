@@ -25,7 +25,6 @@ namespace Source.GamePlay.Services.Unit
         private BoxCollider HitBox;
 
         private float Health { get; set; }
-        private float? Speed { get; set; }
         private UnitService Target { get; set; }
 
         public Guid PlayerId { get; set; } = Guid.Empty;
@@ -35,7 +34,7 @@ namespace Source.GamePlay.Services.Unit
         {
             HitBox = GetComponent<BoxCollider>();
             this.CheckInitializeRequired();
-            UnitAttackService.InjectDependencies(this, 2f);
+            UnitAttackService.InjectDependencies(this, 2f, 5f);
         }
 
         private void Start()
