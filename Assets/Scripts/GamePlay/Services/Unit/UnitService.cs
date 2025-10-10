@@ -25,13 +25,15 @@ namespace Source.GamePlay.Services.Unit
         [InitializationRequired]
         private HealthBarService HealthBarService;
         [InitializationRequired]
+        [SerializeField]
         private BoxCollider HitBox;
+
         [InitializationRequired]
         private UnitManagerService UnitManagerService;
-
         private float MaxHealth { get; set; } = 50f;
         private float Health { get; set; } = 50f;
-        private UnitService Target { get; set; }
+        public UnitService Target { get; private set; }
+        public float Range { get; private set; } = 5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
 
@@ -43,10 +45,10 @@ namespace Source.GamePlay.Services.Unit
 
         private void Awake()
         {
-            HitBox = GetComponent<BoxCollider>();
-
             if (UnitAttackService != null) 
-                UnitAttackService.InjectDependencies(this, 5f, 1f, 10f);
+                UnitAttackService.InjectDependencies(this, Range, 1f, 10f);
+            if (UnitMovementService != null)
+                UnitMovementService.InjectDependencies(this);
         }
 
         private void Start()
@@ -63,10 +65,11 @@ namespace Source.GamePlay.Services.Unit
             this.transform.position = newPos;
         }
 
-        public void MoveUnit(Vector3 destination, float stoppingDistance, UnitService target)
+        public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target)
         {
-            if (UnitMovementService == null) return;
+            Target = target;
 
+            if (UnitMovementService == null || Target != null) return;
             UnitMovementService.MoveUnit(destination, stoppingDistance);
         }
 

@@ -108,7 +108,7 @@ namespace Source.GamePlay.Services.Unit
             return (value + radius >= min && value - radius <= max);
         }
 
-        public void MoveUnits(Guid playerId, Vector3 destination)
+        public void MoveUnits(Guid playerId, Vector3 destination, UnitService target)
         {
             IEnumerable<UnitService> unitsToMove = Units.Where(u => 
                 u.PlayerId == playerId &&
@@ -122,7 +122,7 @@ namespace Source.GamePlay.Services.Unit
 
             foreach (UnitService unit in unitsToMove)
             {
-                unit.MoveUnit(destination, stoppingDistance, null);
+                unit.CommandUnit(destination, stoppingDistance, target);
             }
         }
 

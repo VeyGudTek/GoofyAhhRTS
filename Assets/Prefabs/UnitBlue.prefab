@@ -430,6 +430,7 @@ MonoBehaviour:
   UnitAttackService: {fileID: 5688184842991367836}
   SelectionIndicator: {fileID: 7562840356624071233}
   HealthBarService: {fileID: 5939567787711105434}
+  HitBox: {fileID: 8202670452493377245}
 --- !u!114 &807173054178468924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,6 +444,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Movement: 0
+  NavMeshAgent: {fileID: -384323498120774872}
+  HitBox: {fileID: 8202670452493377245}
 --- !u!114 &5939567787711105434
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using Source.Shared.Utilities;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,18 +16,22 @@ namespace Source.GamePlay.Services.Unit
 
         [SerializeField]
         private MovementType Movement;
+        [InitializationRequired]
+        [SerializeField]
+        private NavMeshAgent NavMeshAgent;
+        [InitializationRequired]
+        [SerializeField]
+        private BoxCollider HitBox;
 
         [InitializationRequired]
-        private NavMeshAgent NavMeshAgent { get; set; }
-        [InitializationRequired]
-        private BoxCollider HitBox { get; set; }
-
+        private UnitService Self;
         private int BasePriority { get; set; } = 99;
+        private bool CanRefreshPath = true;
+        const float RefreshPathTime = .5f;
 
-        private void Awake()
+        public void InjectDependencies(UnitService self)
         {
-            NavMeshAgent = GetComponent<NavMeshAgent>();
-            HitBox = GetComponent<BoxCollider>();
+            Self = self;
         }
 
         private void Start()
@@ -43,7 +48,7 @@ namespace Source.GamePlay.Services.Unit
             }
             catch (Exception e)
             {
-                if (Movement == MovementType.NavMesh && e.Message.Contains(typeof(NavMeshAgent).Name))
+                if (Movement == MovementType.NavMesh || !e.Message.Contains(typeof(NavMeshAgent).Name))
                 {
                     throw e;
                 }
@@ -54,12 +59,30 @@ namespace Source.GamePlay.Services.Unit
         {
             if (NavMeshAgent == null || HitBox == null) return;
             NavMeshAgent.baseOffset = HitBox.size.y / 2f;
-            NavMeshAgent.stoppingDistance = HitBox.size.x / 2f;
         }
 
         private void Update()
         {
+            UpdatePathingUsingTarget();
             CheckReachedPath();
+        }
+
+        private void UpdatePathingUsingTarget()
+        {
+            if (Self == null || Self.Target == null) return;
+
+            if (CanRefreshPath)
+            {
+                MoveUnit(Self.Target.gameObject.transform.position, 0);
+                CanRefreshPath = false;
+                StartCoroutine(RefreshPath());
+            }
+        }
+
+        IEnumerator RefreshPath()
+        {
+            yield return new WaitForSeconds(RefreshPathTime);
+            CanRefreshPath = true;
         }
 
         private void CheckReachedPath()

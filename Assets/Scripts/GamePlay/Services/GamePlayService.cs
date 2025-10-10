@@ -64,10 +64,11 @@ namespace Source.GamePlay.Services
         { 
             if (SelectionService == null) return;
 
-            ContactDto contact = SelectionService.GetGroundSelection();
-            if (!contact.HitGameObject) return;
+            ContactDto groundContact = SelectionService.GetGroundSelection();
+            ContactDto unitContact = SelectionService.GetUnitSelection();
+            if (!groundContact.HitGameObject) return;
 
-            UnitManagerService.MoveUnits(PlayerId, contact.Point);
+            UnitManagerService.MoveUnits(PlayerId, groundContact.Point, unitContact.Unit);
         }
 
         public void SecondaryHoldEvent() { }
