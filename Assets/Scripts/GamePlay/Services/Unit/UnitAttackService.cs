@@ -1,6 +1,4 @@
-using Source.GamePlay.Services.Unit;
 using Source.Shared.Utilities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +9,10 @@ namespace Source.GamePlay.Services.Unit
     public class UnitAttackService : MonoBehaviour
     {
         [InitializationRequired]
-        private UnitService Self;
+        private UnitService Self { get; set; }
+        [InitializationRequired]
+        [SerializeField]
+        private ProjectileService ProjectileService;
 
         [SerializeField]
         private bool HasAttack;
@@ -49,6 +50,12 @@ namespace Source.GamePlay.Services.Unit
                 
                 target.Damage(Damage);
                 CanAttack = false;
+
+                if (ProjectileService != null)
+                {
+                    ProjectileService.CreateProjectile(transform.position, target.gameObject.transform.position);
+                }
+
                 StartCoroutine(ResetCooldown());
             }
         }
