@@ -21,14 +21,17 @@ namespace Source.GamePlay.Services.Unit
         [SerializeField]
         [InitializationRequired]
         private GameObject SelectionIndicator;
+        [SerializeField]
+        [InitializationRequired]
+        private HealthBarService HealthBarService;
         [InitializationRequired]
         private BoxCollider HitBox;
         [InitializationRequired]
         private UnitManagerService UnitManagerService;
 
+        private float MaxHealth { get; set; } = 50f;
         private float Health { get; set; } = 50f;
         private UnitService Target { get; set; }
-
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
 
@@ -94,7 +97,9 @@ namespace Source.GamePlay.Services.Unit
             if (Health < 0f)
             {
                 UnitManagerService.DestroyUnit(this);
+                return;
             }
+            HealthBarService.SetHealth(Health / MaxHealth);
         }
 
         public void Select()
