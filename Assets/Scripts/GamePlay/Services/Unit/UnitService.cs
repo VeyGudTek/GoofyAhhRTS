@@ -17,18 +17,36 @@ namespace Source.GamePlay.Services.Unit
         private UnitMovementService UnitMovementService;
         [SerializeField]
         [InitializationRequired]
+        private UnitAttackService UnitAttackService;
+        [SerializeField]
+        [InitializationRequired]
         private GameObject SelectionIndicator;
+        [SerializeField]
+        [InitializationRequired]
+        private HealthBarService HealthBarService;
         [InitializationRequired]
         private BoxCollider HitBox;
+        [InitializationRequired]
+        private UnitManagerService UnitManagerService;
 
-        private float Health { get; set; }
-        private float? Speed { get; set; }
-        public Guid PlayerId { get; set; } = Guid.Empty;
+        private float MaxHealth { get; set; } = 50f;
+        private float Health { get; set; } = 50f;
+        private UnitService Target { get; set; }
+        public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
+
+        public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId)
+        {
+            UnitManagerService = unitManagerService;
+            PlayerId = playerId;
+        }
 
         private void Awake()
         {
             HitBox = GetComponent<BoxCollider>();
+
+            if (UnitAttackService != null) 
+                UnitAttackService.InjectDependencies(this, 5f, 1f, 10f);
         }
 
         private void Start()
@@ -45,7 +63,7 @@ namespace Source.GamePlay.Services.Unit
             this.transform.position = newPos;
         }
 
-        public void MoveUnit(Vector3 destination, float stoppingDistance)
+        public void MoveUnit(Vector3 destination, float stoppingDistance, UnitService target)
         {
             if (UnitMovementService == null) return;
 
@@ -64,6 +82,24 @@ namespace Source.GamePlay.Services.Unit
                 Position = this.transform.position,
                 Radius = HitBox == null ? 0f : HitBox.size.x / 2f
             };
+        }
+
+        public void RemoveDestroyedUnit(UnitService unit)
+        {
+            Target = null;
+            if (UnitAttackService != null) 
+                UnitAttackService.RemoveUnitInRange(unit);
+        }
+
+        public void Damage(float damage)
+        {
+            Health -= damage;
+            if (Health < 0f)
+            {
+                UnitManagerService.DestroyUnit(this);
+                return;
+            }
+            HealthBarService.SetHealth(Health / MaxHealth);
         }
 
         public void Select()

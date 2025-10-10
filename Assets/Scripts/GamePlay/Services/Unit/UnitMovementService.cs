@@ -14,7 +14,7 @@ namespace Source.GamePlay.Services.Unit
         }
 
         [SerializeField]
-        private MovementType Movement { get; set; }
+        private MovementType Movement;
 
         [InitializationRequired]
         private NavMeshAgent NavMeshAgent { get; set; }
