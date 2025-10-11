@@ -1,3 +1,4 @@
+using Source.GamePlay.Static.Classes;
 using Source.Shared.Utilities;
 using System;
 using UnityEngine;
@@ -39,8 +40,6 @@ namespace Source.GamePlay.Services.Unit
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
-
-        private const string ObstacleLayerName = "Environment";
 
         public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId)
         {
@@ -106,7 +105,7 @@ namespace Source.GamePlay.Services.Unit
         {
             if (target == null) return false;
 
-            int layersToHit = LayerMask.GetMask(ObstacleLayerName);
+            int layersToHit = LayerMask.GetMask(LayerNames.Obstacle);
             Vector3 direction = target.transform.position - transform.position;
             Vector3 origin = transform.position;
             if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, layersToHit))

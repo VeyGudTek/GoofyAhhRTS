@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Source.GamePlay.Services.Unit;
+using Source.GamePlay.Static.Classes;
 
 namespace Source.GamePlay.Services
 {
@@ -32,10 +33,6 @@ namespace Source.GamePlay.Services
         private CameraService CameraService { get; set; }
 
         private Vector3? StoredSelectionPoint { get; set; } = null;
-
-        private const string UILayerName = "UI";
-        private const string UnitLayerName = "Unit";
-        private const string EnvironmentLayerName = "Environment";
 
         public void InjectDependencies(CameraService cameraService)
         {
@@ -83,13 +80,13 @@ namespace Source.GamePlay.Services
 
         public ContactDto GetUnitSelection()
         {
-            int layerMaskToHit = LayerMask.GetMask(UnitLayerName);
+            int layerMaskToHit = LayerMask.GetMask(LayerNames.Unit);
             return GetMouseWorldPoint(layerMaskToHit);
         }
 
         public ContactDto GetGroundSelection()
         {
-            int layerMaskToHit = LayerMask.GetMask(EnvironmentLayerName);
+            int layerMaskToHit = LayerMask.GetMask(LayerNames.Ground);
             return GetMouseWorldPoint(layerMaskToHit);
         }
 
@@ -116,7 +113,7 @@ namespace Source.GamePlay.Services
 
         private bool MouseIsOverUI(Vector2 mousePosition)
         {
-            int uiLayer = LayerMask.NameToLayer(UILayerName);
+            int uiLayer = LayerMask.NameToLayer(LayerNames.UI);
 
             PointerEventData eventData = new PointerEventData(EventSystem.current);
             eventData.position = Mouse.current.position.value;

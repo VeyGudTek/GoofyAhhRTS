@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using Source.Shared.Utilities;
+using Source.GamePlay.Static.Classes;
 
 namespace Source.GamePlay.Services.Unit
 {
@@ -16,7 +17,6 @@ namespace Source.GamePlay.Services.Unit
         GameObject TempUnitRed;
 
         private const float SpawnRayYOrigin = 100f;
-        private const string EnvironmentLayerName = "Environment";
         private readonly List<UnitService> Units = new();
         private readonly List<UnitService> ManuallySelectedUnits = new();
 
@@ -30,7 +30,7 @@ namespace Source.GamePlay.Services.Unit
             if (TempUnitRed == null || TempUnitBlue == null) return;
             GameObject unitToCreate = isBlue ? TempUnitBlue : TempUnitRed;
 
-            int layerMaskToHit = LayerMask.GetMask(EnvironmentLayerName);
+            int layerMaskToHit = LayerMask.GetMask(LayerNames.Ground);
             Vector3 origin = new(spawnLocation.x, SpawnRayYOrigin, spawnLocation.y);
 
             if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMaskToHit))
