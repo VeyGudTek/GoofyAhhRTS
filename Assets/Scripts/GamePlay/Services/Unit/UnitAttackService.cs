@@ -37,27 +37,53 @@ namespace Source.GamePlay.Services.Unit
 
         private void Update()
         {
-            Attack();
+            ProcessAttack();
         }
 
-        private void Attack()
+        private void ProcessAttack()
         {
-            if (CanAttack && HasAttack && UnitsInRange.Count > 0)
+            if (Self == null || Self.Target == null)
             {
-                UnitService target = UnitsInRange
+                AutomaticAttack();
+            }
+            else
+            {
+                ManualAttack();
+            }
+        }
+
+        private void AutomaticAttack()
+        {
+            IEnumerable<UnitService> visibleUnitsInRange = UnitsInRange.Where(u => Self.CanSeeTarget(u));
+            if (CanAttack && HasAttack && visibleUnitsInRange.Count() > 0)
+            {
+                UnitService target = visibleUnitsInRange
                     .OrderBy(u => Mathf.Abs(u.gameObject.transform.position.magnitude - gameObject.transform.position.magnitude))
                     .First();
-                
-                target.Damage(Damage);
-                CanAttack = false;
 
-                if (ProjectileService != null)
-                {
-                    ProjectileService.CreateProjectile(transform.position, target.gameObject.transform.position);
-                }
-
-                StartCoroutine(ResetCooldown());
+                AttackUnit(target);
             }
+        }
+
+        private void ManualAttack()
+        {
+            if (CanAttack && HasAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget())
+            {
+                AttackUnit(Self.Target);
+            }
+        }
+
+        private void AttackUnit(UnitService target)
+        {
+            target.Damage(Damage);
+            CanAttack = false;
+
+            if (ProjectileService != null)
+            {
+                ProjectileService.CreateProjectile(transform.position, target.gameObject.transform.position);
+            }
+
+            StartCoroutine(ResetCooldown());
         }
 
         IEnumerator ResetCooldown()

@@ -94,9 +94,14 @@ namespace Source.GamePlay.Services.Unit
 
         public bool CanSeeTarget()
         {
+            return CanSeeTarget(Target);
+        }
+
+        public bool CanSeeTarget(UnitService target)
+        {
             int layersToHit = LayerMask.GetMask(UnitLayerName) | LayerMask.GetMask(ObstacleLayerName);
 
-            Vector3 direction = Target.transform.position - transform.position;
+            Vector3 direction = target.transform.position - transform.position;
             Vector3 origin = transform.position;
 
             RaycastHit hit;
@@ -105,7 +110,7 @@ namespace Source.GamePlay.Services.Unit
                 UnitService hitUnit = hit.collider.gameObject.GetComponent<UnitService>();
                 if (hitUnit == null) return false;
 
-                return hitUnit == Target;
+                return hitUnit == target;
             }
             return false;
         }
