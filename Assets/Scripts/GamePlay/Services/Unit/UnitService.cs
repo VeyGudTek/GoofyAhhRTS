@@ -72,7 +72,10 @@ namespace Source.GamePlay.Services.Unit
 
         public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target)
         {
-            Target = target;
+            if (target != null && target.PlayerId != PlayerId)
+            {
+                Target = target;
+            }
 
             if (UnitMovementService != null && Target == null)
             {
