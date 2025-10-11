@@ -11,34 +11,37 @@ namespace Source.GamePlay.Services.Unit
     {
         [InitializationRequired]
         [SerializeField]
-        GameObject TempUnitBlue;
+        GameObject BaseUnit;
         [InitializationRequired]
-        [SerializeField]
-        GameObject TempUnitRed;
+        private UnitDataService UnitDataService { get; set; }
 
         private const float SpawnRayYOrigin = 100f;
         private readonly List<UnitService> Units = new();
         private readonly List<UnitService> ManuallySelectedUnits = new();
+
+        public void InjectDependencies(UnitDataService unitDataService)
+        {
+            UnitDataService = unitDataService;
+        }
 
         private void Start()
         {
             this.CheckInitializeRequired();
         }
 
-        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, bool isBlue)
+        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, UnitType type)
         {
-            if (TempUnitRed == null || TempUnitBlue == null) return;
-            GameObject unitToCreate = isBlue ? TempUnitBlue : TempUnitRed;
+            if (UnitDataService == null) return;
 
             int layerMaskToHit = LayerMask.GetMask(LayerNames.Ground);
             Vector3 origin = new(spawnLocation.x, SpawnRayYOrigin, spawnLocation.y);
 
             if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMaskToHit))
             {
-                GameObject newUnit = Instantiate(unitToCreate, hit.point, Quaternion.identity, this.transform);
+                GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.InjectDependencies(this, playerId);
+                unitService.InjectDependencies(this, playerId, UnitDataService.GetUnitData(type));
             }
         }
 

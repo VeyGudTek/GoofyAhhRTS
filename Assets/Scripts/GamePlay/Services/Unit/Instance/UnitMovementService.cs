@@ -20,7 +20,7 @@ namespace Source.GamePlay.Services.Unit
         private bool CanRefreshPath = true;
         const float RefreshPathTime = .5f;
 
-        public void InjectDependencies(UnitService self, float hitBoxHeight, NavMeshAgent navMeshAgent)
+        public void InjectDependencies(UnitService self, float hitBoxHeight, NavMeshAgent navMeshAgent, float speed)
         {
             Self = self;
             NavMeshAgent = navMeshAgent;
@@ -28,6 +28,7 @@ namespace Source.GamePlay.Services.Unit
             {
                 NavMeshAgent.baseOffset = hitBoxHeight / 2f;
                 NavMeshAgent.avoidancePriority = BasePriority;
+                NavMeshAgent.speed = speed;
             }
         }
 

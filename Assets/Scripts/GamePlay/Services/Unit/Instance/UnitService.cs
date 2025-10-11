@@ -1,4 +1,5 @@
 using Source.GamePlay.Static.Classes;
+using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.Utilities;
 using System;
 using UnityEngine;
@@ -30,6 +31,9 @@ namespace Source.GamePlay.Services.Unit
         [InitializationRequired]
         private GameObject SelectionIndicator;
         [SerializeField]
+        [InitializationRequired]
+        private MeshRenderer MeshRenderer;
+        [SerializeField]
         private NavMeshAgent NavMeshAgent;
 
         [InitializationRequired]
@@ -41,18 +45,20 @@ namespace Source.GamePlay.Services.Unit
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
 
-        public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId)
+        public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId, UnitData unitData)
         {
             UnitManagerService = unitManagerService;
             PlayerId = playerId;
-        }
+            MaxHealth = unitData.MaxHealth;
+            Health = MaxHealth;
+            Range = unitData.Range;
 
-        private void Awake()
-        {
-            if (UnitAttackService != null) 
-                UnitAttackService.InjectDependencies(this, Range, 1f, 10f);
+            if (MeshRenderer != null)
+                MeshRenderer.material = unitData.Material;
+            if (UnitAttackService != null)
+                UnitAttackService.InjectDependencies(this, unitData);
             if (UnitMovementService != null)
-                UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.size.y, NavMeshAgent);
+                UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.size.y, NavMeshAgent, unitData.Speed);
         }
 
         private void Start()

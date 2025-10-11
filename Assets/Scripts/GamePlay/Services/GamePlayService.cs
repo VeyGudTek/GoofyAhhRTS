@@ -31,8 +31,8 @@ namespace Source.GamePlay.Services
 
             for (int i = -7; i < 7; i += 2)
             {
-                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -4), true);
-                UnitManagerService.SpawnUnit(enemyGuid, new Vector2(i, 2), false);
+                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -10), UnitType.Blue);
+                UnitManagerService.SpawnUnit(enemyGuid, new Vector2(i, 20), UnitType.Red);
             }
         }
 

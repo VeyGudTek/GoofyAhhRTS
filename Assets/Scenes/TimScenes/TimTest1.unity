@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 384
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -551,6 +551,7 @@ GameObject:
   - component: {fileID: 1066151765}
   - component: {fileID: 1066151764}
   - component: {fileID: 1066151763}
+  - component: {fileID: 1066151766}
   m_Layer: 0
   m_Name: Master
   m_TagString: Untagged
@@ -617,6 +618,21 @@ MonoBehaviour:
   GamePlayService: {fileID: 1066151764}
   CameraService: {fileID: 73509409}
   UnitManagerService: {fileID: 1251777545}
+  UnitDataService: {fileID: 1066151766}
+--- !u!114 &1066151766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066151760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1487a35789e74c54c92bb255f5b65ec4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BlueUnitData: {fileID: 11400000, guid: fa374875ab9b0484283ca3e817d2c143, type: 2}
+  RedUnitData: {fileID: 11400000, guid: 3c685799dd9cc4d4e8a73cdceb294fa2, type: 2}
 --- !u!1 &1074222702
 GameObject:
   m_ObjectHideFlags: 0
@@ -763,8 +779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 022c56dc27c9bef46af3882e5a121e47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TempUnitBlue: {fileID: 4590323852618973426, guid: b07dcdf6f2eaf924182a03c50d1f1f9d, type: 3}
-  TempUnitRed: {fileID: 4590323852618973426, guid: f093c614994771a46b8000c25f399151, type: 3}
+  BaseUnit: {fileID: 4590323852618973426, guid: b07dcdf6f2eaf924182a03c50d1f1f9d, type: 3}
 --- !u!1 &1440845059
 GameObject:
   m_ObjectHideFlags: 0
@@ -1270,6 +1285,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1800288096760600691, guid: cbb540e27fa0ed742b498be203a97bd8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1800288096760600691, guid: cbb540e27fa0ed742b498be203a97bd8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 4036954482836431521, guid: cbb540e27fa0ed742b498be203a97bd8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

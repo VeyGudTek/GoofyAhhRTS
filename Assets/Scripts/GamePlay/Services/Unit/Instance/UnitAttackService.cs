@@ -1,3 +1,4 @@
+using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.Utilities;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,12 +23,15 @@ namespace Source.GamePlay.Services.Unit
 
         private readonly List<UnitService> UnitsInRange = new();
 
-        public void InjectDependencies(UnitService self, float range, float coolDown, float damage)
+        public void InjectDependencies(UnitService self, UnitData unitData)
         {
             Self = self;
-            Cooldown = coolDown;
-            Damage = damage;
-            transform.localScale = new Vector3(range * 2f, transform.localScale.y, range * 2f);
+            Cooldown = unitData.Cooldown;
+            Damage = unitData.damage;
+            transform.localScale = new Vector3(unitData.Range * 2f, transform.localScale.y, unitData.Range * 2f);
+
+            if (ProjectileService != null)
+                ProjectileService.SetProjectileColor(unitData.ProjectileStartColor, unitData.ProjectileEndColor);
         }
 
         private void Start()
