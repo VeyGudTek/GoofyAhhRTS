@@ -107,9 +107,9 @@ namespace Source.GamePlay.Services.Unit
             return (value + radius >= min && value - radius <= max);
         }
 
-        public void DeSelectUnits(bool includePreviousl)
+        public void DeSelectUnits(bool includePrevious)
         {
-            if (includePreviousl)
+            if (includePrevious)
             {
                 PreviouslySelectedUnits.Clear();
                 foreach (UnitService unit in Units)
