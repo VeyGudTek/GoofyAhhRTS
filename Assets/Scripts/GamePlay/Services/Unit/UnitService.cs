@@ -99,13 +99,11 @@ namespace Source.GamePlay.Services.Unit
 
         public bool CanSeeTarget(UnitService target)
         {
-            if (Target == null) return false;
+            if (target == null) return false;
 
             int layersToHit = LayerMask.GetMask(UnitLayerName) | LayerMask.GetMask(ObstacleLayerName);
-
             Vector3 direction = target.transform.position - transform.position;
             Vector3 origin = transform.position;
-
             RaycastHit hit;
             if (Physics.Raycast(origin, direction, out hit, Mathf.Infinity, layersToHit))
             {

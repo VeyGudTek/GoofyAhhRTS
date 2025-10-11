@@ -63,7 +63,7 @@ namespace Source.GamePlay.Services.Unit
 
         private void CheckReachedPath()
         {
-            if (NavMeshAgent == null || !NavMeshAgent.hasPath) return;
+            if (NavMeshAgent == null) return;
 
             if (Self != null && Self.Target != null)
             {
