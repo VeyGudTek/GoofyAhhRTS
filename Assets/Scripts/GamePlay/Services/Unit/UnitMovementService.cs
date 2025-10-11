@@ -46,7 +46,7 @@ namespace Source.GamePlay.Services.Unit
 
         private void UpdatePathingUsingTarget()
         {
-            if (Self == null || Self.Target == null || Self.IsInRangeOfTarget() || !CanRefreshPath) return;
+            if (Self == null || Self.Target == null || (Self.IsInRangeOfTarget() && Self.CanSeeTarget()) || !CanRefreshPath) return;
 
             float stoppingDistance = (Self.GetPosition().Radius * 2) + Self.Target.GetPosition().Radius;
             
