@@ -17,8 +17,8 @@ namespace Source.GamePlay.Services.Unit
 
         private const float SpawnRayYOrigin = 100f;
         private const string EnvironmentLayerName = "Environment";
-        private List<UnitService> Units { get; set; } = new List<UnitService>();
-        private List<UnitService> ManuallySelectedUnits = new List<UnitService>();
+        private readonly List<UnitService> Units = new();
+        private readonly List<UnitService> ManuallySelectedUnits = new();
 
         private void Start()
         {
@@ -30,11 +30,10 @@ namespace Source.GamePlay.Services.Unit
             if (TempUnitRed == null || TempUnitBlue == null) return;
             GameObject unitToCreate = isBlue ? TempUnitBlue : TempUnitRed;
 
-            RaycastHit hit;
             int layerMaskToHit = LayerMask.GetMask(EnvironmentLayerName);
-            Vector3 origin = new Vector3(spawnLocation.x, SpawnRayYOrigin, spawnLocation.y);
+            Vector3 origin = new(spawnLocation.x, SpawnRayYOrigin, spawnLocation.y);
 
-            if (Physics.Raycast(origin, Vector3.down, out hit, Mathf.Infinity, layerMaskToHit))
+            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMaskToHit))
             {
                 GameObject newUnit = Instantiate(unitToCreate, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
@@ -108,7 +107,7 @@ namespace Source.GamePlay.Services.Unit
             return (value + radius >= min && value - radius <= max);
         }
 
-        public void MoveUnits(Guid playerId, Vector3 destination)
+        public void MoveUnits(Guid playerId, Vector3 destination, UnitService target)
         {
             IEnumerable<UnitService> unitsToMove = Units.Where(u => 
                 u.PlayerId == playerId &&
@@ -122,7 +121,7 @@ namespace Source.GamePlay.Services.Unit
 
             foreach (UnitService unit in unitsToMove)
             {
-                unit.MoveUnit(destination, stoppingDistance, null);
+                unit.CommandUnit(destination, stoppingDistance, target);
             }
         }
 

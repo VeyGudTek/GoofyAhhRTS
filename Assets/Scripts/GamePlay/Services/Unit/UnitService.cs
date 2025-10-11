@@ -1,6 +1,7 @@
 using Source.Shared.Utilities;
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Source.GamePlay.Services.Unit
 {
@@ -20,20 +21,26 @@ namespace Source.GamePlay.Services.Unit
         private UnitAttackService UnitAttackService;
         [SerializeField]
         [InitializationRequired]
-        private GameObject SelectionIndicator;
-        [SerializeField]
-        [InitializationRequired]
         private HealthBarService HealthBarService;
         [InitializationRequired]
+        [SerializeField]
         private BoxCollider HitBox;
+        [SerializeField]
+        [InitializationRequired]
+        private GameObject SelectionIndicator;
+        [SerializeField]
+        private NavMeshAgent NavMeshAgent;
+
         [InitializationRequired]
         private UnitManagerService UnitManagerService;
-
         private float MaxHealth { get; set; } = 50f;
         private float Health { get; set; } = 50f;
-        private UnitService Target { get; set; }
+        public UnitService Target { get; private set; }
+        public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
+
+        private const string ObstacleLayerName = "Environment";
 
         public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId)
         {
@@ -43,10 +50,10 @@ namespace Source.GamePlay.Services.Unit
 
         private void Awake()
         {
-            HitBox = GetComponent<BoxCollider>();
-
             if (UnitAttackService != null) 
-                UnitAttackService.InjectDependencies(this, 5f, 1f, 10f);
+                UnitAttackService.InjectDependencies(this, Range, 1f, 10f);
+            if (UnitMovementService != null)
+                UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.size.y, NavMeshAgent);
         }
 
         private void Start()
@@ -63,11 +70,17 @@ namespace Source.GamePlay.Services.Unit
             this.transform.position = newPos;
         }
 
-        public void MoveUnit(Vector3 destination, float stoppingDistance, UnitService target)
+        public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target)
         {
-            if (UnitMovementService == null) return;
+            if (target != null && target.PlayerId != PlayerId)
+            {
+                Target = target;
+            }
 
-            UnitMovementService.MoveUnit(destination, stoppingDistance);
+            if (UnitMovementService != null && Target == null)
+            {
+                UnitMovementService.MoveUnit(destination, stoppingDistance);
+            }
         }
 
         public float GetArea()
@@ -82,6 +95,33 @@ namespace Source.GamePlay.Services.Unit
                 Position = this.transform.position,
                 Radius = HitBox == null ? 0f : HitBox.size.x / 2f
             };
+        }
+
+        public bool CanSeeTarget()
+        {
+            return CanSeeTarget(Target);
+        }
+
+        public bool CanSeeTarget(UnitService target)
+        {
+            if (target == null) return false;
+
+            int layersToHit = LayerMask.GetMask(ObstacleLayerName);
+            Vector3 direction = target.transform.position - transform.position;
+            Vector3 origin = transform.position;
+            if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, layersToHit))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool IsInRangeOfTarget()
+        {
+            if (Target == null) return false;
+
+            float distanceToTarget = (transform.position - Target.transform.position).magnitude;
+            return distanceToTarget <= Range;
         }
 
         public void RemoveDestroyedUnit(UnitService unit)

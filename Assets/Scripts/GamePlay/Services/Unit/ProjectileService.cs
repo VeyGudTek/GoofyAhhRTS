@@ -34,7 +34,7 @@ namespace Source.GamePlay.Services.Unit
             StartCoroutine(RemoveProjectile());
         }
 
-        private Func<Vector3> GetVector3Variance = () => new Vector3(
+        private readonly Func<Vector3> GetVector3Variance = () => new Vector3(
             Random.Range(-Variance, Variance), 
             Random.Range(-Variance, Variance), 
             Random.Range(-Variance, Variance)

@@ -81,7 +81,7 @@ namespace Source.GamePlay.Services
             SelectionObject.SetActive(false);
         }
 
-        private ContactDto GetUnitSelection()
+        public ContactDto GetUnitSelection()
         {
             int layerMaskToHit = LayerMask.GetMask(UnitLayerName);
             return GetMouseWorldPoint(layerMaskToHit);

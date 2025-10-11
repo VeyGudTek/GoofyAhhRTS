@@ -1,5 +1,6 @@
 using Source.Shared.Utilities;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,69 +8,93 @@ namespace Source.GamePlay.Services.Unit
 {
     public class UnitMovementService : MonoBehaviour
     {
-        private enum MovementType
-        {
-            None,
-            NavMesh
-        }
-
-        [SerializeField]
-        private MovementType Movement;
-
         [InitializationRequired]
         private NavMeshAgent NavMeshAgent { get; set; }
         [InitializationRequired]
-        private BoxCollider HitBox { get; set; }
+        [SerializeField]
+        private LineRenderer LineRenderer;
 
+        [InitializationRequired]
+        private UnitService Self;
         private int BasePriority { get; set; } = 99;
+        private bool CanRefreshPath = true;
+        const float RefreshPathTime = .5f;
 
-        private void Awake()
+        public void InjectDependencies(UnitService self, float hitBoxHeight, NavMeshAgent navMeshAgent)
         {
-            NavMeshAgent = GetComponent<NavMeshAgent>();
-            HitBox = GetComponent<BoxCollider>();
+            Self = self;
+            NavMeshAgent = navMeshAgent;
+            if (NavMeshAgent != null)
+            {
+                NavMeshAgent.baseOffset = hitBoxHeight / 2f;
+                NavMeshAgent.avoidancePriority = BasePriority;
+            }
         }
 
         private void Start()
         {
-            CustomCheckInitializeRequired();
-            SetNavmesh();
-        }
-
-        private void CustomCheckInitializeRequired()
-        {
-            try
-            {
-                this.CheckInitializeRequired();
-            }
-            catch (Exception e)
-            {
-                if (Movement == MovementType.NavMesh && e.Message.Contains(typeof(NavMeshAgent).Name))
-                {
-                    throw e;
-                }
-            }
-        }
-
-        private void SetNavmesh()
-        {
-            if (NavMeshAgent == null || HitBox == null) return;
-            NavMeshAgent.baseOffset = HitBox.size.y / 2f;
-            NavMeshAgent.stoppingDistance = HitBox.size.x / 2f;
+            this.CheckInitializeRequired();
         }
 
         private void Update()
         {
+            UpdatePathingUsingTarget();
             CheckReachedPath();
+            DrawPath();
+        }
+
+        private void UpdatePathingUsingTarget()
+        {
+            if (Self == null || Self.Target == null || (Self.IsInRangeOfTarget() && Self.CanSeeTarget()) || !CanRefreshPath) return;
+
+            float stoppingDistance = (Self.GetPosition().Radius * 2) + Self.Target.GetPosition().Radius;
+            
+            MoveUnit(Self.Target.gameObject.transform.position, stoppingDistance);
+            CanRefreshPath = false;
+            StartCoroutine(RefreshPath());
+        }
+
+        IEnumerator RefreshPath()
+        {
+            yield return new WaitForSeconds(RefreshPathTime);
+            CanRefreshPath = true;
         }
 
         private void CheckReachedPath()
         {
-            if (NavMeshAgent == null) return;
+            if (NavMeshAgent == null || !NavMeshAgent.hasPath) return;
 
+            if (Self != null && Self.Target != null)
+            {
+                if (Self.CanSeeTarget() && Self.IsInRangeOfTarget())
+                {
+                    StopPathFinding();
+                    return;
+                }
+            }
             if (!NavMeshAgent.pathPending && NavMeshAgent.remainingDistance <= NavMeshAgent.stoppingDistance)
             {
-                NavMeshAgent.ResetPath();
-                NavMeshAgent.avoidancePriority = BasePriority;
+                StopPathFinding();
+            }
+        }
+
+        private void StopPathFinding()
+        {
+            NavMeshAgent.ResetPath();
+            NavMeshAgent.avoidancePriority = BasePriority;
+        }
+
+        private void DrawPath()
+        {
+            if (NavMeshAgent != null && LineRenderer != null && NavMeshAgent.hasPath)
+            {
+                LineRenderer.enabled = true;
+                LineRenderer.positionCount = NavMeshAgent.path.corners.Length;
+                LineRenderer.SetPositions(NavMeshAgent.path.corners);
+            }
+            else
+            {
+                LineRenderer.enabled = false;
             }
         }
 
@@ -80,14 +105,6 @@ namespace Source.GamePlay.Services.Unit
                 NavMeshAgent.SetDestination(destination);
                 NavMeshAgent.avoidancePriority = BasePriority - 1;
                 NavMeshAgent.stoppingDistance = stoppingDistance;
-            }
-        }
-
-        public void SetSpeed(float? speed)
-        {
-            if (NavMeshAgent != null && speed != null)
-            {
-                NavMeshAgent.speed = (float)speed;
             }
         }
     }
