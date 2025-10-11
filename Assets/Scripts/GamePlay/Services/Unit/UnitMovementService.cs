@@ -25,7 +25,10 @@ namespace Source.GamePlay.Services.Unit
             Self = self;
             NavMeshAgent = navMeshAgent;
             if (NavMeshAgent != null)
+            {
                 NavMeshAgent.baseOffset = hitBoxHeight / 2f;
+                NavMeshAgent.avoidancePriority = BasePriority;
+            }
         }
 
         private void Start()
@@ -59,7 +62,7 @@ namespace Source.GamePlay.Services.Unit
 
         private void CheckReachedPath()
         {
-            if (NavMeshAgent == null) return;
+            if (NavMeshAgent == null || !NavMeshAgent.hasPath) return;
 
             if (Self != null && Self.Target != null)
             {
