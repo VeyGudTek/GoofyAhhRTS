@@ -58,7 +58,7 @@ namespace Source.GamePlay.Services.Unit
             if (CanAttack && HasAttack && visibleUnitsInRange.Count() > 0)
             {
                 UnitService target = visibleUnitsInRange
-                    .OrderBy(u => (u.transform.position - Self.transform.position).magnitude)
+                    .OrderBy(u => (u.transform.position - Self.transform.position).sqrMagnitude)
                     .First();
 
                 AttackUnit(target);
