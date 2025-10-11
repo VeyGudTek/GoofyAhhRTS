@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Source.GamePlay.Services.Unit
+namespace Source.GamePlay.Services.Unit.Instance
 {
     public class UnitMovementService : MonoBehaviour
     {

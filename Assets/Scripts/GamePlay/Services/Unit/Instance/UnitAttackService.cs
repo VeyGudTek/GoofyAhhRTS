@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Source.GamePlay.Services.Unit
+namespace Source.GamePlay.Services.Unit.Instance
 {
     public class UnitAttackService : MonoBehaviour
     {
