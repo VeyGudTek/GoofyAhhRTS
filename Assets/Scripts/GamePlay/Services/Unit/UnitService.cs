@@ -99,6 +99,8 @@ namespace Source.GamePlay.Services.Unit
 
         public bool CanSeeTarget(UnitService target)
         {
+            if (Target == null) return false;
+
             int layersToHit = LayerMask.GetMask(UnitLayerName) | LayerMask.GetMask(ObstacleLayerName);
 
             Vector3 direction = target.transform.position - transform.position;
@@ -117,6 +119,8 @@ namespace Source.GamePlay.Services.Unit
 
         public bool IsInRangeOfTarget()
         {
+            if (Target == null) return false;
+
             float distanceToTarget = (transform.position - Target.transform.position).magnitude;
             return distanceToTarget <= Range;
         }
