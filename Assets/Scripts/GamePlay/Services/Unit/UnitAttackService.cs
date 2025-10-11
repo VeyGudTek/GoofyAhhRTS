@@ -20,7 +20,7 @@ namespace Source.GamePlay.Services.Unit
         private float Damage { get; set; }
         private bool CanAttack { get; set; } = true;
 
-        private List<UnitService> UnitsInRange = new List<UnitService>();
+        private readonly List<UnitService> UnitsInRange = new();
 
         public void InjectDependencies(UnitService self, float range, float coolDown, float damage)
         {
@@ -106,9 +106,8 @@ namespace Source.GamePlay.Services.Unit
         private void OnTriggerExit(Collider other)
         {
             if (Self == null || HasAttack == false) return;
-            UnitService newUnit = other.gameObject.GetComponent<UnitService>();
-
-            if (newUnit != null)
+            
+            if (other.gameObject.TryGetComponent<UnitService>(out var newUnit))
             {
                 UnitsInRange.Remove(newUnit);
             }

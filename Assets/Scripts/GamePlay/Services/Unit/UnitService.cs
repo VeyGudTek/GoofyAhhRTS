@@ -107,13 +107,12 @@ namespace Source.GamePlay.Services.Unit
             int layersToHit = LayerMask.GetMask(UnitLayerName) | LayerMask.GetMask(ObstacleLayerName);
             Vector3 direction = target.transform.position - transform.position;
             Vector3 origin = transform.position;
-            RaycastHit hit;
-            if (Physics.Raycast(origin, direction, out hit, Mathf.Infinity, layersToHit))
+            if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, layersToHit))
             {
-                UnitService hitUnit = hit.collider.gameObject.GetComponent<UnitService>();
-                if (hitUnit == null) return false;
-
-                return hitUnit == target;
+                if (hit.collider.gameObject.TryGetComponent(out UnitService hitUnit))
+                {
+                    return hitUnit == target;
+                }
             }
             return false;
         }
