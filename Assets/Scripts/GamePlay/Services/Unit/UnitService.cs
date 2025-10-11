@@ -33,9 +33,12 @@ namespace Source.GamePlay.Services.Unit
         private float MaxHealth { get; set; } = 50f;
         private float Health { get; set; } = 50f;
         public UnitService Target { get; private set; }
-        public float Range { get; private set; } = 5f;
+        public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
+
+        private const string UnitLayerName = "Unit";
+        private const string ObstacleLayerName = "Environment";
 
         public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId)
         {
@@ -69,8 +72,10 @@ namespace Source.GamePlay.Services.Unit
         {
             Target = target;
 
-            if (UnitMovementService == null || Target != null) return;
-            UnitMovementService.MoveUnit(destination, stoppingDistance);
+            if (UnitMovementService != null && Target == null)
+            {
+                UnitMovementService.MoveUnit(destination, stoppingDistance);
+            }
         }
 
         public float GetArea()
@@ -85,6 +90,30 @@ namespace Source.GamePlay.Services.Unit
                 Position = this.transform.position,
                 Radius = HitBox == null ? 0f : HitBox.size.x / 2f
             };
+        }
+
+        public bool CanSeeTarget()
+        {
+            int layersToHit = LayerMask.GetMask(UnitLayerName) | LayerMask.GetMask(ObstacleLayerName);
+
+            Vector3 direction = Target.transform.position - transform.position;
+            Vector3 origin = transform.position;
+
+            RaycastHit hit;
+            if (Physics.Raycast(origin, direction, out hit, Mathf.Infinity, layersToHit))
+            {
+                UnitService hitUnit = hit.collider.gameObject.GetComponent<UnitService>();
+                if (hitUnit == null) return false;
+
+                return hitUnit == Target;
+            }
+            return false;
+        }
+
+        public bool IsInRangeOfTarget()
+        {
+            float distanceToTarget = (transform.position - Target.transform.position).magnitude;
+            return distanceToTarget <= Range;
         }
 
         public void RemoveDestroyedUnit(UnitService unit)

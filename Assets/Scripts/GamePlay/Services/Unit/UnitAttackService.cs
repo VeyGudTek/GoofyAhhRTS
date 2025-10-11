@@ -27,7 +27,7 @@ namespace Source.GamePlay.Services.Unit
             Self = self;
             Cooldown = coolDown;
             Damage = damage;
-            transform.localScale = new Vector3(range, transform.localScale.y, range);
+            transform.localScale = new Vector3(range * 2f, transform.localScale.y, range * 2f);
         }
 
         private void Start()

@@ -8,14 +8,6 @@ namespace Source.GamePlay.Services.Unit
 {
     public class UnitMovementService : MonoBehaviour
     {
-        private enum MovementType
-        {
-            None,
-            NavMesh
-        }
-
-        [SerializeField]
-        private MovementType Movement;
         [InitializationRequired]
         [SerializeField]
         private NavMeshAgent NavMeshAgent;
@@ -36,23 +28,8 @@ namespace Source.GamePlay.Services.Unit
 
         private void Start()
         {
-            CustomCheckInitializeRequired();
+            this.CheckInitializeRequired();
             SetNavmesh();
-        }
-
-        private void CustomCheckInitializeRequired()
-        {
-            try
-            {
-                this.CheckInitializeRequired();
-            }
-            catch (Exception e)
-            {
-                if (Movement == MovementType.NavMesh || !e.Message.Contains(typeof(NavMeshAgent).Name))
-                {
-                    throw e;
-                }
-            }
         }
 
         private void SetNavmesh()
@@ -69,14 +46,13 @@ namespace Source.GamePlay.Services.Unit
 
         private void UpdatePathingUsingTarget()
         {
-            if (Self == null || Self.Target == null) return;
+            if (Self == null || Self.Target == null || Self.IsInRangeOfTarget() || !CanRefreshPath) return;
 
-            if (CanRefreshPath)
-            {
-                MoveUnit(Self.Target.gameObject.transform.position, 0);
-                CanRefreshPath = false;
-                StartCoroutine(RefreshPath());
-            }
+            float stoppingDistance = (Self.GetPosition().Radius * 2) + Self.Target.GetPosition().Radius;
+            
+            MoveUnit(Self.Target.gameObject.transform.position, stoppingDistance);
+            CanRefreshPath = false;
+            StartCoroutine(RefreshPath());
         }
 
         IEnumerator RefreshPath()
@@ -87,13 +63,26 @@ namespace Source.GamePlay.Services.Unit
 
         private void CheckReachedPath()
         {
-            if (NavMeshAgent == null) return;
+            if (NavMeshAgent == null || !NavMeshAgent.hasPath) return;
 
+            if (Self != null && Self.Target != null)
+            {
+                if (Self.CanSeeTarget() && Self.IsInRangeOfTarget())
+                {
+                    StopPathFinding();
+                    return;
+                }
+            }
             if (!NavMeshAgent.pathPending && NavMeshAgent.remainingDistance <= NavMeshAgent.stoppingDistance)
             {
-                NavMeshAgent.ResetPath();
-                NavMeshAgent.avoidancePriority = BasePriority;
+                StopPathFinding();
             }
+        }
+
+        private void StopPathFinding()
+        {
+            NavMeshAgent.ResetPath();
+            NavMeshAgent.avoidancePriority = BasePriority;
         }
 
         public void MoveUnit(Vector3 destination, float stoppingDistance)
@@ -103,14 +92,6 @@ namespace Source.GamePlay.Services.Unit
                 NavMeshAgent.SetDestination(destination);
                 NavMeshAgent.avoidancePriority = BasePriority - 1;
                 NavMeshAgent.stoppingDistance = stoppingDistance;
-            }
-        }
-
-        public void SetSpeed(float? speed)
-        {
-            if (NavMeshAgent != null && speed != null)
-            {
-                NavMeshAgent.speed = (float)speed;
             }
         }
     }
