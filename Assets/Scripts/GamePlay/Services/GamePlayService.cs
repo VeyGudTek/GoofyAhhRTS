@@ -46,18 +46,26 @@ namespace Source.GamePlay.Services
 
         public void PrimaryHoldEvent(bool isShift) 
         {
-            if ( SelectionService == null) return;
+            if ( SelectionService == null || UnitManagerService == null) return;
 
             SelectionDto selection = SelectionService.ContinueSelection();
-            if ( !selection.SuccessfulSelect ) return;
 
-            UnitManagerService.SelectUnits(selection.Corner1, selection.Corner2, !isShift);
+            if (selection.SuccessfulSelect)
+            {
+                UnitManagerService.SelectUnits(selection.Corner1, selection.Corner2, !isShift);
+            }
+            else
+            {
+                UnitManagerService.DeSelectUnits(false);
+            }
         }
 
         public void PrimaryReleaseEvent() 
         {
-            if (SelectionService == null) return;
+            if (SelectionService == null || UnitManagerService == null) return;
+
             SelectionService.EndSelection();
+            UnitManagerService.AddSelectedToPrevious();
         }
 
         public void SecondaryClickEvent() 

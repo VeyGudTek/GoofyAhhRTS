@@ -59,16 +59,20 @@ namespace Source.GamePlay.Services
         {
             SelectionDto selectionDto = new();
             ContactDto groundContact = GetGroundSelection();
+            float length = 0f;
+            float height = 0f;
 
             if (StoredSelectionPoint != null && groundContact.HitGameObject)
             {
-                selectionDto.SuccessfulSelect = true;
                 selectionDto.Corner1 = (Vector3)StoredSelectionPoint;
                 selectionDto.Corner2 = groundContact.Point;
+
+                length = Mathf.Abs(selectionDto.Corner1.x - selectionDto.Corner2.x);
+                height = Mathf.Abs(selectionDto.Corner1.z - selectionDto.Corner2.z);
+                selectionDto.SuccessfulSelect = length >= .05f && height >= .05f;
             }
 
-            UpdateSelectorObject(selectionDto);
-
+            UpdateSelectorObject(selectionDto, length, height);
             return selectionDto;
         }
 
@@ -123,20 +127,11 @@ namespace Source.GamePlay.Services
             return raycastResults.Where(r => r.gameObject.layer == uiLayer).Count() > 0;
         }
 
-        private void UpdateSelectorObject(SelectionDto selection)
+        private void UpdateSelectorObject(SelectionDto selection, float length, float height)
         {
             if (SelectionObject == null) return;
 
             if (!selection.SuccessfulSelect)
-            {
-                SelectionObject.SetActive(false);
-                return;
-            }
-
-            float length = Mathf.Abs(selection.Corner1.x - selection.Corner2.x);
-            float height = Mathf.Abs(selection.Corner1.z - selection.Corner2.z);
-
-            if ( length < .05f || height < .05f)
             {
                 SelectionObject.SetActive(false);
                 return;

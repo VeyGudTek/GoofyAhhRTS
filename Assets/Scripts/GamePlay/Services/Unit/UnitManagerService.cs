@@ -18,7 +18,7 @@ namespace Source.GamePlay.Services.Unit
 
         private const float SpawnRayYOrigin = 100f;
         private readonly List<UnitService> Units = new();
-        private readonly List<UnitService> ManuallySelectedUnits = new();
+        private readonly List<UnitService> PreviouslySelectedUnits = new();
 
         public void InjectDependencies(UnitDataService unitDataService)
         {
@@ -50,23 +50,19 @@ namespace Source.GamePlay.Services.Unit
         {
             if (deselectPrevious)
             {
-                ManuallySelectedUnits.Clear();
-                foreach (UnitService unit in Units)
-                {
-                    unit.DeSelect();
-                }
+                DeSelectUnits(true);
             }
             
             if (selectedUnit != null)
             {
                 if (selectedUnit.Selected)
                 {
-                    ManuallySelectedUnits.Remove(selectedUnit);
+                    PreviouslySelectedUnits.Remove(selectedUnit);
                     selectedUnit.DeSelect();
                 }
                 else
                 {
-                    ManuallySelectedUnits.Add(selectedUnit);
+                    PreviouslySelectedUnits.Add(selectedUnit);
                     selectedUnit.Select();
                 }
             }
@@ -78,7 +74,7 @@ namespace Source.GamePlay.Services.Unit
 
             if (deselectUnits)
             {
-                foreach (UnitService unit in Units.Where(u => !ManuallySelectedUnits.Contains(u) && !unitsToSelect.Contains(u)))
+                foreach (UnitService unit in Units.Where(u => !PreviouslySelectedUnits.Contains(u) && !unitsToSelect.Contains(u)))
                 {
                     unit.DeSelect();
                 }
@@ -111,6 +107,33 @@ namespace Source.GamePlay.Services.Unit
             return (value + radius >= min && value - radius <= max);
         }
 
+        public void DeSelectUnits(bool includePreviousl)
+        {
+            if (includePreviousl)
+            {
+                PreviouslySelectedUnits.Clear();
+                foreach (UnitService unit in Units)
+                {
+                    unit.DeSelect();
+                }
+            }
+            else
+            {
+                foreach (UnitService unit in Units.Where(u => !PreviouslySelectedUnits.Contains(u)))
+                {
+                    unit.DeSelect();
+                }
+            }
+        }
+
+        public void AddSelectedToPrevious()
+        {
+            foreach(UnitService unit in Units.Where(u => u.Selected && !PreviouslySelectedUnits.Contains(u)))
+            {
+                PreviouslySelectedUnits.Add(unit);
+            }
+        }
+
         public void MoveUnits(Guid playerId, Vector3 destination, UnitService target)
         {
             IEnumerable<UnitService> unitsToMove = Units.Where(u => 
@@ -132,7 +155,7 @@ namespace Source.GamePlay.Services.Unit
         public void DestroyUnit(UnitService unitToDestroy)
         {
             Units.Remove(unitToDestroy);
-            ManuallySelectedUnits.Remove(unitToDestroy);
+            PreviouslySelectedUnits.Remove(unitToDestroy);
             foreach(UnitService currentUnit in Units)
             {
                 currentUnit.RemoveDestroyedUnit(unitToDestroy);
