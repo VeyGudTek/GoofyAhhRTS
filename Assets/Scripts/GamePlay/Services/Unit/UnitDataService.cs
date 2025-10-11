@@ -1,5 +1,6 @@
 using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.Utilities;
+using System;
 using UnityEngine;
 
 namespace Source.GamePlay.Services.Unit
@@ -26,13 +27,12 @@ namespace Source.GamePlay.Services.Unit
 
         public UnitData GetUnitData(UnitType color)
         {
-            switch (color)
+            return color switch
             {
-                case UnitType.Blue:
-                    return BlueUnitData != null ? BlueUnitData : new UnitData();
-                default:
-                    return RedUnitData != null ? RedUnitData : new UnitData();
-            }
+                UnitType.Blue => BlueUnitData,
+                UnitType.Red => RedUnitData,
+                _ => throw new Exception("[UnitDataService]: Invalid Unit Type"),
+            };
         }
     }
 }

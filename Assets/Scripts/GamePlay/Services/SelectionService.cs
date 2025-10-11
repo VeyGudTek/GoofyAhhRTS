@@ -57,7 +57,7 @@ namespace Source.GamePlay.Services
 
         public SelectionDto ContinueSelection()
         {
-            SelectionDto selectionDto = new SelectionDto();
+            SelectionDto selectionDto = new();
             ContactDto groundContact = GetGroundSelection();
 
             if (StoredSelectionPoint != null && groundContact.HitGameObject)
@@ -92,16 +92,14 @@ namespace Source.GamePlay.Services
 
         private ContactDto GetMouseWorldPoint(int layerMaskToHit)
         {
-            ContactDto contact = new ContactDto();
+            ContactDto contact = new();
             Vector2 mousePosition = Mouse.current.position.value;
-            Ray ray;
-            RaycastHit hit;
 
             if (CameraService == null) return contact;
-            if (MouseIsOverUI(mousePosition)) return contact;
-            if (!CameraService.ScreenToWorldPoint(mousePosition, out ray)) return contact;
+            if (MouseIsOverUI()) return contact;
+            if (!CameraService.ScreenToWorldPoint(mousePosition, out Ray ray)) return contact;
             
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMaskToHit))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMaskToHit))
             {
                 contact.HitGameObject = true;
                 contact.Point = hit.point;
@@ -111,13 +109,15 @@ namespace Source.GamePlay.Services
             return contact;
         }
 
-        private bool MouseIsOverUI(Vector2 mousePosition)
+        private bool MouseIsOverUI()
         {
             int uiLayer = LayerMask.NameToLayer(LayerNames.UI);
 
-            PointerEventData eventData = new PointerEventData(EventSystem.current);
-            eventData.position = Mouse.current.position.value;
-            List<RaycastResult> raycastResults = new List<RaycastResult>();
+            PointerEventData eventData = new(EventSystem.current)
+            {
+                position = Mouse.current.position.value
+            };
+            List<RaycastResult> raycastResults = new();
             EventSystem.current.RaycastAll(eventData, raycastResults);
 
             return raycastResults.Where(r => r.gameObject.layer == uiLayer).Count() > 0;

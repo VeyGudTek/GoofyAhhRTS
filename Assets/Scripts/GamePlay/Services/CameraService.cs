@@ -38,7 +38,7 @@ namespace Source.GamePlay.Services
         {
             if (Rigidbody == null) return;
 
-            Vector3 velocity = (new Vector3(direction.x, 0f, direction.y)) * Time.deltaTime * 500f;
+            Vector3 velocity = 500f * Time.deltaTime * new Vector3(direction.x, 0f, direction.y);
             Rigidbody.AddForce(velocity);
         }
     }

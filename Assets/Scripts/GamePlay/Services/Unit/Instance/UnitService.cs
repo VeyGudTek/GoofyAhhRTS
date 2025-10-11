@@ -114,7 +114,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             int layersToHit = LayerMask.GetMask(LayerNames.Obstacle);
             Vector3 direction = target.transform.position - transform.position;
             Vector3 origin = transform.position;
-            if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, layersToHit))
+            if (Physics.Raycast(origin, direction, Mathf.Infinity, layersToHit))
             {
                 return false;
             }
