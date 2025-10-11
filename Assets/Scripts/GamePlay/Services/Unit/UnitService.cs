@@ -1,6 +1,7 @@
 using Source.Shared.Utilities;
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Source.GamePlay.Services.Unit
 {
@@ -20,13 +21,15 @@ namespace Source.GamePlay.Services.Unit
         private UnitAttackService UnitAttackService;
         [SerializeField]
         [InitializationRequired]
-        private GameObject SelectionIndicator;
-        [SerializeField]
-        [InitializationRequired]
         private HealthBarService HealthBarService;
         [InitializationRequired]
         [SerializeField]
         private BoxCollider HitBox;
+        [SerializeField]
+        [InitializationRequired]
+        private GameObject SelectionIndicator;
+        [SerializeField]
+        private NavMeshAgent NavMeshAgent;
 
         [InitializationRequired]
         private UnitManagerService UnitManagerService;
@@ -51,7 +54,7 @@ namespace Source.GamePlay.Services.Unit
             if (UnitAttackService != null) 
                 UnitAttackService.InjectDependencies(this, Range, 1f, 10f);
             if (UnitMovementService != null)
-                UnitMovementService.InjectDependencies(this);
+                UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.size.y, NavMeshAgent);
         }
 
         private void Start()

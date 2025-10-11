@@ -9,11 +9,10 @@ namespace Source.GamePlay.Services.Unit
     public class UnitMovementService : MonoBehaviour
     {
         [InitializationRequired]
-        [SerializeField]
-        private NavMeshAgent NavMeshAgent;
+        private NavMeshAgent NavMeshAgent { get; set; }
         [InitializationRequired]
         [SerializeField]
-        private BoxCollider HitBox;
+        private LineRenderer LineRenderer;
 
         [InitializationRequired]
         private UnitService Self;
@@ -21,27 +20,24 @@ namespace Source.GamePlay.Services.Unit
         private bool CanRefreshPath = true;
         const float RefreshPathTime = .5f;
 
-        public void InjectDependencies(UnitService self)
+        public void InjectDependencies(UnitService self, float hitBoxHeight, NavMeshAgent navMeshAgent)
         {
             Self = self;
+            NavMeshAgent = navMeshAgent;
+            if (NavMeshAgent != null)
+                NavMeshAgent.baseOffset = hitBoxHeight / 2f;
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
-            SetNavmesh();
-        }
-
-        private void SetNavmesh()
-        {
-            if (NavMeshAgent == null || HitBox == null) return;
-            NavMeshAgent.baseOffset = HitBox.size.y / 2f;
         }
 
         private void Update()
         {
             UpdatePathingUsingTarget();
             CheckReachedPath();
+            DrawPath();
         }
 
         private void UpdatePathingUsingTarget()
@@ -83,6 +79,20 @@ namespace Source.GamePlay.Services.Unit
         {
             NavMeshAgent.ResetPath();
             NavMeshAgent.avoidancePriority = BasePriority;
+        }
+
+        private void DrawPath()
+        {
+            if (NavMeshAgent != null && LineRenderer != null && NavMeshAgent.hasPath)
+            {
+                LineRenderer.enabled = true;
+                LineRenderer.positionCount = NavMeshAgent.path.corners.Length;
+                LineRenderer.SetPositions(NavMeshAgent.path.corners);
+            }
+            else
+            {
+                LineRenderer.enabled = false;
+            }
         }
 
         public void MoveUnit(Vector3 destination, float stoppingDistance)
