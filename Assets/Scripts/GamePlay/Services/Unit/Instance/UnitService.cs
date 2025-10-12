@@ -131,7 +131,13 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void RemoveDestroyedUnit(UnitService unit)
         {
-            Target = null;
+            if (Target != null && unit == Target)
+            {
+                Target = null;
+                if (UnitMovementService != null)
+                    UnitMovementService.StopPathFinding();
+            }
+            
             if (UnitAttackService != null) 
                 UnitAttackService.RemoveUnitInRange(unit);
         }

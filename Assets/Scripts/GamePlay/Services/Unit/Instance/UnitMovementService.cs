@@ -79,7 +79,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             }
         }
 
-        private void StopPathFinding()
+        public void StopPathFinding()
         {
             NavMeshAgent.ResetPath();
             NavMeshAgent.avoidancePriority = BasePriority;
