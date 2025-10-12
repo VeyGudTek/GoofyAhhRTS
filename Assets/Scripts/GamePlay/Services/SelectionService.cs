@@ -4,7 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using Source.GamePlay.Services.Unit;
+using Source.GamePlay.Services.Unit.Instance;
+using Source.GamePlay.Static.Classes;
 
 namespace Source.GamePlay.Services
 {
@@ -33,10 +34,6 @@ namespace Source.GamePlay.Services
 
         private Vector3? StoredSelectionPoint { get; set; } = null;
 
-        private const string UILayerName = "UI";
-        private const string UnitLayerName = "Unit";
-        private const string EnvironmentLayerName = "Environment";
-
         public void InjectDependencies(CameraService cameraService)
         {
             CameraService = cameraService;
@@ -60,18 +57,22 @@ namespace Source.GamePlay.Services
 
         public SelectionDto ContinueSelection()
         {
-            SelectionDto selectionDto = new SelectionDto();
+            SelectionDto selectionDto = new();
             ContactDto groundContact = GetGroundSelection();
+            float length = 0f;
+            float height = 0f;
 
             if (StoredSelectionPoint != null && groundContact.HitGameObject)
             {
-                selectionDto.SuccessfulSelect = true;
                 selectionDto.Corner1 = (Vector3)StoredSelectionPoint;
                 selectionDto.Corner2 = groundContact.Point;
+
+                length = Mathf.Abs(selectionDto.Corner1.x - selectionDto.Corner2.x);
+                height = Mathf.Abs(selectionDto.Corner1.z - selectionDto.Corner2.z);
+                selectionDto.SuccessfulSelect = length >= .05f && height >= .05f;
             }
 
-            UpdateSelectorObject(selectionDto);
-
+            UpdateSelectorObject(selectionDto, length, height);
             return selectionDto;
         }
 
@@ -83,28 +84,26 @@ namespace Source.GamePlay.Services
 
         public ContactDto GetUnitSelection()
         {
-            int layerMaskToHit = LayerMask.GetMask(UnitLayerName);
+            int layerMaskToHit = LayerMask.GetMask(LayerNames.Unit);
             return GetMouseWorldPoint(layerMaskToHit);
         }
 
         public ContactDto GetGroundSelection()
         {
-            int layerMaskToHit = LayerMask.GetMask(EnvironmentLayerName);
+            int layerMaskToHit = LayerMask.GetMask(LayerNames.Ground);
             return GetMouseWorldPoint(layerMaskToHit);
         }
 
         private ContactDto GetMouseWorldPoint(int layerMaskToHit)
         {
-            ContactDto contact = new ContactDto();
+            ContactDto contact = new();
             Vector2 mousePosition = Mouse.current.position.value;
-            Ray ray;
-            RaycastHit hit;
 
             if (CameraService == null) return contact;
-            if (MouseIsOverUI(mousePosition)) return contact;
-            if (!CameraService.ScreenToWorldPoint(mousePosition, out ray)) return contact;
+            if (MouseIsOverUI()) return contact;
+            if (!CameraService.ScreenToWorldPoint(mousePosition, out Ray ray)) return contact;
             
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMaskToHit))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMaskToHit))
             {
                 contact.HitGameObject = true;
                 contact.Point = hit.point;
@@ -114,32 +113,25 @@ namespace Source.GamePlay.Services
             return contact;
         }
 
-        private bool MouseIsOverUI(Vector2 mousePosition)
+        private bool MouseIsOverUI()
         {
-            int uiLayer = LayerMask.NameToLayer(UILayerName);
+            int uiLayer = LayerMask.NameToLayer(LayerNames.UI);
 
-            PointerEventData eventData = new PointerEventData(EventSystem.current);
-            eventData.position = Mouse.current.position.value;
-            List<RaycastResult> raycastResults = new List<RaycastResult>();
+            PointerEventData eventData = new(EventSystem.current)
+            {
+                position = Mouse.current.position.value
+            };
+            List<RaycastResult> raycastResults = new();
             EventSystem.current.RaycastAll(eventData, raycastResults);
 
             return raycastResults.Where(r => r.gameObject.layer == uiLayer).Count() > 0;
         }
 
-        private void UpdateSelectorObject(SelectionDto selection)
+        private void UpdateSelectorObject(SelectionDto selection, float length, float height)
         {
             if (SelectionObject == null) return;
 
             if (!selection.SuccessfulSelect)
-            {
-                SelectionObject.SetActive(false);
-                return;
-            }
-
-            float length = Mathf.Abs(selection.Corner1.x - selection.Corner2.x);
-            float height = Mathf.Abs(selection.Corner1.z - selection.Corner2.z);
-
-            if ( length < .05f || height < .05f)
             {
                 SelectionObject.SetActive(false);
                 return;

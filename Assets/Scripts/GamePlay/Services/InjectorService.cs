@@ -22,6 +22,9 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         [SerializeField]
         private UnitManagerService UnitManagerService;
+        [InitializationRequired]
+        [SerializeField]
+        private UnitDataService UnitDataService;
 
         private void Awake()
         {
@@ -33,6 +36,7 @@ namespace Source.GamePlay.Services
         {
             SelectionService.InjectDependencies(CameraService);
             InputService.InjectDependencies(GamePlayService);
+            UnitManagerService.InjectDependencies(UnitDataService);
             GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService);
         }
     }

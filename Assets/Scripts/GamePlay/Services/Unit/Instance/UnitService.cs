@@ -1,9 +1,11 @@
+using Source.GamePlay.Static.Classes;
+using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.Utilities;
 using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Source.GamePlay.Services.Unit
+namespace Source.GamePlay.Services.Unit.Instance
 {
     public class PositionDto
     {
@@ -29,6 +31,9 @@ namespace Source.GamePlay.Services.Unit
         [InitializationRequired]
         private GameObject SelectionIndicator;
         [SerializeField]
+        [InitializationRequired]
+        private MeshRenderer MeshRenderer;
+        [SerializeField]
         private NavMeshAgent NavMeshAgent;
 
         [InitializationRequired]
@@ -40,20 +45,20 @@ namespace Source.GamePlay.Services.Unit
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
 
-        private const string ObstacleLayerName = "Environment";
-
-        public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId)
+        public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId, UnitData unitData)
         {
             UnitManagerService = unitManagerService;
             PlayerId = playerId;
-        }
+            MaxHealth = unitData.MaxHealth;
+            Health = MaxHealth;
+            Range = unitData.Range;
 
-        private void Awake()
-        {
-            if (UnitAttackService != null) 
-                UnitAttackService.InjectDependencies(this, Range, 1f, 10f);
+            if (MeshRenderer != null)
+                MeshRenderer.material = unitData.Material;
+            if (UnitAttackService != null)
+                UnitAttackService.InjectDependencies(this, unitData);
             if (UnitMovementService != null)
-                UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.size.y, NavMeshAgent);
+                UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.size.y, NavMeshAgent, unitData.Speed);
         }
 
         private void Start()
@@ -106,10 +111,10 @@ namespace Source.GamePlay.Services.Unit
         {
             if (target == null) return false;
 
-            int layersToHit = LayerMask.GetMask(ObstacleLayerName);
+            int layersToHit = LayerMask.GetMask(LayerNames.Obstacle);
             Vector3 direction = target.transform.position - transform.position;
             Vector3 origin = transform.position;
-            if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, layersToHit))
+            if (Physics.Raycast(origin, direction, Mathf.Infinity, layersToHit))
             {
                 return false;
             }
@@ -126,7 +131,13 @@ namespace Source.GamePlay.Services.Unit
 
         public void RemoveDestroyedUnit(UnitService unit)
         {
-            Target = null;
+            if (Target != null && unit == Target)
+            {
+                Target = null;
+                if (UnitMovementService != null)
+                    UnitMovementService.StopPathFinding();
+            }
+            
             if (UnitAttackService != null) 
                 UnitAttackService.RemoveUnitInRange(unit);
         }

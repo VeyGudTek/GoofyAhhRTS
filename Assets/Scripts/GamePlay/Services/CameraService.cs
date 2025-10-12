@@ -11,6 +11,7 @@ namespace Source.GamePlay.Services
         private Camera Camera { get; set; }
 
         private const float LINEAR_DAMPING = 2f;
+        private const float CAMERA_SPEED = 750f;
 
         private void Awake()
         {
@@ -38,7 +39,7 @@ namespace Source.GamePlay.Services
         {
             if (Rigidbody == null) return;
 
-            Vector3 velocity = (new Vector3(direction.x, 0f, direction.y)) * Time.deltaTime * 500f;
+            Vector3 velocity = CAMERA_SPEED * Time.deltaTime * new Vector3(direction.x, 0f, direction.y);
             Rigidbody.AddForce(velocity);
         }
     }

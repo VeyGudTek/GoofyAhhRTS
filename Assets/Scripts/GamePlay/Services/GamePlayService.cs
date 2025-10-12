@@ -31,8 +31,9 @@ namespace Source.GamePlay.Services
 
             for (int i = -7; i < 7; i += 2)
             {
-                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -4), true);
-                UnitManagerService.SpawnUnit(enemyGuid, new Vector2(i, 2), false);
+                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -10), UnitType.Blue);
+                UnitManagerService.SpawnUnit(enemyGuid, new Vector2(i, 20), UnitType.Red);
+                UnitManagerService.SpawnUnit(enemyGuid, new Vector2(10, i + 10), UnitType.Red);
             }
         }
 
@@ -46,18 +47,26 @@ namespace Source.GamePlay.Services
 
         public void PrimaryHoldEvent(bool isShift) 
         {
-            if ( SelectionService == null) return;
+            if ( SelectionService == null || UnitManagerService == null) return;
 
             SelectionDto selection = SelectionService.ContinueSelection();
-            if ( !selection.SuccessfulSelect ) return;
 
-            UnitManagerService.SelectUnits(selection.Corner1, selection.Corner2, !isShift);
+            if (selection.SuccessfulSelect)
+            {
+                UnitManagerService.SelectUnits(selection.Corner1, selection.Corner2, !isShift);
+            }
+            else
+            {
+                UnitManagerService.DeSelectUnits(false);
+            }
         }
 
         public void PrimaryReleaseEvent() 
         {
-            if (SelectionService == null) return;
+            if (SelectionService == null || UnitManagerService == null) return;
+
             SelectionService.EndSelection();
+            UnitManagerService.AddSelectedToPrevious();
         }
 
         public void SecondaryClickEvent() 

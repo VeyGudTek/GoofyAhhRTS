@@ -4,20 +4,16 @@ using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Source.GamePlay.Services.Unit
+namespace Source.GamePlay.Services.Unit.Instance
 {
     public class ProjectileService : MonoBehaviour
     {
         [InitializationRequired]
-        LineRenderer LineRenderer { get; set; }
+        [SerializeField]
+        LineRenderer LineRenderer;
 
         private const float ProjectileDuration = .5f;
         private const float Variance = .2f;
-
-        private void Awake()
-        {
-            LineRenderer = GetComponent<LineRenderer>();
-        }
 
         void Start()
         {
@@ -26,12 +22,24 @@ namespace Source.GamePlay.Services.Unit
             LineRenderer.enabled = false;
         }
 
+        public void SetProjectileColor(Color start, Color end)
+        {
+            if (LineRenderer != null)
+            {
+                LineRenderer.startColor = start;
+                LineRenderer.endColor = end;
+            }
+        }
+
         public void CreateProjectile(Vector3 start, Vector3 end)
         {
-            LineRenderer.enabled = true;
-            LineRenderer.SetPosition(0, start + GetVector3Variance());
-            LineRenderer.SetPosition(1, end + GetVector3Variance());
-            StartCoroutine(RemoveProjectile());
+            if (LineRenderer != null)
+            {
+                LineRenderer.enabled = true;
+                LineRenderer.SetPosition(0, start + GetVector3Variance());
+                LineRenderer.SetPosition(1, end + GetVector3Variance());
+                StartCoroutine(RemoveProjectile());
+            }
         }
 
         private readonly Func<Vector3> GetVector3Variance = () => new Vector3(

@@ -1,7 +1,7 @@
 using Source.Shared.Utilities;
 using UnityEngine;
 
-namespace Source.GamePlay.Services.Unit
+namespace Source.GamePlay.Services.Unit.Instance
 {
     public class HealthBarService : MonoBehaviour
     {
