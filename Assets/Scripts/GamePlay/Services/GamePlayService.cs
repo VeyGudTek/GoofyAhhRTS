@@ -82,7 +82,7 @@ namespace Source.GamePlay.Services
 
         public void SecondaryHoldEvent() { }
         public void SecondaryReleaseEvent() { }
-        public void MoveEvent(Vector2 moveVector)
+        public void FixedMoveEvent(Vector2 moveVector)
         {
             CameraService.OnMove(moveVector);
         }

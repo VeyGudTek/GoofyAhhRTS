@@ -10,6 +10,6 @@ namespace Source.Shared.Services.Interfaces
         void SecondaryClickEvent();
         void SecondaryHoldEvent();
         void SecondaryReleaseEvent();
-        void MoveEvent(Vector2 moveVector);
+        void FixedMoveEvent(Vector2 moveVector);
     }
 }

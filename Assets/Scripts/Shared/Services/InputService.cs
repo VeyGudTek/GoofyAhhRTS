@@ -17,6 +17,7 @@ namespace Source.Shared.Services
         private InputAction Move { get; set; }
         [InitializationRequired]
         private InputAction Sprint { get; set; }
+        private Vector2 MoveInput { get; set; } = Vector2.zero;
 
         public void InjectDependencies(IInputProcessorService inputProcessorService)
         {
@@ -43,6 +44,13 @@ namespace Source.Shared.Services
             UpdatePrimary();
             UpdateSecondary();
             UpdateMovement();
+        }
+
+        private void FixedUpdate()
+        {
+            if (InputProcessorService == null) return;
+
+            UpdateFixedMovement();
         }
 
         void UpdatePrimary()
@@ -87,9 +95,14 @@ namespace Source.Shared.Services
             if (Move == null) return;
             
             Vector2 result = Move.ReadValue<Vector2>();
-            if (result != Vector2.zero)
+            MoveInput = result;
+        }
+
+        void UpdateFixedMovement()
+        {
+            if (MoveInput != Vector2.zero)
             {
-                InputProcessorService.MoveEvent(result);
+                InputProcessorService.FixedMoveEvent(MoveInput);
             }
         }
     }
