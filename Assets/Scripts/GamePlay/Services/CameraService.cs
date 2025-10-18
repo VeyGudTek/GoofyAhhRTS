@@ -6,18 +6,14 @@ namespace Source.GamePlay.Services
     public class CameraService: MonoBehaviour
     {
         [InitializationRequired]
-        private Rigidbody Rigidbody { get; set; }
+        [SerializeField]
+        private Rigidbody Rigidbody;
         [InitializationRequired]
-        private Camera Camera { get; set; }
+        [SerializeField]
+        private Camera Camera;
 
-        private const float LINEAR_DAMPING = 2f;
-        private const float CAMERA_SPEED = 750f;
-
-        private void Awake()
-        {
-            Rigidbody = GetComponent<Rigidbody>();
-            Camera = GetComponent<Camera>();
-        }
+        private const float LINEAR_DAMPING = 15f;
+        private const float CAMERA_SPEED = 300f;
 
         private void Start()
         {
@@ -39,7 +35,7 @@ namespace Source.GamePlay.Services
         {
             if (Rigidbody == null) return;
 
-            Vector3 velocity = CAMERA_SPEED * Time.deltaTime * new Vector3(direction.x, 0f, direction.y);
+            Vector3 velocity = CAMERA_SPEED * new Vector3(direction.x, 0f, direction.y);
             Rigidbody.AddForce(velocity);
         }
     }
