@@ -26,7 +26,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         private HealthBarService HealthBarService;
         [InitializationRequired]
         [SerializeField]
-        private BoxCollider HitBox;
+        private CapsuleCollider HitBox;
         [SerializeField]
         [InitializationRequired]
         private GameObject SelectionIndicator;
@@ -58,21 +58,13 @@ namespace Source.GamePlay.Services.Unit.Instance
             if (UnitAttackService != null)
                 UnitAttackService.InjectDependencies(this, unitData);
             if (UnitMovementService != null)
-                UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.size.y, NavMeshAgent, unitData.Speed);
+                UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.height, NavMeshAgent, unitData.Speed);
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
             SelectionIndicator.SetActive(false);
-            SetPosition();
-        }
-
-        private void SetPosition()
-        {
-            Vector3 newPos = this.transform.position;
-            newPos.y += HitBox.size.y / 2f;
-            this.transform.position = newPos;
         }
 
         public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target)
@@ -94,7 +86,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public float GetArea()
         {
-            return HitBox == null ? 0f : HitBox.size.x * HitBox.size.z;
+            return HitBox == null ? 0f : Mathf.PI * (HitBox.radius * HitBox.radius);
         }
 
         public PositionDto GetPosition()
@@ -102,7 +94,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             return new PositionDto()
             {
                 Position = this.transform.position,
-                Radius = HitBox == null ? 0f : HitBox.size.x / 2f
+                Radius = HitBox == null ? 0f : HitBox.radius
             };
         }
 
