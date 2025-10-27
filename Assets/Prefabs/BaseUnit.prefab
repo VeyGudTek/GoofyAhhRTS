@@ -441,7 +441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4319329158920336560}
-  - component: {fileID: 8202670452493377245}
+  - component: {fileID: 527395166707192913}
   - component: {fileID: 5742489160262223180}
   - component: {fileID: -384323498120774872}
   - component: {fileID: 4925235821277857539}
@@ -474,8 +474,8 @@ Transform:
   - {fileID: 2523223920163842388}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &8202670452493377245
-BoxCollider:
+--- !u!136 &527395166707192913
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -492,9 +492,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1.5806873, z: 1}
-  m_Center: {x: 0, y: -0.02871263, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1.4
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5742489160262223180
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -533,7 +535,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 15
   avoidancePriority: 50
   m_AngularSpeed: 0
   m_StoppingDistance: 0
@@ -559,7 +561,7 @@ MonoBehaviour:
   UnitMovementService: {fileID: 1724303742889655876}
   UnitAttackService: {fileID: 5688184842991367836}
   HealthBarService: {fileID: 5939567787711105434}
-  HitBox: {fileID: 8202670452493377245}
+  HitBox: {fileID: 527395166707192913}
   SelectionIndicator: {fileID: 7562840356624071233}
   MeshRenderer: {fileID: 6480793396436504767}
   NavMeshAgent: {fileID: -384323498120774872}
