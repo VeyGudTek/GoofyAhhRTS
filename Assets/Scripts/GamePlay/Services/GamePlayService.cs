@@ -3,6 +3,8 @@ using Source.Shared.Utilities;
 using Source.GamePlay.Services.Unit;
 using System;
 using UnityEngine;
+using Source.GamePlay.Services.Unit.Instance;
+using System.Collections.Generic;
 
 namespace Source.GamePlay.Services
 {
@@ -45,20 +47,13 @@ namespace Source.GamePlay.Services
             UnitManagerService.SelectUnit(contact.Unit, !isShift);
         }
 
-        public void PrimaryHoldEvent(bool isShift) 
+        public void PrimaryHoldEvent()
         {
             if ( SelectionService == null || UnitManagerService == null) return;
 
-            SelectionDto selection = SelectionService.ContinueSelection();
+            List<UnitService> selectedUnits = SelectionService.ContinueSelection();
 
-            if (selection.SuccessfulSelect)
-            {
-                UnitManagerService.SelectUnits(selection.Corner1, selection.Corner2, !isShift);
-            }
-            else
-            {
-                UnitManagerService.DeSelectUnits(false);
-            }
+            UnitManagerService.SelectUnits(selectedUnits);
         }
 
         public void PrimaryReleaseEvent() 

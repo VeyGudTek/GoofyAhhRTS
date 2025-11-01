@@ -68,43 +68,17 @@ namespace Source.GamePlay.Services.Unit
             }
         }
 
-        public void SelectUnits(Vector3 selectionStart, Vector3 selectionEnd, bool deselectUnits)
+        public void SelectUnits(List<UnitService> unitsToSelect)
         {
-            IEnumerable<UnitService> unitsToSelect = Units.Where(u => CheckSelectArea(u.GetPosition(), selectionStart, selectionEnd));
-
-            if (deselectUnits)
+            foreach (UnitService unit in Units.Where(u => !PreviouslySelectedUnits.Contains(u) && !unitsToSelect.Contains(u)))
             {
-                foreach (UnitService unit in Units.Where(u => !PreviouslySelectedUnits.Contains(u) && !unitsToSelect.Contains(u)))
-                {
-                    unit.DeSelect();
-                }
+                unit.DeSelect();
             }
 
             foreach (UnitService unit in unitsToSelect)
             {
                 unit.Select();
             }
-        }
-
-        private static bool CheckSelectArea(PositionDto unitPosition, Vector3 selectionStart, Vector3 selectionEnd)
-        {
-            if (!ValueIsBetween(unitPosition.Position.x, unitPosition.Radius, selectionStart.x, selectionEnd.x))
-            {
-                return false;
-            } 
-            if (!ValueIsBetween(unitPosition.Position.z, unitPosition.Radius, selectionStart.z, selectionEnd.z))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private static bool ValueIsBetween(float value, float radius, float end1, float end2)
-        {
-            float max = Mathf.Max(end1, end2);
-            float min = Mathf.Min(end1, end2);
-
-            return (value + radius >= min && value - radius <= max);
         }
 
         public void DeSelectUnits(bool includePrevious)

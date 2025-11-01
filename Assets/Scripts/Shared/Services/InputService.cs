@@ -63,7 +63,7 @@ namespace Source.Shared.Services
             }
             if (Primary.IsInProgress())
             {
-                InputProcessorService.PrimaryHoldEvent(Sprint.IsInProgress());
+                InputProcessorService.PrimaryHoldEvent();
             }
             if (Primary.WasReleasedThisFrame())
             {

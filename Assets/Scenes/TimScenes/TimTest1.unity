@@ -849,7 +849,7 @@ GameObject:
   - component: {fileID: 1440845062}
   - component: {fileID: 1440845061}
   m_Layer: 0
-  m_Name: Selector
+  m_Name: SelectionIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -917,7 +917,7 @@ Transform:
   m_GameObject: {fileID: 1440845059}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.02, y: 0.93, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1298,6 +1298,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2021359414}
   - component: {fileID: 2021359413}
+  - component: {fileID: 2021359415}
+  - component: {fileID: 2021359416}
   m_Layer: 0
   m_Name: SelectionService
   m_TagString: Untagged
@@ -1317,7 +1319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c439a77449a529b47826916b68065547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectionObject: {fileID: 1440845059}
+  SelectionIndicator: {fileID: 1440845059}
 --- !u!4 &2021359414
 Transform:
   m_ObjectHideFlags: 0
@@ -1334,6 +1336,54 @@ Transform:
   - {fileID: 1440845063}
   m_Father: {fileID: 1066151762}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &2021359415
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021359412}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &2021359416
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021359412}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2029831297
 GameObject:
   m_ObjectHideFlags: 0
