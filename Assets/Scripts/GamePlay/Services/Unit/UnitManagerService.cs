@@ -84,14 +84,6 @@ namespace Source.GamePlay.Services.Unit
             }
         }
 
-        private static bool ValueIsBetween(float value, float radius, float end1, float end2)
-        {
-            float max = Mathf.Max(end1, end2);
-            float min = Mathf.Min(end1, end2);
-
-            return (value + radius >= min && value - radius <= max);
-        }
-
         public void DeSelectUnits(bool includePrevious)
         {
             if (includePrevious)
