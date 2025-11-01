@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Source.GamePlay.Services.Unit.Instance;
 using Source.GamePlay.Static.Classes;
+using Source.GamePlay.Utilities;
 
 namespace Source.GamePlay.Services
 {
@@ -16,23 +17,17 @@ namespace Source.GamePlay.Services
         public UnitService Unit = null;
     }
 
-    public class SelectionDto
-    {
-        public bool SuccessfulSelect = false;
-        public Vector3 Corner1 = Vector3.zero;
-        public Vector3 Corner2 = Vector3.zero;
-    }
-
     public class SelectionService : MonoBehaviour
     {
         [InitializationRequired]
         [SerializeField]
-        private GameObject SelectionObject;
+        private GameObject SelectionIndicator;
 
         [InitializationRequired]
         private CameraService CameraService { get; set; }
 
         private Vector3? StoredSelectionPoint { get; set; } = null;
+        private List<UnitService> SelectedUnits { get; set; } = new List<UnitService>();
 
         public void InjectDependencies(CameraService cameraService)
         {
@@ -42,7 +37,7 @@ namespace Source.GamePlay.Services
         private void Start()
         {
             this.CheckInitializeRequired();
-            SelectionObject.SetActive(false);
+            SelectionIndicator.SetActive(false);
         }
 
         public ContactDto StartSelection()
@@ -55,31 +50,37 @@ namespace Source.GamePlay.Services
             return GetUnitSelection();
         }
 
-        public SelectionDto ContinueSelection()
+        public List<UnitService> ContinueSelection()
         {
-            SelectionDto selectionDto = new();
             ContactDto groundContact = GetGroundSelection();
-            float length = 0f;
-            float height = 0f;
 
-            if (StoredSelectionPoint != null && groundContact.HitGameObject)
+            Vector3 storedSelection = StoredSelectionPoint == null ? groundContact.Point : (Vector3)StoredSelectionPoint;
+            float length = Mathf.Abs((groundContact.Point.x - storedSelection.x));
+            float width = Mathf.Abs((groundContact.Point.z - storedSelection.z));
+            const float distanceThreshold = .05f;
+
+            if (groundContact.HitGameObject) 
             {
-                selectionDto.Corner1 = (Vector3)StoredSelectionPoint;
-                selectionDto.Corner2 = groundContact.Point;
+                if (StoredSelectionPoint == null)
+                {
+                    StoredSelectionPoint = groundContact.Point;
+                }
+                UpdateTransform(groundContact.Point, length, width);
 
-                length = Mathf.Abs(selectionDto.Corner1.x - selectionDto.Corner2.x);
-                height = Mathf.Abs(selectionDto.Corner1.z - selectionDto.Corner2.z);
-                selectionDto.SuccessfulSelect = length >= .05f && height >= .05f;
+                if (length > distanceThreshold && width > distanceThreshold)
+                {
+                    SelectionIndicator.SetActive(true);
+                    return SelectedUnits;
+                }
             }
-
-            UpdateSelectorObject(selectionDto, length, height);
-            return selectionDto;
+            SelectionIndicator.SetActive(false);
+            return new List<UnitService>();
         }
 
         public void EndSelection()
         {
             StoredSelectionPoint = null;
-            SelectionObject.SetActive(false);
+            SelectionIndicator.SetActive(false);
         }
 
         public ContactDto GetUnitSelection()
@@ -127,23 +128,40 @@ namespace Source.GamePlay.Services
             return raycastResults.Where(r => r.gameObject.layer == uiLayer).Count() > 0;
         }
 
-        private void UpdateSelectorObject(SelectionDto selection, float length, float height)
+        private void UpdateTransform(Vector3 currentPoint, float length, float width)
         {
-            if (SelectionObject == null) return;
+            if (SelectionIndicator == null) return;
+            const int SelectionY = 1;
+            const int SelectionHeight = 10;
+            const int SelectionIndicatorHeight = 1;
 
-            if (!selection.SuccessfulSelect)
+            Vector3 storedSelection = (Vector3)StoredSelectionPoint;
+
+            float midX = (currentPoint.x + storedSelection.x) / 2;
+            float midZ = (currentPoint.z + storedSelection.z) / 2;
+
+            transform.position = new Vector3(midX, SelectionY, midZ);
+            transform.localScale = new Vector3(length, SelectionHeight, width);
+            SelectionIndicator.transform.position = new Vector3(midX, SelectionY, midZ);
+            SelectionIndicator.transform.SetGlobalScale(new Vector3(length, SelectionIndicatorHeight, width));
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            UnitService newUnit = other.gameObject.GetComponent<UnitService>();
+            if (newUnit != null)
             {
-                SelectionObject.SetActive(false);
-                return;
+                SelectedUnits.Add(newUnit);
             }
+        }
 
-            float midX = (selection.Corner1.x + selection.Corner2.x) / 2;
-            float prevY = SelectionObject.transform.position.y;
-            float midZ = (selection.Corner1.z + selection.Corner2.z) / 2;
-                
-            SelectionObject.SetActive(true);
-            SelectionObject.transform.position = new Vector3(midX, prevY, midZ);
-            SelectionObject.transform.localScale = new Vector3(length, 1, height);
+        private void OnTriggerExit(Collider other)
+        {
+            UnitService newUnit = other.gameObject.GetComponent<UnitService>();
+            if (newUnit != null)
+            {
+                SelectedUnits.Remove(newUnit);
+            }
         }
     }
 }
