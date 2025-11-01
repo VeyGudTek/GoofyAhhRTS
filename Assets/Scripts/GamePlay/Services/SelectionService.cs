@@ -53,10 +53,6 @@ namespace Source.GamePlay.Services
         public List<UnitService> ContinueSelection()
         {
             ContactDto groundContact = GetGroundSelection();
-
-            Vector3 storedSelection = StoredSelectionPoint == null ? groundContact.Point : (Vector3)StoredSelectionPoint;
-            float length = Mathf.Abs((groundContact.Point.x - storedSelection.x));
-            float width = Mathf.Abs((groundContact.Point.z - storedSelection.z));
             const float distanceThreshold = .05f;
 
             if (groundContact.HitGameObject) 
@@ -65,6 +61,9 @@ namespace Source.GamePlay.Services
                 {
                     StoredSelectionPoint = groundContact.Point;
                 }
+                float length = Mathf.Abs((groundContact.Point.x - ((Vector3)StoredSelectionPoint).x));
+                float width = Mathf.Abs((groundContact.Point.z - ((Vector3)StoredSelectionPoint).z));
+
                 UpdateTransform(groundContact.Point, length, width);
 
                 if (length > distanceThreshold && width > distanceThreshold)
