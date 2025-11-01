@@ -68,14 +68,11 @@ namespace Source.GamePlay.Services.Unit
             }
         }
 
-        public void SelectUnits(List<UnitService> unitsToSelect, bool deselectUnits)
+        public void SelectUnits(List<UnitService> unitsToSelect)
         {
-            if (deselectUnits)
+            foreach (UnitService unit in Units.Where(u => !PreviouslySelectedUnits.Contains(u) && !unitsToSelect.Contains(u)))
             {
-                foreach (UnitService unit in Units.Where(u => !PreviouslySelectedUnits.Contains(u) && !unitsToSelect.Contains(u)))
-                {
-                    unit.DeSelect();
-                }
+                unit.DeSelect();
             }
 
             foreach (UnitService unit in unitsToSelect)

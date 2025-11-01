@@ -48,13 +48,13 @@ namespace Source.GamePlay.Services
             UnitManagerService.SelectUnit(contact.Unit, !isShift);
         }
 
-        public void PrimaryHoldEvent(bool isShift) 
+        public void PrimaryHoldEvent()
         {
             if ( SelectionService == null || UnitManagerService == null) return;
 
             List<UnitService> selectedUnits = SelectionService.ContinueSelection();
 
-            UnitManagerService.SelectUnits(selectedUnits, !isShift);
+            UnitManagerService.SelectUnits(selectedUnits);
         }
 
         public void PrimaryReleaseEvent() 
