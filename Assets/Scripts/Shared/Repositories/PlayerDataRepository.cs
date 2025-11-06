@@ -2,10 +2,13 @@ using Source.Shared.Services;
 
 namespace Source.Shared.Repositories
 {
-    public class PlayerData { }
+    public class PlayerData 
+    {
+        public PlayerData Clone() => (PlayerData)MemberwiseClone();
+    }
     public class PlayerDataRepository
     {
-        public PlayerData PlayerData { get; set; }
+        private PlayerData PlayerData { get; set; }
         private const string FileName = "playerData";
 
         public PlayerDataRepository()
@@ -13,8 +16,11 @@ namespace Source.Shared.Repositories
             PlayerData = DataAccessService.ReadData<PlayerData>(FileName);
         }
 
-        public void SavePlayerData()
+        public void GetPlayerData() => PlayerData.Clone();
+
+        public void SavePlayerData(PlayerData newPlayerData)
         {
+            PlayerData = newPlayerData.Clone();
             DataAccessService.WriteData(FileName, PlayerData);
         }
     }
