@@ -5,7 +5,6 @@ namespace Source.Shared.Repositories
     public class Settings
     {
         public float CameraSpeed { get; set; } = 300f;
-        public Settings Clone() => (Settings)this.MemberwiseClone();
     }
 
     public class SettingsRepository
