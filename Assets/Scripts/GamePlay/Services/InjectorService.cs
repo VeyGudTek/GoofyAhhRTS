@@ -2,10 +2,11 @@ using Source.Shared.Services;
 using Source.Shared.Utilities;
 using Source.GamePlay.Services.Unit;
 using UnityEngine;
+using Source.Shared.Repositories;
 
 namespace Source.GamePlay.Services
 {
-    public class InjectorService: MonoBehaviour
+    public class InjectorService : MonoBehaviour
     {
         [SerializeField]
         [InitializationRequired]
@@ -25,6 +26,9 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         [SerializeField]
         private UnitDataService UnitDataService;
+        [InitializationRequired]
+        [SerializeField]
+        private SettingsRepository SettingsRepository;
 
         private void Awake()
         {
@@ -34,6 +38,7 @@ namespace Source.GamePlay.Services
 
         private void InjectDependencies()
         {
+            CameraService.InjectDependencies(SettingsRepository);
             SelectionService.InjectDependencies(CameraService);
             InputService.InjectDependencies(GamePlayService);
             UnitManagerService.InjectDependencies(UnitDataService);

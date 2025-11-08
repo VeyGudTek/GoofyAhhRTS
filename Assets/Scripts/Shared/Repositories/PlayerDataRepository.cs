@@ -1,4 +1,5 @@
 using Source.Shared.Services;
+using UnityEngine;
 
 namespace Source.Shared.Repositories
 {
@@ -6,12 +7,12 @@ namespace Source.Shared.Repositories
     {
         public PlayerData Clone() => (PlayerData)MemberwiseClone();
     }
-    public class PlayerDataRepository
+    public class PlayerDataRepository : MonoBehaviour
     {
         private PlayerData PlayerData { get; set; }
         private const string FileName = "playerData";
 
-        public PlayerDataRepository()
+        private void Awake()
         {
             PlayerData = DataAccessService.ReadData<PlayerData>(FileName);
         }

@@ -1,5 +1,5 @@
 using Source.Shared.Services;
-using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Source.Shared.Repositories
 {
@@ -9,12 +9,12 @@ namespace Source.Shared.Repositories
         public Settings Clone() => (Settings)MemberwiseClone();
     }
 
-    public class SettingsRepository
+    public class SettingsRepository : MonoBehaviour
     {
         private Settings Settings { get; set; }
         private const string FileName = "Settings";
 
-        public SettingsRepository()
+        private void Awake()
         {
             Settings = DataAccessService.ReadData<Settings>(FileName);
         }
