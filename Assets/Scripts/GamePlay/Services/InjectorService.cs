@@ -29,6 +29,15 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         [SerializeField]
         private SettingsRepository SettingsRepository;
+        [InitializationRequired]
+        [SerializeField]
+        private SettingsMenuService SettingsUIService;
+        [InitializationRequired]
+        [SerializeField]
+        private PauseMenuService PauseMenuService;
+        [InitializationRequired]
+        [SerializeField]
+        private SceneService SceneService;
 
         private void Awake()
         {
@@ -38,11 +47,12 @@ namespace Source.GamePlay.Services
 
         private void InjectDependencies()
         {
+            PauseMenuService.InjectDependencies(GamePlayService, SettingsUIService.gameObject);
             CameraService.InjectDependencies(SettingsRepository);
             SelectionService.InjectDependencies(CameraService);
             InputService.InjectDependencies(GamePlayService);
             UnitManagerService.InjectDependencies(UnitDataService);
-            GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService);
+            GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService, SceneService);
         }
     }
 }

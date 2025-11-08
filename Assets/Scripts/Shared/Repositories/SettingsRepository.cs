@@ -11,7 +11,7 @@ namespace Source.Shared.Repositories
 
     public class SettingsRepository : MonoBehaviour
     {
-        private Settings Settings { get; set; }
+        private Settings Settings { get; set; } = new();
         private const string FileName = "Settings";
 
         private void Awake()

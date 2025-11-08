@@ -5,6 +5,7 @@ using System;
 using UnityEngine;
 using Source.GamePlay.Services.Unit.Instance;
 using System.Collections.Generic;
+using Source.Shared.Services;
 
 namespace Source.GamePlay.Services
 {
@@ -16,19 +17,23 @@ namespace Source.GamePlay.Services
         private UnitManagerService UnitManagerService { get; set; }
         [InitializationRequired]
         private SelectionService SelectionService { get; set; }
+        [InitializationRequired]
+        private SceneService SceneService { get; set; }
 
         private Guid PlayerId { get; set; } = Guid.NewGuid();
 
-        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService)
+        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService, SceneService sceneService)
         {
             CameraService = cameraService;
             UnitManagerService = unitManagerService;
             SelectionService = selectionService;
+            SceneService = sceneService;
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
+            //TempCodeBelow
             Guid enemyGuid = Guid.NewGuid();
 
             for (int i = -7; i < 7; i += 2)
