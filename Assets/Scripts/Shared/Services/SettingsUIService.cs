@@ -3,9 +3,9 @@ using Source.Shared.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Source.Start.Services
+namespace Source.Shared.Services
 {
-    public class SettingsService : MonoBehaviour
+    public class SettingsUIService : MonoBehaviour
     {
         [InitializationRequired]
         [SerializeField]

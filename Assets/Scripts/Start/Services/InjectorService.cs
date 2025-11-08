@@ -9,10 +9,10 @@ namespace Source.Start.Services
     {
         [InitializationRequired]
         [SerializeField]
-        private MainMenuService MainMenuService;
+        private MainMenuUIService MainMenuService;
         [InitializationRequired]
         [SerializeField]
-        private SettingsService SettingsService;
+        private SettingsUIService SettingsService;
         [InitializationRequired]
         [SerializeField]
         private SceneService SceneService;

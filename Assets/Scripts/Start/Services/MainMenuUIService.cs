@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Source.Start.Services
 {
-    public class MainMenuService : MonoBehaviour
+    public class MainMenuUIService : MonoBehaviour
     {
         [InitializationRequired]
         private SceneService SceneService { get; set; }
