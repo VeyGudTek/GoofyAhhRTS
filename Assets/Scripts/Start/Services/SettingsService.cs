@@ -1,3 +1,4 @@
+using Source.Shared.Repositories;
 using Source.Shared.Utilities;
 using UnityEngine;
 
@@ -6,11 +7,18 @@ namespace Source.Start.Services
     public class SettingsService : MonoBehaviour
     {
         [InitializationRequired]
-        private GameObject MenuObject { get; set; }
+        [SerializeField]
+        private GameObject DiscardConfirmationObject;
 
-        public void InjectDependencies(GameObject menuObject)
+        [InitializationRequired]
+        private GameObject MenuObject { get; set; }
+        [InitializationRequired]
+        private SettingsRepository SettingsRepo { get; set; }
+
+        public void InjectDependencies(GameObject menuObject, SettingsRepository settingsRepo)
         {
             MenuObject = menuObject;
+            SettingsRepo = settingsRepo;
         }
 
         private void Start()
@@ -18,7 +26,34 @@ namespace Source.Start.Services
             this.CheckInitializeRequired();
         }
 
-        public void OnBack()
+        public void OnDiscard()
+        {
+            if (DiscardConfirmationObject == null) return;
+
+            DiscardConfirmationObject.SetActive(true);
+        }
+
+        public void OnDiscardCancel()
+        {
+            if (DiscardConfirmationObject == null) return;
+
+            DiscardConfirmationObject.SetActive(false);
+        }
+
+        public void OnDiscardConfirm()
+        {
+            if (DiscardConfirmationObject == null) return;
+
+            DiscardConfirmationObject.SetActive(false);
+            ReturnToMenu();
+        }
+
+        public void OnSave()
+        {
+            ReturnToMenu();
+        }
+
+        private void ReturnToMenu()
         {
             if (MenuObject == null) return;
 
