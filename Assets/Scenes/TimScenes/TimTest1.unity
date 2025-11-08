@@ -609,6 +609,7 @@ GameObject:
   - component: {fileID: 1066151764}
   - component: {fileID: 1066151763}
   - component: {fileID: 1066151766}
+  - component: {fileID: 1066151767}
   m_Layer: 0
   m_Name: Master
   m_TagString: Untagged
@@ -676,6 +677,7 @@ MonoBehaviour:
   CameraService: {fileID: 73509409}
   UnitManagerService: {fileID: 1251777545}
   UnitDataService: {fileID: 1066151766}
+  SettingsRepository: {fileID: 1066151767}
 --- !u!114 &1066151766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -690,6 +692,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BlueUnitData: {fileID: 11400000, guid: fa374875ab9b0484283ca3e817d2c143, type: 2}
   RedUnitData: {fileID: 11400000, guid: 3c685799dd9cc4d4e8a73cdceb294fa2, type: 2}
+--- !u!114 &1066151767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066151760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da827f48161dba4da73fad905b1910a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1074222702
 GameObject:
   m_ObjectHideFlags: 0
