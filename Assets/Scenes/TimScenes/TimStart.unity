@@ -170,7 +170,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bd79d249e9214946a997c9f0d171bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlaySceneName: TimGamePlay
 --- !u!1 &106055895
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,9 +1309,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1649568461}
-  - component: {fileID: 1649568463}
   - component: {fileID: 1649568462}
   - component: {fileID: 1649568464}
+  - component: {fileID: 1649568465}
   m_Layer: 0
   m_Name: Master
   m_TagString: Untagged
@@ -1347,22 +1346,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50443e5a5c4d94547a894550807c1ab8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1649568463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1649568460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c964405a216df140af204cfa3fa2a58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MainMenuService: {fileID: 40866394}
-  SettingsService: {fileID: 1558742083}
-  SceneService: {fileID: 1649568462}
-  SettingsRepository: {fileID: 1649568464}
 --- !u!114 &1649568464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1375,6 +1358,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0da827f48161dba4da73fad905b1910a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1649568465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1649568460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9150ddad8f70d2742ab93aee925a7198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SettingsMenuService: {fileID: 1558742083}
+  StartMenuService: {fileID: 40866394}
+  SceneService: {fileID: 1649568462}
+  SettingsRepository: {fileID: 1649568464}
+  NextSceneName: TimGamePlay
 --- !u!1 &1999323898
 GameObject:
   m_ObjectHideFlags: 0
@@ -1523,6 +1523,10 @@ PrefabInstance:
     - target: {fileID: 64390254205828991, guid: 921a2b5c2547c6f498090f11e5efee0f, type: 3}
       propertyPath: m_Name
       value: Settings
+      objectReference: {fileID: 0}
+    - target: {fileID: 64390254205828991, guid: 921a2b5c2547c6f498090f11e5efee0f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1277451396980208500, guid: 921a2b5c2547c6f498090f11e5efee0f, type: 3}
       propertyPath: m_AnchorMax.x
