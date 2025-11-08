@@ -2142,7 +2142,19 @@ MonoBehaviour:
   m_Value: 300
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1558742083}
+        m_TargetAssemblyTypeName: Source.Start.Services.SettingsService, Assembly-CSharp
+        m_MethodName: OnCameraSpeedChange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1241926285
 GameObject:
   m_ObjectHideFlags: 0
@@ -2710,6 +2722,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DiscardConfirmationObject: {fileID: 1681684514}
+  CameraSpeedSlider: {fileID: 1204070663}
 --- !u!1 &1582005199
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using Source.Shared.Repositories;
 using Source.Shared.Utilities;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Source.Start.Services
 {
@@ -9,11 +10,15 @@ namespace Source.Start.Services
         [InitializationRequired]
         [SerializeField]
         private GameObject DiscardConfirmationObject;
+        [InitializationRequired]
+        [SerializeField]
+        private Slider CameraSpeedSlider;
 
         [InitializationRequired]
         private GameObject MenuObject { get; set; }
         [InitializationRequired]
         private SettingsRepository SettingsRepo { get; set; }
+        private Settings CurrentSettings { get; set; } = new();
 
         public void InjectDependencies(GameObject menuObject, SettingsRepository settingsRepo)
         {
@@ -24,6 +29,20 @@ namespace Source.Start.Services
         private void Start()
         {
             this.CheckInitializeRequired();
+        }
+
+        private void OnEnable()
+        {
+            if (SettingsRepo == null) return;
+            CurrentSettings = SettingsRepo.GetSettings();
+
+            if (CameraSpeedSlider != null)
+                CameraSpeedSlider.value = CurrentSettings.CameraSpeed;
+        }
+
+        public void OnCameraSpeedChange()
+        {
+            CurrentSettings.CameraSpeed = CameraSpeedSlider.value;
         }
 
         public void OnDiscard()
@@ -50,6 +69,7 @@ namespace Source.Start.Services
 
         public void OnSave()
         {
+            SettingsRepo.SaveSettings(CurrentSettings);
             ReturnToMenu();
         }
 
