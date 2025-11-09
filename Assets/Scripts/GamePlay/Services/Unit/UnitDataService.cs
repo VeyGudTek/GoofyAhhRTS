@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Source.GamePlay.Services.Unit
 {
-    public enum UnitType
+    public enum UnitColor
     {
         Blue,
         Red
@@ -25,12 +25,12 @@ namespace Source.GamePlay.Services.Unit
             this.CheckInitializeRequired();
         }
 
-        public UnitData GetUnitData(UnitType color)
+        public UnitData GetUnitData(UnitColor color)
         {
             return color switch
             {
-                UnitType.Blue => BlueUnitData,
-                UnitType.Red => RedUnitData,
+                UnitColor.Blue => BlueUnitData,
+                UnitColor.Red => RedUnitData,
                 _ => throw new Exception("[UnitDataService]: Invalid Unit Type"),
             };
         }

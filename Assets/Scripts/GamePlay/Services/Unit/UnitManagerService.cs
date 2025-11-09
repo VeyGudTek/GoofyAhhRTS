@@ -30,7 +30,7 @@ namespace Source.GamePlay.Services.Unit
             this.CheckInitializeRequired();
         }
 
-        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, UnitType type)
+        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, UnitColor type)
         {
             if (UnitDataService == null) return;
 

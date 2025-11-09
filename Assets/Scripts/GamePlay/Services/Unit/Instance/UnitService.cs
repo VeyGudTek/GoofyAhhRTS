@@ -7,6 +7,12 @@ using UnityEngine.AI;
 
 namespace Source.GamePlay.Services.Unit.Instance
 {
+    public enum UnitType
+    {
+        Regular,
+        Harvestor
+    }
+
     public class PositionDto
     {
         public Vector3 Position { get; set; }
@@ -38,12 +44,15 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         [InitializationRequired]
         private UnitManagerService UnitManagerService;
+        public UnitService HomeBase { get; private set; }
         private float MaxHealth { get; set; } = 50f;
         private float Health { get; set; } = 50f;
-        public UnitService Target { get; private set; }
+        private UnitService Target { get; set; }
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
+        public bool HarvesterReturning { get; set; } = false;
+        public UnitType UnitType { get; private set; } = UnitType.Regular;
 
         public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId, UnitData unitData)
         {
@@ -100,10 +109,10 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public bool CanSeeTarget()
         {
-            return CanSeeTarget(Target);
+            return CanSeeUnit(CurrentTarget);
         }
 
-        public bool CanSeeTarget(UnitService target)
+        public bool CanSeeUnit(UnitService target)
         {
             if (target == null) return false;
 
@@ -160,5 +169,12 @@ namespace Source.GamePlay.Services.Unit.Instance
             Selected = false;
             SelectionIndicator.SetActive(false);
         }
+
+        public UnitService CurrentTarget => UnitType switch 
+        { 
+            UnitType.Harvestor => HarvesterReturning ? HomeBase : Target,
+            UnitType.Regular => Target,
+            _ => Target
+        };
     }
 }

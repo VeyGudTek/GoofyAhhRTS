@@ -46,13 +46,16 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void UpdatePathingUsingTarget()
         {
-            if (Self == null || Self.Target == null || (Self.IsInRangeOfTarget() && Self.CanSeeTarget()) || !CanRefreshPath) return;
+            UnitService currentTarget = Self.CurrentTarget;
+            if (Self == null || currentTarget == null) return;
 
-            float stoppingDistance = (Self.GetPosition().Radius * 2) + Self.Target.GetPosition().Radius;
-            
-            MoveUnit(Self.Target.gameObject.transform.position, stoppingDistance);
-            CanRefreshPath = false;
-            StartCoroutine(RefreshPath());
+            if ((!Self.IsInRangeOfTarget() || !Self.CanSeeTarget()) && CanRefreshPath)
+            {
+                float stoppingDistance = (Self.GetPosition().Radius * 2) + currentTarget.GetPosition().Radius;
+                MoveUnit(currentTarget.gameObject.transform.position, stoppingDistance);
+                CanRefreshPath = false;
+                StartCoroutine(RefreshPath());
+            }
         }
 
         IEnumerator RefreshPath()
@@ -65,7 +68,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             if (NavMeshAgent == null || !NavMeshAgent.hasPath) return;
 
-            if (Self != null && Self.Target != null)
+            if (Self != null && Self.CurrentTarget != null)
             {
                 if (Self.CanSeeTarget() && Self.IsInRangeOfTarget())
                 {

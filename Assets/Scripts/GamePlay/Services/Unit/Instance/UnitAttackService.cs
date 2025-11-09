@@ -14,9 +14,6 @@ namespace Source.GamePlay.Services.Unit.Instance
         [InitializationRequired]
         [SerializeField]
         private ProjectileService ProjectileService;
-
-        [SerializeField]
-        private bool HasAttack;
         private float Cooldown { get; set; }
         private float Damage { get; set; }
         private bool CanAttack { get; set; } = true;
@@ -46,7 +43,9 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void ProcessAttack()
         {
-            if (Self == null || Self.Target == null)
+            if (Self == null) return;
+
+            if (Self.CurrentTarget == null)
             {
                 AutomaticAttack();
             }
@@ -58,8 +57,8 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void AutomaticAttack()
         {
-            IEnumerable<UnitService> visibleUnitsInRange = UnitsInRange.Where(u => Self.CanSeeTarget(u));
-            if (CanAttack && HasAttack && visibleUnitsInRange.Count() > 0)
+            IEnumerable<UnitService> visibleUnitsInRange = UnitsInRange.Where(u => Self.CanSeeUnit(u));
+            if (CanAttack && visibleUnitsInRange.Count() > 0)
             {
                 UnitService target = visibleUnitsInRange
                     .OrderBy(u => (u.transform.position - Self.transform.position).sqrMagnitude)
@@ -71,23 +70,21 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void ManualAttack()
         {
-            if (CanAttack && HasAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget())
+            if (CanAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget())
             {
-                AttackUnit(Self.Target);
+                AttackUnit(Self.CurrentTarget);
             }
         }
 
         private void AttackUnit(UnitService target)
         {
             target.Damage(Damage);
+            Self.HarvesterReturning = !Self.HarvesterReturning;
             CanAttack = false;
+            StartCoroutine(ResetCooldown());
 
             if (ProjectileService != null)
-            {
                 ProjectileService.CreateProjectile(transform.position, target.gameObject.transform.position);
-            }
-
-            StartCoroutine(ResetCooldown());
         }
 
         IEnumerator ResetCooldown()
@@ -98,7 +95,8 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void OnTriggerEnter(Collider other)
         {
-            if (Self == null || HasAttack == false) return;
+            if (Self == null) return;
+
             UnitService newUnit = other.gameObject.GetComponent<UnitService>();
 
             if (newUnit != null && newUnit.PlayerId != Self.PlayerId)
@@ -109,7 +107,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void OnTriggerExit(Collider other)
         {
-            if (Self == null || HasAttack == false) return;
+            if (Self == null) return;
             
             if (other.gameObject.TryGetComponent<UnitService>(out var newUnit))
             {
