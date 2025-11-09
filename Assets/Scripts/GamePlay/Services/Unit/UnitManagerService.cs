@@ -49,11 +49,14 @@ namespace Source.GamePlay.Services.Unit
             if (GamePlayService == null || UnitDataService == null) return;
 
             HomeUnit.InjectDependencies(this, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(UnitColor.Blue, UnitType.Home));
-            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Home));
+            Units.Add(HomeUnit);
+            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.EnemyGuid, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Home));
+            Units.Add(EnemyHomeUnit);
 
             foreach(UnitService resource in  ResourceUnits)
             {
                 resource.InjectDependencies(this, null, Guid.Empty, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Resource));
+                Units.Add(resource);
             }
         }
 

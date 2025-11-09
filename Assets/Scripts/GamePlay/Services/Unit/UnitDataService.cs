@@ -49,11 +49,11 @@ namespace Source.GamePlay.Services.Unit
             UnitData data =  color switch
             {
                 UnitColor.Blue => GetBlueUnitData(type),
-                UnitColor.Red => GetBlueUnitData(type),
+                UnitColor.Red => GetRedUnitData(type),
                 _ => throw new Exception("[UnitDataService]: Invalid Unit Color"),
             };
 
-            return data == null ? null : data;
+            return data == null ? new UnitData() : data;
         }
 
         public UnitData GetBlueUnitData(UnitType type)

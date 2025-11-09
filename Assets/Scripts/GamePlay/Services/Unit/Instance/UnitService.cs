@@ -67,6 +67,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             MaxHealth = unitData.MaxHealth;
             Health = MaxHealth;
             Range = unitData.Range;
+            UnitType = unitData.UnitType;
             HomeBase = homeBase;
 
             if (MeshRenderer != null)

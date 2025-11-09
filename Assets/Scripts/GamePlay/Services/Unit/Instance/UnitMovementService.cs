@@ -46,7 +46,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void UpdatePathingUsingTarget()
         {
-            if (Self == null || Self.CurrentTarget == null) return;
+            if (Self == null || Self.CurrentTarget == null || !NavMeshAgent.enabled) return;
             UnitService currentTarget = Self.CurrentTarget;
 
             if ((!Self.IsInRangeOfTarget() || !Self.CanSeeTarget()) && CanRefreshPath)
@@ -104,7 +104,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void MoveUnit(Vector3 destination, float stoppingDistance)
         {
-            if (NavMeshAgent != null)
+            if (NavMeshAgent != null && NavMeshAgent.enabled)
             {
                 NavMeshAgent.SetDestination(destination);
                 NavMeshAgent.avoidancePriority = BasePriority - 1;
