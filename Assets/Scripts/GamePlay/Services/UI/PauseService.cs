@@ -39,13 +39,17 @@ namespace Source.GamePlay.Services.UI
             PauseMenuService.gameObject.SetActive(true);
         }
 
-        public void ProcessEscape()
+        public void ProcessCancel()
         {
             if (PauseMenuService == null) return;
 
             if (PauseMenuService.gameObject.activeSelf)
             {
-                PauseMenuService.ProcessEscape();
+                PauseMenuService.ProcessCancel();
+            }
+            if (SettingsMenuService.gameObject.activeSelf)
+            {
+                SettingsMenuService.ProcessCancel();
             }
         }
 

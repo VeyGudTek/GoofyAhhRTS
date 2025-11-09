@@ -105,7 +105,7 @@ namespace Source.GamePlay.Services
             Action escapeAction = GameState switch
             {
                 GameState.Playing => PauseGame,
-                GameState.Paused => PauseService.ProcessEscape,
+                GameState.Paused => PauseService.ProcessCancel,
                 _ => () => { }
             };
 

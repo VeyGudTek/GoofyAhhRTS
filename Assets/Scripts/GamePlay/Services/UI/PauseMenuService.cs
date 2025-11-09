@@ -28,7 +28,7 @@ namespace Source.GamePlay.Services.UI
             PauseService.Resume();
         }
 
-        public void ProcessEscape()
+        public void ProcessCancel()
         {
             if (PauseService == null || QuitConfirmationObject == null) return;
 

@@ -41,6 +41,20 @@ namespace Source.Shared.Services
                 CameraSpeedSlider.value = CurrentSettings.CameraSpeed;
         }
 
+        public void ProcessCancel()
+        {
+            if (MenuService == null || DiscardConfirmationObject == null) return;
+
+            if (DiscardConfirmationObject.gameObject.activeSelf)
+            {
+                OnDiscardCancel();
+            }
+            else
+            {
+                OnDiscard();
+            }
+        }
+
         public void OnCameraSpeedChange()
         {
             CurrentSettings.CameraSpeed = CameraSpeedSlider.value;
