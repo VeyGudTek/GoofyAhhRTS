@@ -41,7 +41,7 @@ namespace Source.GamePlay.Services.UI
 
         public void ProcessCancel()
         {
-            if (PauseMenuService == null) return;
+            if (PauseMenuService == null || SettingsMenuService == null) return;
 
             if (PauseMenuService.gameObject.activeSelf)
             {
