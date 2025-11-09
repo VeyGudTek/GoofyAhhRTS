@@ -189,6 +189,11 @@ namespace Source.GamePlay.Services.Unit.Instance
             SelectionIndicator.SetActive(false);
         }
 
+        public void AddGold(float gold)
+        {
+            Debug.Log("Gold Added");
+        }
+
         public UnitService CurrentTarget => UnitType switch 
         { 
             UnitType.Harvestor => HarvesterReturning ? HomeBase : Target,

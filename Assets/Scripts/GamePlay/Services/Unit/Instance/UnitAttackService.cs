@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Source.GamePlay.Services.Unit.Instance
 {
@@ -70,7 +71,10 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void ManualAttack()
         {
-            if (CanAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget())
+            bool harvestorAndResource = Self.UnitType == UnitType.Harvestor && Self.CurrentTarget.UnitType == UnitType.Resource;
+            bool regularAndEnemy = Self.UnitType == UnitType.Regular && Self.CurrentTarget.UnitType != UnitType.Resource;
+
+            if (CanAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget() && (harvestorAndResource || regularAndEnemy))
             {
                 AttackUnit(Self.CurrentTarget);
             }
@@ -99,7 +103,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
             UnitService newUnit = other.gameObject.GetComponent<UnitService>();
 
-            if (newUnit != null && newUnit.PlayerId != Self.PlayerId)
+            if (newUnit != null && newUnit.PlayerId != Self.PlayerId && newUnit.UnitType != UnitType.Resource)
             {
                 UnitsInRange.Add(newUnit);
             }
