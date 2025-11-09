@@ -114,12 +114,14 @@ namespace Source.GamePlay.Services
 
         public void PauseGame()
         {
+            Time.timeScale = 0;
             PauseService.OpenPauseMenu();
             GameState = GameState.Paused;
         }
 
         public void UnPauseGame()
         {
+            Time.timeScale = 1;
             GameState = GameState.Playing;
         }
     }
