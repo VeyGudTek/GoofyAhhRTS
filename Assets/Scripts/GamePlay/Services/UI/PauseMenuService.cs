@@ -25,7 +25,21 @@ namespace Source.GamePlay.Services.UI
         {
             if (PauseService == null) return;
 
-            gameObject.SetActive(false);
+            PauseService.Resume();
+        }
+
+        public void ProcessEscape()
+        {
+            if (PauseService == null || QuitConfirmationObject == null) return;
+
+            if (QuitConfirmationObject.gameObject.activeSelf)
+            {
+                OnQuitCancel();
+            }
+            else
+            {
+                PauseService.Resume();
+            }
         }
 
         public void OnSettings()

@@ -58,7 +58,7 @@ namespace Source.GamePlay.Services
             SelectionService.InjectDependencies(CameraService);
             InputService.InjectDependencies(GamePlayService);
             UnitManagerService.InjectDependencies(UnitDataService);
-            GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService, SceneService);
+            GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService, PauseService, SceneService);
         }
     }
 }

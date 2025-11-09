@@ -34,22 +34,41 @@ namespace Source.GamePlay.Services.UI
 
         public void OpenPauseMenu()
         {
+            if (PauseMenuService == null) return;
+
             PauseMenuService.gameObject.SetActive(true);
+        }
+
+        public void ProcessEscape()
+        {
+            if (PauseMenuService == null) return;
+
+            if (PauseMenuService.gameObject.activeSelf)
+            {
+                PauseMenuService.ProcessEscape();
+            }
         }
 
         public void Resume()
         {
+            if (PauseMenuService == null || GamePlayService == null) return;
+
             PauseMenuService.gameObject.SetActive(false);
+            GamePlayService.UnPauseGame();
         }
 
         public void OpenSettings()
         {
+            if (PauseMenuService == null || SettingsMenuService == null) return;
+
             PauseMenuService.gameObject.SetActive(false);
             SettingsMenuService.gameObject.SetActive(true);
         }
 
         public void CloseSettings()
         {
+            if (PauseMenuService == null || SettingsMenuService == null) return;
+
             PauseMenuService.gameObject.SetActive(true); 
             SettingsMenuService.gameObject.SetActive(false);
         }
