@@ -21,6 +21,8 @@ namespace Source.Start.Services
 
         public void OnPlay()
         {
+            if (StartService == null) return;
+
             StartService.Play();
         }
 
@@ -33,6 +35,8 @@ namespace Source.Start.Services
 
         public void OnQuit()
         {
+            if (StartService == null) return;
+
             StartService.Quit();
         }
     }
