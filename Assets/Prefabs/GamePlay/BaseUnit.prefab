@@ -225,7 +225,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ProjectileService: {fileID: 5344883701286992484}
-  HasAttack: 1
 --- !u!114 &5344883701286992484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,6 +359,7 @@ GameObject:
   - component: {fileID: -384323498120774872}
   - component: {fileID: 4925235821277857539}
   - component: {fileID: 5939567787711105434}
+  - component: {fileID: -3675312499849701561}
   m_Layer: 6
   m_Name: BaseUnit
   m_TagString: Untagged
@@ -445,7 +445,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4590323852618973426}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
@@ -479,6 +479,7 @@ MonoBehaviour:
   SelectionIndicator: {fileID: 7562840356624071233}
   MeshRenderer: {fileID: 6480793396436504767}
   NavMeshAgent: {fileID: -384323498120774872}
+  navMeshObstacle: {fileID: -3675312499849701561}
 --- !u!114 &5939567787711105434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,6 +493,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HealthBar: {fileID: 7226884206715216283}
+--- !u!208 &-3675312499849701561
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4590323852618973426}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &5301969090425376558
 GameObject:
   m_ObjectHideFlags: 0

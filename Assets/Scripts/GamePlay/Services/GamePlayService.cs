@@ -29,7 +29,8 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         private SceneService SceneService { get; set; }
 
-        private Guid PlayerId { get; set; } = Guid.NewGuid();
+        public Guid PlayerId { get; private set; } = Guid.NewGuid();
+        public Guid EnemyGuid { get; private set; } = Guid.NewGuid();
         private GameState GameState = GameState.Playing;
 
         public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService,PauseService pauseService, SceneService sceneService)
@@ -45,13 +46,12 @@ namespace Source.GamePlay.Services
         {
             this.CheckInitializeRequired();
             //TempCodeBelow
-            Guid enemyGuid = Guid.NewGuid();
 
             for (int i = -7; i < 7; i += 2)
             {
                 UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -10), UnitColor.Blue);
-                UnitManagerService.SpawnUnit(enemyGuid, new Vector2(i, 20), UnitColor.Red);
-                UnitManagerService.SpawnUnit(enemyGuid, new Vector2(10, i + 10), UnitColor.Red);
+                UnitManagerService.SpawnUnit(EnemyGuid, new Vector2(i, 20), UnitColor.Red);
+                UnitManagerService.SpawnUnit(EnemyGuid, new Vector2(10, i + 10), UnitColor.Red);
             }
         }
 

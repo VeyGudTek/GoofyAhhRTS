@@ -1,3 +1,4 @@
+using Source.GamePlay.Services.Unit.Instance;
 using UnityEngine;
 
 namespace Source.GamePlay.Static.ScriptableObjects
@@ -13,5 +14,6 @@ namespace Source.GamePlay.Static.ScriptableObjects
         public float damage;
         public Color ProjectileStartColor;
         public Color ProjectileEndColor;
+        public UnitType UnitType;
     }
 }

@@ -12,17 +12,31 @@ namespace Source.GamePlay.Services.Unit
     {
         [InitializationRequired]
         [SerializeField]
-        GameObject BaseUnit;
+        private GameObject BaseUnit;
+        [InitializationRequired]
+        [SerializeField]
+        private UnitService HomeUnit;
+        [InitializationRequired]
+        [SerializeField]
+        private UnitService EnemyHomeUnit;
+        
         [InitializationRequired]
         private UnitDataService UnitDataService { get; set; }
+        [InitializationRequired]
+        private GamePlayService GamePlayService { get; set; }
 
         private const float SpawnRayYOrigin = 100f;
+        [SerializeField]
+        private List<UnitService> ResourceUnits = new List<UnitService>();
         private readonly List<UnitService> Units = new();
         private readonly List<UnitService> PreviouslySelectedUnits = new();
 
-        public void InjectDependencies(UnitDataService unitDataService)
+        public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService)
         {
             UnitDataService = unitDataService;
+            GamePlayService = gamePlayService;
+
+            InitializeExistingUnits();
         }
 
         private void Start()
@@ -30,7 +44,20 @@ namespace Source.GamePlay.Services.Unit
             this.CheckInitializeRequired();
         }
 
-        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, UnitColor type)
+        private void InitializeExistingUnits()
+        {
+            if (GamePlayService == null || UnitDataService == null) return;
+
+            HomeUnit.InjectDependencies(this, GamePlayService.PlayerId, UnitDataService.GetUnitData(UnitColor.Blue, UnitType.Home));
+            EnemyHomeUnit.InjectDependencies(this, GamePlayService.PlayerId, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Home));
+
+            foreach(UnitService resource in  ResourceUnits)
+            {
+                resource.InjectDependencies(this, Guid.Empty, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Resource));
+            }
+        }
+
+        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, UnitColor color)
         {
             if (UnitDataService == null) return;
 
@@ -42,7 +69,7 @@ namespace Source.GamePlay.Services.Unit
                 GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.InjectDependencies(this, playerId, UnitDataService.GetUnitData(type));
+                unitService.InjectDependencies(this, playerId, UnitDataService.GetUnitData(color, UnitType.Regular));
             }
         }
 

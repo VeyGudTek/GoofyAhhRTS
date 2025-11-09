@@ -10,7 +10,9 @@ namespace Source.GamePlay.Services.Unit.Instance
     public enum UnitType
     {
         Regular,
-        Harvestor
+        Harvestor,
+        Home,
+        Resource
     }
 
     public class PositionDto
@@ -39,8 +41,12 @@ namespace Source.GamePlay.Services.Unit.Instance
         [SerializeField]
         [InitializationRequired]
         private MeshRenderer MeshRenderer;
+        [InitializationRequired]
         [SerializeField]
         private NavMeshAgent NavMeshAgent;
+        [InitializationRequired]
+        [SerializeField]
+        private NavMeshObstacle navMeshObstacle;
 
         [InitializationRequired]
         private UnitManagerService UnitManagerService;
@@ -68,6 +74,17 @@ namespace Source.GamePlay.Services.Unit.Instance
                 UnitAttackService.InjectDependencies(this, unitData);
             if (UnitMovementService != null)
                 UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.height, NavMeshAgent, unitData.Speed);
+
+            if (UnitType == UnitType.Home || UnitType == UnitType.Resource)
+            {
+                navMeshObstacle.enabled = true;
+                NavMeshAgent.enabled = false;
+            }
+            else
+            {
+                navMeshObstacle.enabled = false;
+                NavMeshAgent.enabled = true;                
+            }
         }
 
         private void Start()
