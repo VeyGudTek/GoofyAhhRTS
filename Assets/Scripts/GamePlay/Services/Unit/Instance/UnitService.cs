@@ -149,7 +149,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             if (Target == null) return false;
 
-            float distanceToTarget = (transform.position - Target.transform.position).magnitude;
+            float distanceToTarget = (transform.position - CurrentTarget.transform.position).magnitude;
             return distanceToTarget <= Range;
         }
 

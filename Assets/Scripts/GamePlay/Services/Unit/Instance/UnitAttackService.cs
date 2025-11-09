@@ -72,9 +72,10 @@ namespace Source.GamePlay.Services.Unit.Instance
         private void ManualAttack()
         {
             bool harvestorAndResource = Self.UnitType == UnitType.Harvestor && Self.CurrentTarget.UnitType == UnitType.Resource;
+            bool harvestorAndHome = Self.UnitType == UnitType.Harvestor && Self.CurrentTarget == Self.HomeBase;
             bool regularAndEnemy = Self.UnitType == UnitType.Regular && Self.CurrentTarget.UnitType != UnitType.Resource;
 
-            if (CanAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget() && (harvestorAndResource || regularAndEnemy))
+            if (CanAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget() && (harvestorAndResource || regularAndEnemy || harvestorAndHome))
             {
                 AttackUnit(Self.CurrentTarget);
             }
@@ -82,7 +83,14 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void AttackUnit(UnitService target)
         {
-            target.Damage(Damage);
+            if (target != Self.HomeBase)
+            {
+                target.Damage(Damage);
+            }
+            else
+            {
+                Self.AddGold(Damage);
+            }
             Self.HarvesterReturning = !Self.HarvesterReturning;
             CanAttack = false;
             StartCoroutine(ResetCooldown());

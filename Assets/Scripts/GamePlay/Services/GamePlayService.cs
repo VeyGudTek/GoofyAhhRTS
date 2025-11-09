@@ -49,9 +49,9 @@ namespace Source.GamePlay.Services
 
             for (int i = -7; i < 7; i += 2)
             {
-                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -10), UnitColor.Blue);
-                UnitManagerService.SpawnUnit(EnemyGuid, new Vector2(i, 20), UnitColor.Red);
-                UnitManagerService.SpawnUnit(EnemyGuid, new Vector2(10, i + 10), UnitColor.Red);
+                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -10), UnitColor.Blue, UnitType.Regular);
+                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -15), UnitColor.Blue, UnitType.Harvestor);
+                UnitManagerService.SpawnUnit(EnemyGuid, new Vector2(10, i + 10), UnitColor.Red, UnitType.Regular);
             }
         }
 
