@@ -90,7 +90,9 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void DrawPath()
         {
-            if (NavMeshAgent != null && LineRenderer != null && NavMeshAgent.hasPath)
+            if (NavMeshAgent == null || LineRenderer == null) return;
+
+            if (NavMeshAgent.hasPath && !NavMeshAgent.pathPending)
             {
                 LineRenderer.enabled = true;
 
@@ -110,7 +112,7 @@ namespace Source.GamePlay.Services.Unit.Instance
                 LineRenderer.positionCount = numCorners;
                 LineRenderer.SetPositions(corners);
             }
-            else
+            else if (Self.CurrentTarget == null) 
             {
                 LineRenderer.enabled = false;
             }
