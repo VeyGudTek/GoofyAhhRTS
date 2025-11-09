@@ -48,12 +48,12 @@ namespace Source.GamePlay.Services.Unit
         {
             if (GamePlayService == null || UnitDataService == null) return;
 
-            HomeUnit.InjectDependencies(this, GamePlayService.PlayerId, UnitDataService.GetUnitData(UnitColor.Blue, UnitType.Home));
-            EnemyHomeUnit.InjectDependencies(this, GamePlayService.PlayerId, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Home));
+            HomeUnit.InjectDependencies(this, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(UnitColor.Blue, UnitType.Home));
+            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Home));
 
             foreach(UnitService resource in  ResourceUnits)
             {
-                resource.InjectDependencies(this, Guid.Empty, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Resource));
+                resource.InjectDependencies(this, null, Guid.Empty, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Resource));
             }
         }
 
@@ -69,7 +69,7 @@ namespace Source.GamePlay.Services.Unit
                 GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.InjectDependencies(this, playerId, UnitDataService.GetUnitData(color, UnitType.Regular));
+                unitService.InjectDependencies(this, playerId == GamePlayService.PlayerId ? HomeUnit : EnemyHomeUnit, playerId, UnitDataService.GetUnitData(color, UnitType.Regular));
             }
         }
 

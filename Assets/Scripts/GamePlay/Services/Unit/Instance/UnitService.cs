@@ -60,13 +60,14 @@ namespace Source.GamePlay.Services.Unit.Instance
         public bool HarvesterReturning { get; set; } = false;
         public UnitType UnitType { get; private set; } = UnitType.Regular;
 
-        public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId, UnitData unitData)
+        public void InjectDependencies(UnitManagerService unitManagerService, UnitService homeBase, Guid playerId, UnitData unitData)
         {
             UnitManagerService = unitManagerService;
             PlayerId = playerId;
             MaxHealth = unitData.MaxHealth;
             Health = MaxHealth;
             Range = unitData.Range;
+            HomeBase = homeBase;
 
             if (MeshRenderer != null)
                 MeshRenderer.material = unitData.Material;
