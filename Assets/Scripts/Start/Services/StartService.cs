@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Source.Start.Services
 {
-    public class StartService : MonoBehaviour, IMenuService
+    public class StartService : MonoBehaviour, IMenuService, IInputProcessorService
     {
         [InitializationRequired]
         [SerializeField]
@@ -20,6 +20,9 @@ namespace Source.Start.Services
         [InitializationRequired]
         [SerializeField]
         private SettingsRepository SettingsRepository;
+        [InitializationRequired]
+        [SerializeField]
+        private InputService InputService;
 
         [SerializeField]
         private string NextSceneName = "TimGamePlay";
@@ -29,6 +32,7 @@ namespace Source.Start.Services
             this.CheckInitializeRequired();
             StartMenuService.InjectDependencies(this);
             SettingsMenuService.InjectDependencies(SettingsRepository, this);
+            InputService.InjectDependencies(this);
         }
 
         public void Play()
@@ -57,6 +61,21 @@ namespace Source.Start.Services
         public void Quit()
         {
             Application.Quit();
+        }
+
+        public void PrimaryClickEvent(bool isShift) { }
+        public void PrimaryHoldEvent() { }
+        public void PrimaryReleaseEvent() { }
+        public void SecondaryClickEvent() { }
+        public void SecondaryHoldEvent() { }
+        public void SecondaryReleaseEvent() { }
+        public void FixedMoveEvent(Vector2 moveVector) { }
+        public void CancelEvent() 
+        { 
+            if (SettingsMenuService != null && SettingsMenuService.gameObject.activeSelf)
+            {
+                SettingsMenuService.ProcessCancel();
+            }
         }
     }
 }
