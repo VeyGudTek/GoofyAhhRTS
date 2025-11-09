@@ -93,8 +93,22 @@ namespace Source.GamePlay.Services.Unit.Instance
             if (NavMeshAgent != null && LineRenderer != null && NavMeshAgent.hasPath)
             {
                 LineRenderer.enabled = true;
-                LineRenderer.positionCount = NavMeshAgent.path.corners.Length;
-                LineRenderer.SetPositions(NavMeshAgent.path.corners);
+
+                int numCorners = NavMeshAgent.path.corners.Length;
+                Vector3[] corners = new Vector3[numCorners];
+                Array.Copy(NavMeshAgent.path.corners, corners, numCorners);
+
+                if (Self.CurrentTarget != null)
+                {
+                    corners[numCorners - 1] = new Vector3(
+                        Self.CurrentTarget.transform.position.x,
+                        corners[numCorners - 1].y,
+                        Self.CurrentTarget.transform.position.z
+                    );
+                }
+
+                LineRenderer.positionCount = numCorners;
+                LineRenderer.SetPositions(corners);
             }
             else
             {
