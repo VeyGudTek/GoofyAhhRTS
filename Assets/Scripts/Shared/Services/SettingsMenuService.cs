@@ -1,11 +1,12 @@
 using Source.Shared.Repositories;
+using Source.Shared.Services.Interfaces;
 using Source.Shared.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Source.Shared.Services
 {
-    public class SettingsUIService : MonoBehaviour
+    public class SettingsMenuService : MonoBehaviour
     {
         [InitializationRequired]
         [SerializeField]
@@ -15,15 +16,15 @@ namespace Source.Shared.Services
         private Slider CameraSpeedSlider;
 
         [InitializationRequired]
-        private GameObject MenuObject { get; set; }
-        [InitializationRequired]
         private SettingsRepository SettingsRepo { get; set; }
+        [InitializationRequired]
+        private IMenuService MenuService { get; set; }
         private Settings CurrentSettings { get; set; } = new();
 
-        public void InjectDependencies(GameObject menuObject, SettingsRepository settingsRepo)
+        public void InjectDependencies(SettingsRepository settingsRepo, IMenuService menuService)
         {
-            MenuObject = menuObject;
             SettingsRepo = settingsRepo;
+            MenuService = menuService;
         }
 
         private void Start()
@@ -38,6 +39,20 @@ namespace Source.Shared.Services
 
             if (CameraSpeedSlider != null)
                 CameraSpeedSlider.value = CurrentSettings.CameraSpeed;
+        }
+
+        public void ProcessCancel()
+        {
+            if (MenuService == null || DiscardConfirmationObject == null) return;
+
+            if (DiscardConfirmationObject.gameObject.activeSelf)
+            {
+                OnDiscardCancel();
+            }
+            else
+            {
+                OnDiscard();
+            }
         }
 
         public void OnCameraSpeedChange()
@@ -61,24 +76,18 @@ namespace Source.Shared.Services
 
         public void OnDiscardConfirm()
         {
-            if (DiscardConfirmationObject == null) return;
+            if (DiscardConfirmationObject == null || MenuService == null) return;
 
             DiscardConfirmationObject.SetActive(false);
-            ReturnToMenu();
+            MenuService.CloseSettings();
         }
 
         public void OnSave()
         {
+            if (MenuService == null) return;
+
             SettingsRepo.SaveSettings(CurrentSettings);
-            ReturnToMenu();
-        }
-
-        private void ReturnToMenu()
-        {
-            if (MenuObject == null) return;
-
-            gameObject.SetActive(false);
-            MenuObject.SetActive(true);
+            MenuService.CloseSettings();
         }
     }
 }

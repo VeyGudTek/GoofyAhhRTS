@@ -5,9 +5,17 @@ using System;
 using UnityEngine;
 using Source.GamePlay.Services.Unit.Instance;
 using System.Collections.Generic;
+using Source.Shared.Services;
+using Source.GamePlay.Services.UI;
 
 namespace Source.GamePlay.Services
 {
+    internal enum GameState
+    {
+        Playing,
+        Paused
+    }
+
     public class GamePlayService: MonoBehaviour, IInputProcessorService
     {
         [InitializationRequired]
@@ -16,19 +24,27 @@ namespace Source.GamePlay.Services
         private UnitManagerService UnitManagerService { get; set; }
         [InitializationRequired]
         private SelectionService SelectionService { get; set; }
+        [InitializationRequired]
+        PauseService PauseService { get; set; }
+        [InitializationRequired]
+        private SceneService SceneService { get; set; }
 
         private Guid PlayerId { get; set; } = Guid.NewGuid();
+        private GameState GameState = GameState.Playing;
 
-        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService)
+        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService,PauseService pauseService, SceneService sceneService)
         {
             CameraService = cameraService;
             UnitManagerService = unitManagerService;
             SelectionService = selectionService;
+            PauseService = pauseService;
+            SceneService = sceneService;
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
+            //TempCodeBelow
             Guid enemyGuid = Guid.NewGuid();
 
             for (int i = -7; i < 7; i += 2)
@@ -80,6 +96,33 @@ namespace Source.GamePlay.Services
         public void FixedMoveEvent(Vector2 moveVector)
         {
             CameraService.OnMove(moveVector);
+        }
+
+        public void CancelEvent()
+        {
+            if (PauseService == null) return;
+
+            Action escapeAction = GameState switch
+            {
+                GameState.Playing => PauseGame,
+                GameState.Paused => PauseService.ProcessCancel,
+                _ => () => { }
+            };
+
+            escapeAction();
+        }
+
+        public void PauseGame()
+        {
+            Time.timeScale = 0;
+            PauseService.OpenPauseMenu();
+            GameState = GameState.Paused;
+        }
+
+        public void UnPauseGame()
+        {
+            Time.timeScale = 1;
+            GameState = GameState.Playing;
         }
     }
 }

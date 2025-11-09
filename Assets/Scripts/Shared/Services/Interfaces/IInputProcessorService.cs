@@ -11,5 +11,6 @@ namespace Source.Shared.Services.Interfaces
         void SecondaryHoldEvent();
         void SecondaryReleaseEvent();
         void FixedMoveEvent(Vector2 moveVector);
+        void CancelEvent();
     }
 }

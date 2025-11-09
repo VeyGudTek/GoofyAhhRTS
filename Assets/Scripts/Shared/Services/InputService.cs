@@ -17,6 +17,8 @@ namespace Source.Shared.Services
         private InputAction Move { get; set; }
         [InitializationRequired]
         private InputAction Sprint { get; set; }
+        [InitializationRequired]
+        private InputAction Cancel { get; set; }
         private Vector2 MoveInput { get; set; } = Vector2.zero;
 
         public void InjectDependencies(IInputProcessorService inputProcessorService)
@@ -30,6 +32,7 @@ namespace Source.Shared.Services
             Secondary = InputSystem.actions.FindAction("RightClick");
             Move = InputSystem.actions.FindAction("Move");
             Sprint = InputSystem.actions.FindAction("Sprint");
+            Cancel = InputSystem.actions.FindAction("Cancel");
         }
 
         private void Start()
@@ -44,6 +47,7 @@ namespace Source.Shared.Services
             UpdatePrimary();
             UpdateSecondary();
             UpdateMovement();
+            UpdateEscape();
         }
 
         private void FixedUpdate()
@@ -103,6 +107,16 @@ namespace Source.Shared.Services
             if (MoveInput != Vector2.zero)
             {
                 InputProcessorService.FixedMoveEvent(MoveInput);
+            }
+        }
+
+        void UpdateEscape()
+        {
+            if (Cancel == null) return;
+
+            if (Cancel.WasPerformedThisFrame()) 
+            {
+                InputProcessorService.CancelEvent();
             }
         }
     }
