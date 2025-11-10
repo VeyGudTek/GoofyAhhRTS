@@ -149,7 +149,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public bool IsInRangeOfTarget()
         {
-            if (Target == null) return false;
+            if (CurrentTarget == null) return false;
 
             float distanceToTarget = (transform.position - CurrentTarget.transform.position).magnitude;
             return distanceToTarget <= Range;
