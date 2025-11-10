@@ -13,6 +13,8 @@ namespace Source.GamePlay.Services.Unit.Instance
         [InitializationRequired]
         private UnitService Self { get; set; }
         [InitializationRequired]
+        private UnitHarvestorService HarvestorService { get; set; }
+        [InitializationRequired]
         [SerializeField]
         private ProjectileService ProjectileService;
         private float Cooldown { get; set; }
@@ -21,12 +23,13 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private readonly List<UnitService> UnitsInRange = new();
 
-        public void InjectDependencies(UnitService self, UnitData unitData)
+        public void InjectDependencies(UnitService self, UnitData unitData, UnitHarvestorService harvestorService)
         {
             Self = self;
             Cooldown = unitData.Cooldown;
             Damage = unitData.damage;
             transform.localScale = new Vector3(unitData.Range * 2f, transform.localScale.y, unitData.Range * 2f);
+            HarvestorService = harvestorService;
 
             if (ProjectileService != null)
                 ProjectileService.SetProjectileColor(unitData.ProjectileStartColor, unitData.ProjectileEndColor);
@@ -71,11 +74,9 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void ManualAttack()
         {
-            bool harvestorAndResource = Self.UnitType == UnitType.Harvestor && Self.CurrentTarget.UnitType == UnitType.Resource;
-            bool harvestorAndHome = Self.UnitType == UnitType.Harvestor && Self.CurrentTarget == Self.HomeBase;
-            bool regularAndEnemy = Self.UnitType == UnitType.Regular && Self.CurrentTarget.UnitType != UnitType.Resource;
+            bool regularCanAttack = Self.UnitType == UnitType.Regular && Self.CurrentTarget.UnitType != UnitType.Resource;
 
-            if (CanAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget() && (harvestorAndResource || regularAndEnemy || harvestorAndHome))
+            if (CanAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget() && (regularCanAttack || HarvestorService.CanAttack))
             {
                 AttackUnit(Self.CurrentTarget);
             }
@@ -83,15 +84,11 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void AttackUnit(UnitService target)
         {
-            if (target != Self.HomeBase)
+            if (!HarvestorService.TryAttack(target, Damage))
             {
                 target.Damage(Damage);
             }
-            else
-            {
-                Self.AddGold(Damage);
-            }
-            Self.HarvesterReturning = !Self.HarvesterReturning;
+
             CanAttack = false;
             StartCoroutine(ResetCooldown());
 

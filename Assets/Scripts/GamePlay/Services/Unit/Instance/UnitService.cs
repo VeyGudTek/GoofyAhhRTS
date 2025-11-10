@@ -31,6 +31,9 @@ namespace Source.GamePlay.Services.Unit.Instance
         private UnitAttackService UnitAttackService;
         [SerializeField]
         [InitializationRequired]
+        private UnitHarvestorService UnitHarvestorService;
+        [SerializeField]
+        [InitializationRequired]
         private HealthBarService HealthBarService;
         [InitializationRequired]
         [SerializeField]
@@ -50,14 +53,12 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         [InitializationRequired]
         private UnitManagerService UnitManagerService;
-        public UnitService HomeBase { get; private set; }
         private float MaxHealth { get; set; } = 50f;
         private float Health { get; set; } = 50f;
         private UnitService Target { get; set; }
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
-        public bool HarvesterReturning { get; set; } = false;
         public UnitType UnitType { get; private set; } = UnitType.Regular;
 
         public void InjectDependencies(UnitManagerService unitManagerService, UnitService homeBase, Guid playerId, UnitData unitData)
@@ -68,14 +69,15 @@ namespace Source.GamePlay.Services.Unit.Instance
             Health = MaxHealth;
             Range = unitData.Range;
             UnitType = unitData.UnitType;
-            HomeBase = homeBase;
 
             if (MeshRenderer != null)
                 MeshRenderer.material = unitData.Material;
             if (UnitAttackService != null)
-                UnitAttackService.InjectDependencies(this, unitData);
+                UnitAttackService.InjectDependencies(this, unitData, UnitHarvestorService);
             if (UnitMovementService != null)
                 UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.height, NavMeshAgent, unitData.Speed);
+            if (UnitHarvestorService != null)
+                UnitHarvestorService.InjectDependencies(this, homeBase);
 
             if (UnitType == UnitType.Home || UnitType == UnitType.Resource)
             {
@@ -194,11 +196,6 @@ namespace Source.GamePlay.Services.Unit.Instance
             Debug.Log("Gold Added");
         }
 
-        public UnitService CurrentTarget => UnitType switch 
-        { 
-            UnitType.Harvestor => HarvesterReturning ? HomeBase : Target,
-            UnitType.Regular => Target,
-            _ => Target
-        };
+        public UnitService CurrentTarget => UnitHarvestorService.GetCurrentTarget(Target);
     }
 }
