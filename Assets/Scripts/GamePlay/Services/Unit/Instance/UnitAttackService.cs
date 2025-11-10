@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Source.GamePlay.Services.Unit.Instance
 {
@@ -12,23 +13,23 @@ namespace Source.GamePlay.Services.Unit.Instance
         [InitializationRequired]
         private UnitService Self { get; set; }
         [InitializationRequired]
+        private UnitHarvestorService HarvestorService { get; set; }
+        [InitializationRequired]
         [SerializeField]
         private ProjectileService ProjectileService;
-
-        [SerializeField]
-        private bool HasAttack;
         private float Cooldown { get; set; }
         private float Damage { get; set; }
         private bool CanAttack { get; set; } = true;
 
         private readonly List<UnitService> UnitsInRange = new();
 
-        public void InjectDependencies(UnitService self, UnitData unitData)
+        public void InjectDependencies(UnitService self, UnitData unitData, UnitHarvestorService harvestorService)
         {
             Self = self;
             Cooldown = unitData.Cooldown;
             Damage = unitData.damage;
             transform.localScale = new Vector3(unitData.Range * 2f, transform.localScale.y, unitData.Range * 2f);
+            HarvestorService = harvestorService;
 
             if (ProjectileService != null)
                 ProjectileService.SetProjectileColor(unitData.ProjectileStartColor, unitData.ProjectileEndColor);
@@ -46,7 +47,9 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void ProcessAttack()
         {
-            if (Self == null || Self.Target == null)
+            if (Self == null) return;
+
+            if (Self.CurrentTarget == null)
             {
                 AutomaticAttack();
             }
@@ -58,8 +61,8 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void AutomaticAttack()
         {
-            IEnumerable<UnitService> visibleUnitsInRange = UnitsInRange.Where(u => Self.CanSeeTarget(u));
-            if (CanAttack && HasAttack && visibleUnitsInRange.Count() > 0)
+            IEnumerable<UnitService> visibleUnitsInRange = UnitsInRange.Where(u => Self.CanSeeUnit(u));
+            if (CanAttack && visibleUnitsInRange.Count() > 0)
             {
                 UnitService target = visibleUnitsInRange
                     .OrderBy(u => (u.transform.position - Self.transform.position).sqrMagnitude)
@@ -71,23 +74,26 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void ManualAttack()
         {
-            if (CanAttack && HasAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget())
+            bool regularCanAttack = Self.UnitType == UnitType.Regular && Self.CurrentTarget.UnitType != UnitType.Resource;
+
+            if (CanAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget() && (regularCanAttack || HarvestorService.CanAttack))
             {
-                AttackUnit(Self.Target);
+                AttackUnit(Self.CurrentTarget);
             }
         }
 
         private void AttackUnit(UnitService target)
         {
-            target.Damage(Damage);
-            CanAttack = false;
-
-            if (ProjectileService != null)
+            if (!HarvestorService.TryAttack(target, Damage))
             {
-                ProjectileService.CreateProjectile(transform.position, target.gameObject.transform.position);
+                target.Damage(Damage);
             }
 
+            CanAttack = false;
             StartCoroutine(ResetCooldown());
+
+            if (ProjectileService != null)
+                ProjectileService.CreateProjectile(transform.position, target.gameObject.transform.position);
         }
 
         IEnumerator ResetCooldown()
@@ -98,10 +104,11 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void OnTriggerEnter(Collider other)
         {
-            if (Self == null || HasAttack == false) return;
+            if (Self == null) return;
+
             UnitService newUnit = other.gameObject.GetComponent<UnitService>();
 
-            if (newUnit != null && newUnit.PlayerId != Self.PlayerId)
+            if (newUnit != null && newUnit.PlayerId != Self.PlayerId && newUnit.UnitType != UnitType.Resource)
             {
                 UnitsInRange.Add(newUnit);
             }
@@ -109,7 +116,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void OnTriggerExit(Collider other)
         {
-            if (Self == null || HasAttack == false) return;
+            if (Self == null) return;
             
             if (other.gameObject.TryGetComponent<UnitService>(out var newUnit))
             {

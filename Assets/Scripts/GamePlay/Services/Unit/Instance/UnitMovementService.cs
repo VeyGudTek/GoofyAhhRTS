@@ -46,13 +46,16 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void UpdatePathingUsingTarget()
         {
-            if (Self == null || Self.Target == null || (Self.IsInRangeOfTarget() && Self.CanSeeTarget()) || !CanRefreshPath) return;
+            if (Self == null || Self.CurrentTarget == null || !NavMeshAgent.enabled) return;
+            UnitService currentTarget = Self.CurrentTarget;
 
-            float stoppingDistance = (Self.GetPosition().Radius * 2) + Self.Target.GetPosition().Radius;
-            
-            MoveUnit(Self.Target.gameObject.transform.position, stoppingDistance);
-            CanRefreshPath = false;
-            StartCoroutine(RefreshPath());
+            if ((!Self.IsInRangeOfTarget() || !Self.CanSeeTarget()) && CanRefreshPath)
+            {
+                float stoppingDistance = Self.GetPosition().Radius + currentTarget.GetPosition().Radius;
+                MoveUnit(currentTarget.gameObject.transform.position, stoppingDistance);
+                CanRefreshPath = false;
+                StartCoroutine(RefreshPath());
+            }
         }
 
         IEnumerator RefreshPath()
@@ -65,7 +68,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             if (NavMeshAgent == null || !NavMeshAgent.hasPath) return;
 
-            if (Self != null && Self.Target != null)
+            if (Self != null && Self.CurrentTarget != null)
             {
                 if (Self.CanSeeTarget() && Self.IsInRangeOfTarget())
                 {
@@ -87,13 +90,29 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void DrawPath()
         {
-            if (NavMeshAgent != null && LineRenderer != null && NavMeshAgent.hasPath)
+            if (NavMeshAgent == null || LineRenderer == null) return;
+
+            if (NavMeshAgent.hasPath && !NavMeshAgent.pathPending)
             {
                 LineRenderer.enabled = true;
-                LineRenderer.positionCount = NavMeshAgent.path.corners.Length;
-                LineRenderer.SetPositions(NavMeshAgent.path.corners);
+
+                int numCorners = NavMeshAgent.path.corners.Length;
+                Vector3[] corners = new Vector3[numCorners];
+                Array.Copy(NavMeshAgent.path.corners, corners, numCorners);
+
+                if (Self.CurrentTarget != null)
+                {
+                    corners[numCorners - 1] = new Vector3(
+                        Self.CurrentTarget.transform.position.x,
+                        corners[numCorners - 1].y,
+                        Self.CurrentTarget.transform.position.z
+                    );
+                }
+
+                LineRenderer.positionCount = numCorners;
+                LineRenderer.SetPositions(corners);
             }
-            else
+            else if (Self.CurrentTarget == null) 
             {
                 LineRenderer.enabled = false;
             }
@@ -101,7 +120,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void MoveUnit(Vector3 destination, float stoppingDistance)
         {
-            if (NavMeshAgent != null)
+            if (NavMeshAgent != null && NavMeshAgent.enabled)
             {
                 NavMeshAgent.SetDestination(destination);
                 NavMeshAgent.avoidancePriority = BasePriority - 1;

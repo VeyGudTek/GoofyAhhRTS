@@ -7,6 +7,14 @@ using UnityEngine.AI;
 
 namespace Source.GamePlay.Services.Unit.Instance
 {
+    public enum UnitType
+    {
+        Regular,
+        Harvestor,
+        Home,
+        Resource
+    }
+
     public class PositionDto
     {
         public Vector3 Position { get; set; }
@@ -23,6 +31,9 @@ namespace Source.GamePlay.Services.Unit.Instance
         private UnitAttackService UnitAttackService;
         [SerializeField]
         [InitializationRequired]
+        private UnitHarvestorService UnitHarvestorService;
+        [SerializeField]
+        [InitializationRequired]
         private HealthBarService HealthBarService;
         [InitializationRequired]
         [SerializeField]
@@ -33,32 +44,51 @@ namespace Source.GamePlay.Services.Unit.Instance
         [SerializeField]
         [InitializationRequired]
         private MeshRenderer MeshRenderer;
+        [InitializationRequired]
         [SerializeField]
         private NavMeshAgent NavMeshAgent;
+        [InitializationRequired]
+        [SerializeField]
+        private NavMeshObstacle navMeshObstacle;
 
         [InitializationRequired]
         private UnitManagerService UnitManagerService;
         private float MaxHealth { get; set; } = 50f;
         private float Health { get; set; } = 50f;
-        public UnitService Target { get; private set; }
+        private UnitService Target { get; set; }
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
+        public UnitType UnitType { get; private set; } = UnitType.Regular;
 
-        public void InjectDependencies(UnitManagerService unitManagerService, Guid playerId, UnitData unitData)
+        public void InjectDependencies(UnitManagerService unitManagerService, UnitService homeBase, Guid playerId, UnitData unitData)
         {
             UnitManagerService = unitManagerService;
             PlayerId = playerId;
             MaxHealth = unitData.MaxHealth;
             Health = MaxHealth;
             Range = unitData.Range;
+            UnitType = unitData.UnitType;
 
             if (MeshRenderer != null)
                 MeshRenderer.material = unitData.Material;
             if (UnitAttackService != null)
-                UnitAttackService.InjectDependencies(this, unitData);
+                UnitAttackService.InjectDependencies(this, unitData, UnitHarvestorService);
             if (UnitMovementService != null)
                 UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.height, NavMeshAgent, unitData.Speed);
+            if (UnitHarvestorService != null)
+                UnitHarvestorService.InjectDependencies(this, homeBase);
+
+            if (UnitType == UnitType.Home || UnitType == UnitType.Resource)
+            {
+                navMeshObstacle.enabled = true;
+                NavMeshAgent.enabled = false;
+            }
+            else
+            {
+                navMeshObstacle.enabled = false;
+                NavMeshAgent.enabled = true;                
+            }
         }
 
         private void Start()
@@ -100,10 +130,10 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public bool CanSeeTarget()
         {
-            return CanSeeTarget(Target);
+            return CanSeeUnit(CurrentTarget);
         }
 
-        public bool CanSeeTarget(UnitService target)
+        public bool CanSeeUnit(UnitService target)
         {
             if (target == null) return false;
 
@@ -119,9 +149,9 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public bool IsInRangeOfTarget()
         {
-            if (Target == null) return false;
+            if (CurrentTarget == null) return false;
 
-            float distanceToTarget = (transform.position - Target.transform.position).magnitude;
+            float distanceToTarget = (transform.position - CurrentTarget.transform.position).magnitude;
             return distanceToTarget <= Range;
         }
 
@@ -160,5 +190,12 @@ namespace Source.GamePlay.Services.Unit.Instance
             Selected = false;
             SelectionIndicator.SetActive(false);
         }
+
+        public void AddGold(float gold)
+        {
+            Debug.Log("Gold Added");
+        }
+
+        public UnitService CurrentTarget => UnitHarvestorService.GetCurrentTarget(Target);
     }
 }
