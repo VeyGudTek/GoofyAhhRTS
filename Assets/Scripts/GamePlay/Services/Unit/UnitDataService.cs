@@ -6,10 +6,11 @@ using UnityEngine;
 
 namespace Source.GamePlay.Services.Unit
 {
-    public enum UnitColor
+    public enum Faction
     {
-        Blue,
-        Red
+        ProCyber,
+        AntiCyber,
+        None
     }
 
     public class UnitDataService : MonoBehaviour
@@ -41,22 +42,22 @@ namespace Source.GamePlay.Services.Unit
             this.CheckInitializeRequired();
         }
 
-        public UnitData GetUnitData(UnitColor color, UnitType type)
+        public UnitData GetUnitData(Faction color, UnitType type)
         {
             if (type == UnitType.Resource)
                 return ResourceData;
 
             UnitData data =  color switch
             {
-                UnitColor.Blue => GetBlueUnitData(type),
-                UnitColor.Red => GetRedUnitData(type),
-                _ => throw new Exception("[UnitDataService]: Invalid Unit Color"),
+                Faction.ProCyber => GetProCyberUnitData(type),
+                Faction.AntiCyber => GetAntiCyberUnitData(type),
+                _ => throw new Exception("[UnitDataService]: Invalid Unit Faction"),
             };
 
             return data == null ? new UnitData() : data;
         }
 
-        public UnitData GetBlueUnitData(UnitType type)
+        public UnitData GetProCyberUnitData(UnitType type)
         {
             return type switch 
             {
@@ -67,7 +68,7 @@ namespace Source.GamePlay.Services.Unit
             };
         }
 
-        public UnitData GetRedUnitData(UnitType type)
+        public UnitData GetAntiCyberUnitData(UnitType type)
         {
             return type switch
             {

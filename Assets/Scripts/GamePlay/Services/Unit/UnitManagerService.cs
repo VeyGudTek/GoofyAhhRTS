@@ -48,19 +48,19 @@ namespace Source.GamePlay.Services.Unit
         {
             if (GamePlayService == null || UnitDataService == null) return;
 
-            HomeUnit.InjectDependencies(this, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(UnitColor.Blue, UnitType.Home));
+            HomeUnit.InjectDependencies(this, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(Faction.ProCyber, UnitType.Home));
             Units.Add(HomeUnit);
-            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.EnemyGuid, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Home));
+            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.EnemyGuid, UnitDataService.GetUnitData(Faction.AntiCyber, UnitType.Home));
             Units.Add(EnemyHomeUnit);
 
             foreach(UnitService resource in  ResourceUnits)
             {
-                resource.InjectDependencies(this, null, Guid.Empty, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Resource));
+                resource.InjectDependencies(this, null, Guid.Empty, UnitDataService.GetUnitData(Faction.None, UnitType.Resource));
                 Units.Add(resource);
             }
         }
 
-        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, UnitColor color, UnitType type)
+        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, Faction faction, UnitType type)
         {
             if (UnitDataService == null) return;
 
@@ -72,7 +72,7 @@ namespace Source.GamePlay.Services.Unit
                 GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.InjectDependencies(this, playerId == GamePlayService.PlayerId ? HomeUnit : EnemyHomeUnit, playerId, UnitDataService.GetUnitData(color, type));
+                unitService.InjectDependencies(this, playerId == GamePlayService.PlayerId ? HomeUnit : EnemyHomeUnit, playerId, UnitDataService.GetUnitData(faction, type));
             }
         }
 
