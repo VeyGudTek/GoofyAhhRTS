@@ -128,7 +128,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             };
         }
 
-        public bool CanSeeTarget()
+        private bool CanSeeTarget()
         {
             return CanSeeUnit(CurrentTarget);
         }
@@ -147,13 +147,15 @@ namespace Source.GamePlay.Services.Unit.Instance
             return true;
         }
 
-        public bool IsInRangeOfTarget()
+        private bool IsInRangeOfTarget()
         {
             if (CurrentTarget == null) return false;
 
             float distanceToTarget = (transform.position - CurrentTarget.transform.position).magnitude;
             return distanceToTarget <= Range;
         }
+
+        public bool CanAttackTarget => IsInRangeOfTarget() && CanSeeTarget();
 
         public void RemoveDestroyedUnit(UnitService unit)
         {

@@ -76,7 +76,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             bool regularCanAttack = Self.UnitType == UnitType.Regular && Self.CurrentTarget.UnitType != UnitType.Resource;
 
-            if (CanAttack && Self.CanSeeTarget() && Self.IsInRangeOfTarget() && (regularCanAttack || HarvestorService.CanAttack))
+            if (CanAttack && Self.CanAttackTarget && (regularCanAttack || HarvestorService.CanAttack))
             {
                 AttackUnit(Self.CurrentTarget);
             }

@@ -49,7 +49,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             if (Self == null || Self.CurrentTarget == null || !NavMeshAgent.enabled) return;
             UnitService currentTarget = Self.CurrentTarget;
 
-            if ((!Self.IsInRangeOfTarget() || !Self.CanSeeTarget()) && CanRefreshPath)
+            if (!Self.CanAttackTarget && CanRefreshPath)
             {
                 float stoppingDistance = Self.GetPosition().Radius + currentTarget.GetPosition().Radius;
                 MoveUnit(currentTarget.gameObject.transform.position, stoppingDistance);
@@ -70,7 +70,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
             if (Self != null && Self.CurrentTarget != null)
             {
-                if (Self.CanSeeTarget() && Self.IsInRangeOfTarget())
+                if (Self.CanAttackTarget)
                 {
                     StopPathFinding();
                     return;
@@ -112,7 +112,7 @@ namespace Source.GamePlay.Services.Unit.Instance
                 LineRenderer.positionCount = numCorners;
                 LineRenderer.SetPositions(corners);
             }
-            else if (Self.CurrentTarget == null) 
+            else if (Self.CurrentTarget == null || Self.CanAttackTarget) 
             {
                 LineRenderer.enabled = false;
             }
