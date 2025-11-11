@@ -99,7 +99,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
             UnitService newUnit = other.gameObject.GetComponent<UnitService>();
 
-            if (newUnit != null && newUnit.PlayerId != Self.PlayerId && Self.UnitTypeService.CanAutoAttack(newUnit))
+            if (newUnit != null && Self.UnitTypeService.CanAutoAttack(newUnit))
             {
                 UnitsInRange.Add(newUnit);
             }
