@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace Source.GamePlay.Services.Unit.Instance
 {
@@ -12,8 +11,6 @@ namespace Source.GamePlay.Services.Unit.Instance
     {
         [InitializationRequired]
         private UnitService Self { get; set; }
-        [InitializationRequired]
-        private UnitHarvestorService HarvestorService { get; set; }
         [InitializationRequired]
         [SerializeField]
         private ProjectileService ProjectileService;
@@ -23,13 +20,12 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private readonly List<UnitService> UnitsInRange = new();
 
-        public void InjectDependencies(UnitService self, UnitData unitData, UnitHarvestorService harvestorService)
+        public void InjectDependencies(UnitService self, UnitData unitData)
         {
             Self = self;
             Cooldown = unitData.Cooldown;
-            Damage = unitData.damage;
+            Damage = unitData.Damage;
             transform.localScale = new Vector3(unitData.Range * 2f, transform.localScale.y, unitData.Range * 2f);
-            HarvestorService = harvestorService;
 
             if (ProjectileService != null)
                 ProjectileService.SetProjectileColor(unitData.ProjectileStartColor, unitData.ProjectileEndColor);
@@ -49,7 +45,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             if (Self == null) return;
 
-            if (Self.CurrentTarget == null)
+            if (Self.UnitTypeService.GetTarget() == null)
             {
                 AutomaticAttack();
             }
@@ -74,20 +70,15 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void ManualAttack()
         {
-            bool regularCanAttack = Self.UnitType == UnitType.Regular && Self.CurrentTarget.UnitType != UnitType.Resource;
-
-            if (CanAttack && Self.CanAttackTarget && (regularCanAttack || HarvestorService.CanAttack))
+            if (CanAttack && Self.CanAttackTarget && Self.UnitTypeService.CanManualAttack())
             {
-                AttackUnit(Self.CurrentTarget);
+                AttackUnit(Self.UnitTypeService.GetTarget());
             }
         }
 
         private void AttackUnit(UnitService target)
         {
-            if (!HarvestorService.TryAttack(target, Damage))
-            {
-                target.Damage(Damage);
-            }
+            Self.UnitTypeService.Attack(target, Damage);
 
             CanAttack = false;
             StartCoroutine(ResetCooldown());
@@ -108,7 +99,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
             UnitService newUnit = other.gameObject.GetComponent<UnitService>();
 
-            if (newUnit != null && newUnit.PlayerId != Self.PlayerId && newUnit.UnitType != UnitType.Resource)
+            if (newUnit != null && newUnit.PlayerId != Self.PlayerId && Self.UnitTypeService.CanAutoAttack(newUnit))
             {
                 UnitsInRange.Add(newUnit);
             }

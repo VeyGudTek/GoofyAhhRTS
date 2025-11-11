@@ -1,4 +1,4 @@
-using Source.GamePlay.Services.Unit.Instance;
+using Source.GamePlay.Services.Unit.Instance.Types;
 using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.Utilities;
 using System;

@@ -20,4 +20,4 @@ MonoBehaviour:
   damage: 15
   ProjectileStartColor: {r: 0.05630207, g: 0, b: 1, a: 1}
   ProjectileEndColor: {r: 0, g: 0.9184027, b: 1, a: 1}
-  UnitType: 1
+  UnitType: {fileID: 7430998714240215412, guid: 43e65ee48311f06459acdf847d23e326, type: 3}

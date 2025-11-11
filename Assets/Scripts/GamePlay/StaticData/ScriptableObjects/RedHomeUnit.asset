@@ -17,7 +17,7 @@ MonoBehaviour:
   Range: 7
   Speed: 5
   Cooldown: 1
-  damage: 15
+  Damage: 0
   ProjectileStartColor: {r: 1, g: 0.06693827, b: 0, a: 1}
   ProjectileEndColor: {r: 1, g: 0.51707965, b: 0, a: 1}
   UnitType: 2

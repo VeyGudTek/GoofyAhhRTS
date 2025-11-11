@@ -7,6 +7,7 @@ using Source.GamePlay.Services.Unit.Instance;
 using System.Collections.Generic;
 using Source.Shared.Services;
 using Source.GamePlay.Services.UI;
+using Source.GamePlay.Static.ScriptableObjects;
 
 namespace Source.GamePlay.Services
 {

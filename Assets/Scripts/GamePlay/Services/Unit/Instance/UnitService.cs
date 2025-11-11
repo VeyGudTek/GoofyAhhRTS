@@ -1,3 +1,4 @@
+using Source.GamePlay.Services.Unit.Instance.Types;
 using Source.GamePlay.Static.Classes;
 using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.Utilities;
@@ -7,14 +8,6 @@ using UnityEngine.AI;
 
 namespace Source.GamePlay.Services.Unit.Instance
 {
-    public enum UnitType
-    {
-        Regular,
-        Harvestor,
-        Home,
-        Resource
-    }
-
     public class UnitService : MonoBehaviour
     {
         [SerializeField]
@@ -23,9 +16,6 @@ namespace Source.GamePlay.Services.Unit.Instance
         [SerializeField]
         [InitializationRequired]
         private UnitAttackService UnitAttackService;
-        [SerializeField]
-        [InitializationRequired]
-        private UnitHarvestorService UnitHarvestorService;
         [SerializeField]
         [InitializationRequired]
         private HealthBarService HealthBarService;
@@ -46,34 +36,34 @@ namespace Source.GamePlay.Services.Unit.Instance
         private NavMeshObstacle navMeshObstacle;
 
         [InitializationRequired]
-        private UnitManagerService UnitManagerService;
+        private UnitManagerService UnitManagerService { get; set; }
+        [InitializationRequired]
+        public BaseUnitTypeService UnitTypeService { get; private set; }
         private float MaxHealth { get; set; } = 50f;
         private float Health { get; set; } = 50f;
-        private UnitService Target { get; set; }
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
-        public UnitType UnitType { get; private set; } = UnitType.Regular;
 
         public void InjectDependencies(UnitManagerService unitManagerService, UnitService homeBase, Guid playerId, UnitData unitData)
         {
             UnitManagerService = unitManagerService;
+            UnitTypeService = AddUnitType(unitData.UnitType);
             PlayerId = playerId;
             MaxHealth = unitData.MaxHealth;
             Health = MaxHealth;
             Range = unitData.Range;
-            UnitType = unitData.UnitType;
 
             if (MeshRenderer != null)
                 MeshRenderer.material = unitData.Material;
             if (UnitAttackService != null)
-                UnitAttackService.InjectDependencies(this, unitData, UnitHarvestorService);
+                UnitAttackService.InjectDependencies(this, unitData);
             if (UnitMovementService != null)
                 UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.height, NavMeshAgent, unitData.Speed);
-            if (UnitHarvestorService != null)
-                UnitHarvestorService.InjectDependencies(this, homeBase);
+            if (UnitTypeService != null)
+                UnitTypeService.InjectDependencies(this);
 
-            if (UnitType == UnitType.Home || UnitType == UnitType.Resource)
+            if (!UnitTypeService.HasMove)
             {
                 navMeshObstacle.enabled = true;
                 NavMeshAgent.enabled = false;
@@ -81,8 +71,20 @@ namespace Source.GamePlay.Services.Unit.Instance
             else
             {
                 navMeshObstacle.enabled = false;
-                NavMeshAgent.enabled = true;                
+                NavMeshAgent.enabled = true;
             }
+        }
+
+        private BaseUnitTypeService AddUnitType(UnitType type)
+        {
+            return type switch 
+            {
+                UnitType.Regular => gameObject.AddComponent<RegularUnitService>(),
+                UnitType.Home => gameObject.AddComponent<HomeUnitTypeService>(),
+                UnitType.Resource => gameObject.AddComponent<ResourceUnitTypeService>(),
+                UnitType.Harvestor => gameObject.AddComponent<HarvestorUnitService>(),
+                _ => gameObject.AddComponent<HomeUnitTypeService>(),
+            };
         }
 
         private void Start()
@@ -95,16 +97,16 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             if (target == null)
             {
-                Target = null;
+                UnitTypeService.SetTarget(null);
 
                 if (UnitMovementService != null)
                 {
                     UnitMovementService.MoveUnit(destination, stoppingDistance);
                 }
             }
-            else if (target.PlayerId != PlayerId)
+            else
             {
-                Target = target;
+                UnitTypeService.SetTarget(target);
             }
         }
 
@@ -114,7 +116,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private bool CanSeeTarget()
         {
-            return CanSeeUnit(CurrentTarget);
+            return CanSeeUnit(UnitTypeService.GetTarget());
         }
 
         public bool CanSeeUnit(UnitService target)
@@ -133,9 +135,9 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private bool IsInRangeOfTarget()
         {
-            if (CurrentTarget == null) return false;
+            if (UnitTypeService.GetTarget() == null) return false;
 
-            float distanceToTarget = (transform.position - CurrentTarget.transform.position).magnitude;
+            float distanceToTarget = (transform.position - UnitTypeService.GetTarget().transform.position).magnitude;
             return distanceToTarget <= Range;
         }
 
@@ -143,9 +145,9 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void RemoveDestroyedUnit(UnitService unit)
         {
-            if (Target != null && unit == Target)
+            if (UnitTypeService.OriginalTarget != null && UnitTypeService.OriginalTarget == unit)
             {
-                Target = null;
+                UnitTypeService.SetTarget(null);
                 if (UnitMovementService != null)
                     UnitMovementService.StopPathFinding();
             }
@@ -181,7 +183,5 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             Debug.Log("Gold Added");
         }
-
-        public UnitService CurrentTarget => UnitHarvestorService.GetCurrentTarget(Target);
     }
 }

@@ -17,13 +17,13 @@ namespace Source.GamePlay.Services.Unit.Instance
             HomeBase = homeBase;
         }
 
-        public bool CanAttack => 
-            Self.UnitType == UnitType.Harvestor && Self.CurrentTarget.UnitType == UnitType.Resource ||
-            Self.UnitType == UnitType.Harvestor && Self.CurrentTarget == HomeBase;
+        public bool CanAttack => false;
+            //Self.UnitType == UnitType.Harvestor && Self.CurrentTarget.UnitType == UnitType.Resource ||
+            //Self.UnitType == UnitType.Harvestor && Self.CurrentTarget == HomeBase;
 
         public bool TryAttack(UnitService target, float damage)
         {
-            if (Self.UnitType != UnitType.Harvestor) return false;
+            //if (Self.UnitType != UnitType.Harvestor) return false;
 
             if (HarvesterReturning)
             {
@@ -40,12 +40,13 @@ namespace Source.GamePlay.Services.Unit.Instance
             
         public UnitService GetCurrentTarget(UnitService target)
         {
-            return Self.UnitType switch
-            {
-                UnitType.Harvestor => HarvesterReturning ? HomeBase : target,
-                UnitType.Regular => target,
-                _ => target
-            };
+            return null;
+            //return Self.UnitType switch
+            //{
+            //    UnitType.Harvestor => HarvesterReturning ? HomeBase : target,
+            //    UnitType.Regular => target,
+            //    _ => target
+            //};
         }
     }
 }

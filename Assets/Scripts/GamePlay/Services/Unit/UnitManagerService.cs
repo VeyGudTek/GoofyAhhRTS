@@ -5,6 +5,7 @@ using System;
 using Source.Shared.Utilities;
 using Source.GamePlay.Static.Classes;
 using Source.GamePlay.Services.Unit.Instance;
+using Source.GamePlay.Static.ScriptableObjects;
 
 namespace Source.GamePlay.Services.Unit
 {
