@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf7940cd3ac06b3408466d1fca4ba1e4, type: 3}
-  m_Name: RedHarvestorUnit
+  m_Name: ProCyberHomeUnit
   m_EditorClassIdentifier: 
-  Material: {fileID: 2100000, guid: 6d840e133e25ec64689a1d55f3afd0ec, type: 2}
+  Material: {fileID: 2100000, guid: 3d5c95b2a569b5d4ca3ca5afd75f6670, type: 2}
   MaxHealth: 100
-  Range: 2
+  Range: 7
   Speed: 5
   Cooldown: 1
-  damage: 15
-  ProjectileStartColor: {r: 1, g: 0.06693827, b: 0, a: 1}
-  ProjectileEndColor: {r: 1, g: 0.51707965, b: 0, a: 1}
-  UnitType: {fileID: 7430998714240215412, guid: 43e65ee48311f06459acdf847d23e326, type: 3}
+  Damage: 0
+  ProjectileStartColor: {r: 0.05630207, g: 0, b: 1, a: 1}
+  ProjectileEndColor: {r: 0, g: 0.9184027, b: 1, a: 1}
+  UnitType: 2

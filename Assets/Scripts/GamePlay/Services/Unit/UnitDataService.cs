@@ -1,4 +1,3 @@
-using Source.GamePlay.Services.Unit.Instance.Types;
 using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.Utilities;
 using System;
@@ -17,22 +16,22 @@ namespace Source.GamePlay.Services.Unit
     {
         [SerializeField]
         [InitializationRequired]
-        private UnitData BlueRegularData;
+        private UnitData ProCyberRegularData;
         [SerializeField]
         [InitializationRequired]
-        private UnitData BlueHarvestorData;
+        private UnitData ProCyberHarvestorData;
         [SerializeField]
         [InitializationRequired]
-        private UnitData BlueHomeData;
+        private UnitData ProCyberHomeData;
         [SerializeField]
         [InitializationRequired]
-        private UnitData RedRegularData;
+        private UnitData AntiCyberRegularData;
         [SerializeField]
         [InitializationRequired]
-        private UnitData RedHarvestorData;
+        private UnitData AntiCyberHarvestorData;
         [SerializeField]
         [InitializationRequired]
-        private UnitData RedHomeData;
+        private UnitData AntiCyberHomeData;
         [SerializeField]
         [InitializationRequired]
         private UnitData ResourceData;
@@ -61,9 +60,9 @@ namespace Source.GamePlay.Services.Unit
         {
             return type switch 
             {
-                UnitType.Regular => BlueRegularData,
-                UnitType.Home => BlueHomeData,
-                UnitType.Harvestor => BlueHarvestorData,
+                UnitType.Regular => ProCyberRegularData,
+                UnitType.Home => ProCyberHomeData,
+                UnitType.Harvestor => ProCyberHarvestorData,
                 _ => throw new Exception("[UnitDataService]: Invalid Unit Type"),
             };
         }
@@ -72,9 +71,9 @@ namespace Source.GamePlay.Services.Unit
         {
             return type switch
             {
-                UnitType.Regular => RedRegularData,
-                UnitType.Home => RedHomeData,
-                UnitType.Harvestor => RedHarvestorData,
+                UnitType.Regular => AntiCyberRegularData,
+                UnitType.Home => AntiCyberHomeData,
+                UnitType.Harvestor => AntiCyberHarvestorData,
                 _ => throw new Exception("[UnitDataService]: Invalid Unit Type"),
             };
         }

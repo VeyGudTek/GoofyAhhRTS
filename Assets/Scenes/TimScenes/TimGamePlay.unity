@@ -1860,12 +1860,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1487a35789e74c54c92bb255f5b65ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlueRegularData: {fileID: 11400000, guid: fa374875ab9b0484283ca3e817d2c143, type: 2}
-  BlueHarvestorData: {fileID: 11400000, guid: 3ff8e159896a7f3458eb9e22aea1d340, type: 2}
-  BlueHomeData: {fileID: 11400000, guid: f19ace6a89cd1fa48a43c4203a6b83c6, type: 2}
-  RedRegularData: {fileID: 11400000, guid: 3c685799dd9cc4d4e8a73cdceb294fa2, type: 2}
-  RedHarvestorData: {fileID: 11400000, guid: 61f0770b8cc3e27439124abd11f18c7d, type: 2}
-  RedHomeData: {fileID: 11400000, guid: 48ea11d3792693e41b16ff9de08313e3, type: 2}
+  ProCyberRegularData: {fileID: 11400000, guid: fa374875ab9b0484283ca3e817d2c143, type: 2}
+  ProCyberHarvestorData: {fileID: 11400000, guid: 3ff8e159896a7f3458eb9e22aea1d340, type: 2}
+  ProCyberHomeData: {fileID: 11400000, guid: f19ace6a89cd1fa48a43c4203a6b83c6, type: 2}
+  AntiCyberRegularData: {fileID: 11400000, guid: 3c685799dd9cc4d4e8a73cdceb294fa2, type: 2}
+  AntiCyberHarvestorData: {fileID: 11400000, guid: 61f0770b8cc3e27439124abd11f18c7d, type: 2}
+  AntiCyberHomeData: {fileID: 11400000, guid: 48ea11d3792693e41b16ff9de08313e3, type: 2}
   ResourceData: {fileID: 11400000, guid: 05a824e7773b5fc4aa6ba02ac5dbb878, type: 2}
 --- !u!114 &1066151767
 MonoBehaviour:

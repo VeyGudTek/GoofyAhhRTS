@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf7940cd3ac06b3408466d1fca4ba1e4, type: 3}
-  m_Name: RedHomeUnit
+  m_Name: AntiCyberHomeUnit
   m_EditorClassIdentifier: 
   Material: {fileID: 2100000, guid: 6d840e133e25ec64689a1d55f3afd0ec, type: 2}
   MaxHealth: 100
