@@ -48,8 +48,8 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void UpdatePathingUsingTarget()
         {
-            if (Self.UnitTypeService.GetTarget() == null) return;
             UnitService currentTarget = Self.UnitTypeService.GetTarget();
+            if (currentTarget == null) return;
 
             if (!Self.CanAttackTarget && CanRefreshPath)
             {
