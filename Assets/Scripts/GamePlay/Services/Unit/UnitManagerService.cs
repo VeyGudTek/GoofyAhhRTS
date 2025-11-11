@@ -50,7 +50,7 @@ namespace Source.GamePlay.Services.Unit
 
             HomeUnit.InjectDependencies(this, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(Faction.ProCyber, UnitType.Home));
             Units.Add(HomeUnit);
-            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.EnemyGuid, UnitDataService.GetUnitData(Faction.AntiCyber, UnitType.Home));
+            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.EnemyId, UnitDataService.GetUnitData(Faction.AntiCyber, UnitType.Home));
             Units.Add(EnemyHomeUnit);
 
             foreach(UnitService resource in  ResourceUnits)
@@ -165,6 +165,13 @@ namespace Source.GamePlay.Services.Unit
                 currentUnit.RemoveDestroyedUnit(unitToDestroy);
             }
             Destroy(unitToDestroy.gameObject);
+        }
+
+        public UnitService GetHomeBase(Guid playerId)
+        {
+            if (playerId == GamePlayService.PlayerId) return HomeUnit;
+            if (playerId == GamePlayService.EnemyId) return HomeUnit;
+            return null;
         }
     }
 }

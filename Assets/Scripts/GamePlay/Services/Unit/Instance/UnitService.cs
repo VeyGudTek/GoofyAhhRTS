@@ -109,8 +109,8 @@ namespace Source.GamePlay.Services.Unit.Instance
         }
 
         public float Area => HitBox == null ? 0f : Mathf.PI * (HitBox.radius * HitBox.radius);
-
         public float Radius => HitBox == null ? 0f : HitBox.radius;
+        public UnitService HomeBase => UnitManagerService.GetHomeBase(PlayerId);
 
         private bool CanSeeTarget()
         {

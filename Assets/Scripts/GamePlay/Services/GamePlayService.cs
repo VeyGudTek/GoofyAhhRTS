@@ -30,7 +30,7 @@ namespace Source.GamePlay.Services
         private SceneService SceneService { get; set; }
 
         public Guid PlayerId { get; private set; } = Guid.NewGuid();
-        public Guid EnemyGuid { get; private set; } = Guid.NewGuid();
+        public Guid EnemyId { get; private set; } = Guid.NewGuid();
         private GameState GameState = GameState.Playing;
 
         public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService,PauseService pauseService, SceneService sceneService)
@@ -51,7 +51,7 @@ namespace Source.GamePlay.Services
             {
                 UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -10), Faction.ProCyber, UnitType.Regular);
                 UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -15), Faction.ProCyber, UnitType.Harvestor);
-                UnitManagerService.SpawnUnit(EnemyGuid, new Vector2(10, i + 10), Faction.AntiCyber, UnitType.Regular);
+                UnitManagerService.SpawnUnit(EnemyId, new Vector2(10, i + 10), Faction.AntiCyber, UnitType.Regular);
             }
         }
 
