@@ -2,7 +2,7 @@ using System;
 
 namespace Source.GamePlay.Services.Unit.Instance.Types
 {
-    public class RegularUnitService : BaseUnitTypeService
+    public class RegularUnitTypeService : BaseUnitTypeService
     {
         public override bool HasMove => true;
         public override bool HasAttack => true;
@@ -28,7 +28,7 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
 
         public override bool CanManualAttack()
         {
-            return !Target.UnitTypeService.IsResource;
+            return !(Target == null || Target.UnitTypeService.IsResource);
         }
 
         public override bool CanAutoAttack(UnitService target)

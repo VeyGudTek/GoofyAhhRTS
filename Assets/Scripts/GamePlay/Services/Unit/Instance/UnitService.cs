@@ -79,10 +79,10 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             return type switch 
             {
-                UnitType.Regular => gameObject.AddComponent<RegularUnitService>(),
+                UnitType.Regular => gameObject.AddComponent<RegularUnitTypeService>(),
                 UnitType.Home => gameObject.AddComponent<HomeUnitTypeService>(),
                 UnitType.Resource => gameObject.AddComponent<ResourceUnitTypeService>(),
-                UnitType.Harvestor => gameObject.AddComponent<HarvestorUnitService>(),
+                UnitType.Harvestor => gameObject.AddComponent<HarvestorUnitTypeService>(),
                 _ => gameObject.AddComponent<HomeUnitTypeService>(),
             };
         }

@@ -1,6 +1,6 @@
 namespace Source.GamePlay.Services.Unit.Instance.Types
 {
-    public class HarvestorUnitService : BaseUnitTypeService
+    public class HarvestorUnitTypeService : BaseUnitTypeService
     {
         private bool HarvesterReturning { get; set; } = false;
         public override bool HasMove => true;
@@ -27,7 +27,8 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
 
         public override bool CanManualAttack()
         {
-            return Target.UnitTypeService.IsResource || Target == Self.HomeBase;
+            UnitService target = GetTarget();
+            return target != null && (target.UnitTypeService.IsResource || target == Self.HomeBase);
         }
 
         public override void Attack(UnitService target, float damage)
