@@ -51,7 +51,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
             if (!Self.CanAttackTarget && CanRefreshPath)
             {
-                float stoppingDistance = Self.GetPosition().Radius + currentTarget.GetPosition().Radius;
+                float stoppingDistance = Self.Radius + currentTarget.Radius;
                 MoveUnit(currentTarget.gameObject.transform.position, stoppingDistance);
                 CanRefreshPath = false;
                 StartCoroutine(RefreshPath());

@@ -146,7 +146,7 @@ namespace Source.GamePlay.Services.Unit
             );
 
             float stoppingDistance = unitsToMove.Aggregate(0f, 
-                (total, currUnit) => total + currUnit.GetArea(), 
+                (total, currUnit) => total + currUnit.Area, 
                 total => Mathf.Sqrt(total / 4f)
             );
 

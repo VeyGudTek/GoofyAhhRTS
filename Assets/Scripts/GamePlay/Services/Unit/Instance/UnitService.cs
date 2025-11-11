@@ -15,12 +15,6 @@ namespace Source.GamePlay.Services.Unit.Instance
         Resource
     }
 
-    public class PositionDto
-    {
-        public Vector3 Position { get; set; }
-        public float Radius { get; set; }
-    }
-
     public class UnitService : MonoBehaviour
     {
         [SerializeField]
@@ -114,19 +108,9 @@ namespace Source.GamePlay.Services.Unit.Instance
             }
         }
 
-        public float GetArea()
-        {
-            return HitBox == null ? 0f : Mathf.PI * (HitBox.radius * HitBox.radius);
-        }
+        public float Area => HitBox == null ? 0f : Mathf.PI * (HitBox.radius * HitBox.radius);
 
-        public PositionDto GetPosition()
-        {
-            return new PositionDto()
-            {
-                Position = this.transform.position,
-                Radius = HitBox == null ? 0f : HitBox.radius
-            };
-        }
+        public float Radius => HitBox == null ? 0f : HitBox.radius;
 
         private bool CanSeeTarget()
         {
