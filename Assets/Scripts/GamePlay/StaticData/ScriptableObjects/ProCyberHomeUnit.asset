@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Material: {fileID: 2100000, guid: 3d5c95b2a569b5d4ca3ca5afd75f6670, type: 2}
   MaxHealth: 100
-  Range: 7
+  Range: 0
   Speed: 5
   Cooldown: 1
   Damage: 0
