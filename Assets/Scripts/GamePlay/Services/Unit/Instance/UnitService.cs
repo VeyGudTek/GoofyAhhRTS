@@ -95,18 +95,14 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target)
         {
+            UnitTypeService.SetTarget(target);
+
             if (target == null)
             {
-                UnitTypeService.SetTarget(null);
-
                 if (UnitMovementService != null)
                 {
                     UnitMovementService.MoveUnit(destination, stoppingDistance);
                 }
-            }
-            else
-            {
-                UnitTypeService.SetTarget(target);
             }
         }
 
