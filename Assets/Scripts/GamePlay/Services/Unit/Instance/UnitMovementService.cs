@@ -39,6 +39,8 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void Update()
         {
+            if (Self == null || !Self.UnitTypeService.HasMove) return;
+
             UpdatePathingUsingTarget();
             CheckReachedPath();
             DrawPath();
@@ -46,12 +48,12 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void UpdatePathingUsingTarget()
         {
-            if (Self == null || Self.CurrentTarget == null || !NavMeshAgent.enabled) return;
-            UnitService currentTarget = Self.CurrentTarget;
+            UnitService currentTarget = Self.UnitTypeService.GetTarget();
+            if (currentTarget == null) return;
 
-            if ((!Self.IsInRangeOfTarget() || !Self.CanSeeTarget()) && CanRefreshPath)
+            if (!Self.CanAttackTarget && CanRefreshPath)
             {
-                float stoppingDistance = Self.GetPosition().Radius + currentTarget.GetPosition().Radius;
+                float stoppingDistance = Self.Radius + currentTarget.Radius;
                 MoveUnit(currentTarget.gameObject.transform.position, stoppingDistance);
                 CanRefreshPath = false;
                 StartCoroutine(RefreshPath());
@@ -68,9 +70,9 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             if (NavMeshAgent == null || !NavMeshAgent.hasPath) return;
 
-            if (Self != null && Self.CurrentTarget != null)
+            if (Self != null && Self.UnitTypeService.GetTarget() != null)
             {
-                if (Self.CanSeeTarget() && Self.IsInRangeOfTarget())
+                if (Self.CanAttackTarget)
                 {
                     StopPathFinding();
                     return;
@@ -100,19 +102,19 @@ namespace Source.GamePlay.Services.Unit.Instance
                 Vector3[] corners = new Vector3[numCorners];
                 Array.Copy(NavMeshAgent.path.corners, corners, numCorners);
 
-                if (Self.CurrentTarget != null)
+                if (Self.UnitTypeService.GetTarget() != null)
                 {
                     corners[numCorners - 1] = new Vector3(
-                        Self.CurrentTarget.transform.position.x,
+                        Self.UnitTypeService.GetTarget().transform.position.x,
                         corners[numCorners - 1].y,
-                        Self.CurrentTarget.transform.position.z
+                        Self.UnitTypeService.GetTarget().transform.position.z
                     );
                 }
 
                 LineRenderer.positionCount = numCorners;
                 LineRenderer.SetPositions(corners);
             }
-            else if (Self.CurrentTarget == null) 
+            else if (Self.UnitTypeService.GetTarget() == null || Self.CanAttackTarget) 
             {
                 LineRenderer.enabled = false;
             }
@@ -120,7 +122,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void MoveUnit(Vector3 destination, float stoppingDistance)
         {
-            if (NavMeshAgent != null && NavMeshAgent.enabled)
+            if (NavMeshAgent != null && Self.UnitTypeService.HasMove)
             {
                 NavMeshAgent.SetDestination(destination);
                 NavMeshAgent.avoidancePriority = BasePriority - 1;

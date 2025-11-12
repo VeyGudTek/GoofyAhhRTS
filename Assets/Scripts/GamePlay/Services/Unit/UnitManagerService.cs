@@ -5,6 +5,7 @@ using System;
 using Source.Shared.Utilities;
 using Source.GamePlay.Static.Classes;
 using Source.GamePlay.Services.Unit.Instance;
+using Source.GamePlay.Static.ScriptableObjects;
 
 namespace Source.GamePlay.Services.Unit
 {
@@ -48,19 +49,19 @@ namespace Source.GamePlay.Services.Unit
         {
             if (GamePlayService == null || UnitDataService == null) return;
 
-            HomeUnit.InjectDependencies(this, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(UnitColor.Blue, UnitType.Home));
+            HomeUnit.InjectDependencies(this, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(Faction.ProCyber, UnitType.Home));
             Units.Add(HomeUnit);
-            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.EnemyGuid, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Home));
+            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.EnemyId, UnitDataService.GetUnitData(Faction.AntiCyber, UnitType.Home));
             Units.Add(EnemyHomeUnit);
 
             foreach(UnitService resource in  ResourceUnits)
             {
-                resource.InjectDependencies(this, null, Guid.Empty, UnitDataService.GetUnitData(UnitColor.Red, UnitType.Resource));
+                resource.InjectDependencies(this, null, Guid.Empty, UnitDataService.GetUnitData(Faction.None, UnitType.Resource));
                 Units.Add(resource);
             }
         }
 
-        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, UnitColor color, UnitType type)
+        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, Faction faction, UnitType type)
         {
             if (UnitDataService == null) return;
 
@@ -72,7 +73,7 @@ namespace Source.GamePlay.Services.Unit
                 GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.InjectDependencies(this, playerId == GamePlayService.PlayerId ? HomeUnit : EnemyHomeUnit, playerId, UnitDataService.GetUnitData(color, type));
+                unitService.InjectDependencies(this, playerId == GamePlayService.PlayerId ? HomeUnit : EnemyHomeUnit, playerId, UnitDataService.GetUnitData(faction, type));
             }
         }
 
@@ -146,7 +147,7 @@ namespace Source.GamePlay.Services.Unit
             );
 
             float stoppingDistance = unitsToMove.Aggregate(0f, 
-                (total, currUnit) => total + currUnit.GetArea(), 
+                (total, currUnit) => total + currUnit.Area, 
                 total => Mathf.Sqrt(total / 4f)
             );
 
@@ -165,6 +166,13 @@ namespace Source.GamePlay.Services.Unit
                 currentUnit.RemoveDestroyedUnit(unitToDestroy);
             }
             Destroy(unitToDestroy.gameObject);
+        }
+
+        public UnitService GetHomeBase(Guid playerId)
+        {
+            if (playerId == GamePlayService.PlayerId) return HomeUnit;
+            if (playerId == GamePlayService.EnemyId) return HomeUnit;
+            return null;
         }
     }
 }

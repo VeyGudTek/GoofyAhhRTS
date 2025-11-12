@@ -1,8 +1,15 @@
-using Source.GamePlay.Services.Unit.Instance;
 using UnityEngine;
 
 namespace Source.GamePlay.Static.ScriptableObjects
 {
+    public enum UnitType
+    {
+        Harvestor,
+        Regular,
+        Home,
+        Resource
+    }
+
     [CreateAssetMenu(fileName = "UnitData", menuName = "Scriptable Objects/UnitData")]
     public class UnitData : ScriptableObject
     {
@@ -11,7 +18,7 @@ namespace Source.GamePlay.Static.ScriptableObjects
         public float Range;
         public float Speed;
         public float Cooldown;
-        public float damage;
+        public float Damage;
         public Color ProjectileStartColor;
         public Color ProjectileEndColor;
         public UnitType UnitType;

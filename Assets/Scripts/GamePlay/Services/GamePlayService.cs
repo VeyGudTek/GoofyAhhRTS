@@ -7,6 +7,7 @@ using Source.GamePlay.Services.Unit.Instance;
 using System.Collections.Generic;
 using Source.Shared.Services;
 using Source.GamePlay.Services.UI;
+using Source.GamePlay.Static.ScriptableObjects;
 
 namespace Source.GamePlay.Services
 {
@@ -30,7 +31,7 @@ namespace Source.GamePlay.Services
         private SceneService SceneService { get; set; }
 
         public Guid PlayerId { get; private set; } = Guid.NewGuid();
-        public Guid EnemyGuid { get; private set; } = Guid.NewGuid();
+        public Guid EnemyId { get; private set; } = Guid.NewGuid();
         private GameState GameState = GameState.Playing;
 
         public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService,PauseService pauseService, SceneService sceneService)
@@ -49,9 +50,9 @@ namespace Source.GamePlay.Services
 
             for (int i = -7; i < 7; i += 2)
             {
-                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -10), UnitColor.Blue, UnitType.Regular);
-                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -15), UnitColor.Blue, UnitType.Harvestor);
-                UnitManagerService.SpawnUnit(EnemyGuid, new Vector2(10, i + 10), UnitColor.Red, UnitType.Regular);
+                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -10), Faction.ProCyber, UnitType.Regular);
+                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -15), Faction.ProCyber, UnitType.Harvestor);
+                UnitManagerService.SpawnUnit(EnemyId, new Vector2(10, i + 10), Faction.AntiCyber, UnitType.Regular);
             }
         }
 
