@@ -48,7 +48,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         public void InjectDependencies(UnitManagerService unitManagerService, UnitService homeBase, Guid playerId, UnitData unitData)
         {
             UnitManagerService = unitManagerService;
-            UnitTypeService = AddUnitType(unitData.UnitType);
+            UnitTypeService = CreateUnitType(unitData.UnitType);
             PlayerId = playerId;
             MaxHealth = unitData.MaxHealth;
             Health = MaxHealth;
@@ -75,16 +75,10 @@ namespace Source.GamePlay.Services.Unit.Instance
             }
         }
 
-        private BaseUnitTypeService AddUnitType(UnitType type)
+        private BaseUnitTypeService CreateUnitType(GameObject unitTypePrefab)
         {
-            return type switch 
-            {
-                UnitType.Regular => gameObject.AddComponent<RegularUnitTypeService>(),
-                UnitType.Home => gameObject.AddComponent<HomeUnitTypeService>(),
-                UnitType.Resource => gameObject.AddComponent<ResourceUnitTypeService>(),
-                UnitType.Harvestor => gameObject.AddComponent<HarvestorUnitTypeService>(),
-                _ => gameObject.AddComponent<HomeUnitTypeService>(),
-            };
+            GameObject newUnitType = Instantiate(unitTypePrefab, transform);
+            return newUnitType.GetComponent<BaseUnitTypeService>();
         }
 
         private void Start()

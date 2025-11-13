@@ -20,4 +20,4 @@ MonoBehaviour:
   Damage: 0
   ProjectileStartColor: {r: 0, g: 0, b: 0, a: 1}
   ProjectileEndColor: {r: 0, g: 0, b: 0, a: 1}
-  UnitType: 3
+  UnitType: {fileID: 2011009503091313746, guid: dc0a4ede636d85d419942601cd1e836c, type: 3}
