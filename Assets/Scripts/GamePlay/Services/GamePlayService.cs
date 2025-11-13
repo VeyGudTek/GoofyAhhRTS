@@ -33,6 +33,7 @@ namespace Source.GamePlay.Services
         public Guid PlayerId { get; private set; } = Guid.NewGuid();
         public Guid EnemyId { get; private set; } = Guid.NewGuid();
         private GameState GameState = GameState.Playing;
+        private bool IsPlaying => GameState == GameState.Playing;
 
         public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService,PauseService pauseService, SceneService sceneService)
         {
@@ -58,7 +59,7 @@ namespace Source.GamePlay.Services
 
         public void PrimaryClickEvent(bool isShift)
         {
-            if (SelectionService == null) return;
+            if (SelectionService == null || !IsPlaying) return;
 
             ContactDto contact = SelectionService.StartSelection();
             UnitManagerService.SelectUnit(contact.Unit, !isShift);
@@ -66,7 +67,7 @@ namespace Source.GamePlay.Services
 
         public void PrimaryHoldEvent()
         {
-            if ( SelectionService == null || UnitManagerService == null) return;
+            if ( SelectionService == null || UnitManagerService == null || !IsPlaying) return;
 
             List<UnitService> selectedUnits = SelectionService.ContinueSelection();
 
@@ -75,7 +76,7 @@ namespace Source.GamePlay.Services
 
         public void PrimaryReleaseEvent() 
         {
-            if (SelectionService == null || UnitManagerService == null) return;
+            if (SelectionService == null || UnitManagerService == null || !IsPlaying) return;
 
             SelectionService.EndSelection();
             UnitManagerService.AddSelectedToPrevious();
@@ -83,7 +84,7 @@ namespace Source.GamePlay.Services
 
         public void SecondaryClickEvent() 
         { 
-            if (SelectionService == null) return;
+            if (SelectionService == null || !IsPlaying) return;
 
             ContactDto groundContact = SelectionService.GetGroundSelection();
             ContactDto unitContact = SelectionService.GetUnitSelection();
