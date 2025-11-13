@@ -57,10 +57,14 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         private void AutomaticAttack()
         {
-            IEnumerable<UnitService> visibleUnitsInRange = UnitsInRange.Where(u => Self.CanSeeUnit(u));
-            if (CanAttack && visibleUnitsInRange.Count() > 0)
+            if (!CanAttack) return;
+
+            IEnumerable<UnitService> attackableUnits = UnitsInRange.Where(u => Self.CanSeeUnit(u) &&
+                Self.UnitTypeService.CanAutoAttack(u));
+
+            if (attackableUnits.Count() > 0)
             {
-                UnitService target = visibleUnitsInRange
+                UnitService target = attackableUnits
                     .OrderBy(u => (u.transform.position - Self.transform.position).sqrMagnitude)
                     .First();
 
@@ -97,9 +101,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             if (Self == null) return;
 
-            UnitService newUnit = other.gameObject.GetComponent<UnitService>();
-
-            if (newUnit != null && Self.UnitTypeService.CanAutoAttack(newUnit))
+            if (other.gameObject.TryGetComponent<UnitService>(out var newUnit))
             {
                 UnitsInRange.Add(newUnit);
             }
