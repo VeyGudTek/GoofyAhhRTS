@@ -16,7 +16,6 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         [InitializationRequired]
         private UnitService Self;
-        private int BasePriority { get; set; } = 99;
         private bool CanRefreshPath = true;
         const float RefreshPathTime = .5f;
 
@@ -27,7 +26,6 @@ namespace Source.GamePlay.Services.Unit.Instance
             if (NavMeshAgent != null)
             {
                 NavMeshAgent.baseOffset = hitBoxHeight / 2f;
-                NavMeshAgent.avoidancePriority = BasePriority;
                 NavMeshAgent.speed = speed;
             }
         }
@@ -87,7 +85,6 @@ namespace Source.GamePlay.Services.Unit.Instance
         public void StopPathFinding()
         {
             NavMeshAgent.ResetPath();
-            NavMeshAgent.avoidancePriority = BasePriority;
         }
 
         private void DrawPath()
@@ -125,7 +122,6 @@ namespace Source.GamePlay.Services.Unit.Instance
             if (NavMeshAgent != null && Self.UnitTypeService.HasMove)
             {
                 NavMeshAgent.SetDestination(destination);
-                NavMeshAgent.avoidancePriority = BasePriority - 1;
                 NavMeshAgent.stoppingDistance = stoppingDistance;
             }
         }
