@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Source.Shared.Services;
 using Source.GamePlay.Services.UI;
 using Source.GamePlay.Static.ScriptableObjects;
+using Source.Shared.StaticData;
 
 namespace Source.GamePlay.Services
 {
@@ -125,6 +126,12 @@ namespace Source.GamePlay.Services
         {
             Time.timeScale = 1;
             GameState = GameState.Playing;
+        }
+
+        public void OnQuit()
+        {
+            SceneService.LoadScene(SceneNames.Start);
+            Time.timeScale = 1;
         }
     }
 }

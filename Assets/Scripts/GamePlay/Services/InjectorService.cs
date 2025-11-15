@@ -51,7 +51,7 @@ namespace Source.GamePlay.Services
 
         private void InjectDependencies()
         {
-            PauseService.InjectDependencies(SettingsMenuService, PauseMenuService, GamePlayService, SceneService);
+            PauseService.InjectDependencies(SettingsMenuService, PauseMenuService, GamePlayService);
             PauseMenuService.InjectDependencies(PauseService);
             SettingsMenuService.InjectDependencies(SettingsRepository, PauseService);
             CameraService.InjectDependencies(SettingsRepository);

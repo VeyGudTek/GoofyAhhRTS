@@ -13,18 +13,12 @@ namespace Source.GamePlay.Services.UI
         private PauseMenuService PauseMenuService { get; set; }
         [InitializationRequired]
         private GamePlayService GamePlayService { get; set; }
-        [InitializationRequired]
-        private SceneService SceneService { get; set; }
 
-        [SerializeField]
-        private string QuitSceneName = "TimStart";
-
-        public void InjectDependencies(SettingsMenuService settingsMenuService, PauseMenuService pauseMenuService, GamePlayService gamePlayService, SceneService sceneService)
+        public void InjectDependencies(SettingsMenuService settingsMenuService, PauseMenuService pauseMenuService, GamePlayService gamePlayService)
         {
             SettingsMenuService = settingsMenuService;
             PauseMenuService = pauseMenuService;
             GamePlayService = gamePlayService;
-            SceneService = sceneService;
         }
 
         private void Start()
@@ -79,10 +73,7 @@ namespace Source.GamePlay.Services.UI
 
         public void Quit()
         {
-            if (SceneService != null)
-            {
-                SceneService.LoadScene(QuitSceneName);
-            }
+            GamePlayService.OnQuit();
         }
     }
 }
