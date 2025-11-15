@@ -16,6 +16,7 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
         }
 
         public virtual bool IsResource => false;
+        public virtual bool IsHome => false;
         public virtual bool HasMove => false;
         public virtual bool HasAttack => false;
         public virtual UnitService GetTarget() { return null; }

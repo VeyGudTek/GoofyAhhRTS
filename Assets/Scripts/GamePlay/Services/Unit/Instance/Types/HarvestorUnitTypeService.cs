@@ -2,13 +2,15 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
 {
     public class HarvestorUnitTypeService : BaseUnitTypeService
     {
-        private bool HarvesterReturning { get; set; } = false;
+        private int ResourceBag = 0;
         public override bool HasMove => true;
         public override bool HasAttack => true;
+        private const float ResourceDamageModifier = .1f;
+        private const int MaxResources = 3;
 
         public override UnitService GetTarget()
         {
-            return HarvesterReturning ? Self.HomeBase : Target;
+            return ResourceBag >= MaxResources && Target != null ? Self.HomeBase : Target;
         }
 
         public override void SetTarget(UnitService target)
@@ -19,7 +21,7 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
                 return;
             }
 
-            if (target.PlayerId != Self.PlayerId)
+            if (target.PlayerId != Self.PlayerId || target.UnitTypeService.IsHome)
             {
                 Target = target;
             }
@@ -27,22 +29,40 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
 
         public override bool CanManualAttack()
         {
-            UnitService target = GetTarget();
-            return target != null && (target.UnitTypeService.IsResource || target == Self.HomeBase);
+            return CanAttack(GetTarget());
+        }
+
+        public override bool CanAutoAttack(UnitService target)
+        {
+            return CanAttack(target);
+        }
+
+        private bool CanAttack(UnitService target)
+        {
+            bool enemyAndNonResource = target.PlayerId != Self.PlayerId && !target.UnitTypeService.IsResource;
+            bool resourceAndHasSpace = target.UnitTypeService.IsResource && ResourceBag < MaxResources;
+            bool homeAndHasResource = target.UnitTypeService.IsHome && ResourceBag > 0;
+
+            return enemyAndNonResource || homeAndHasResource || resourceAndHasSpace;
         }
 
         public override void Attack(UnitService target, float damage)
         {
-            if (HarvesterReturning)
+            if (target.UnitTypeService.IsHome)
             {
-                Self.AddGold(damage);
+                Self.AddGold(damage * ResourceBag);
+                ResourceBag = 0;
             }
             else
             {
-                target.Damage(damage);
-            }
+                float modifiedDamage = target.UnitTypeService.IsResource ? damage : damage * ResourceDamageModifier;
+                target.Damage(modifiedDamage);
 
-            HarvesterReturning = !HarvesterReturning;
+                if (target.UnitTypeService.IsResource)
+                {
+                    ResourceBag += 1;
+                }
+            }
         }
     }
 }

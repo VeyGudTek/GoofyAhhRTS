@@ -1,6 +1,7 @@
 using Source.Shared.Repositories;
 using Source.Shared.Services;
 using Source.Shared.Services.Interfaces;
+using Source.Shared.StaticData;
 using Source.Shared.Utilities;
 using UnityEngine;
 
@@ -24,9 +25,6 @@ namespace Source.Start.Services
         [SerializeField]
         private InputService InputService;
 
-        [SerializeField]
-        private string NextSceneName = "TimGamePlay";
-
         public void Awake()
         {
             this.CheckInitializeRequired();
@@ -39,7 +37,7 @@ namespace Source.Start.Services
         {
             if (SceneService == null) return;
 
-            SceneService.LoadScene(NextSceneName);
+            SceneService.LoadScene(SceneNames.GamePlay);
         }
 
         public void CloseSettings()

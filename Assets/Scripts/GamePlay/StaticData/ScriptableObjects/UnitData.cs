@@ -21,6 +21,6 @@ namespace Source.GamePlay.Static.ScriptableObjects
         public float Damage;
         public Color ProjectileStartColor;
         public Color ProjectileEndColor;
-        public UnitType UnitType;
+        public GameObject UnitType;
     }
 }
