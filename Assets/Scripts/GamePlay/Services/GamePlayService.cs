@@ -48,14 +48,6 @@ namespace Source.GamePlay.Services
         private void Start()
         {
             this.CheckInitializeRequired();
-            //TempCodeBelow
-
-            for (int i = -7; i < 7; i += 2)
-            {
-                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -10), Faction.ProCyber, UnitType.Regular);
-                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -15), Faction.ProCyber, UnitType.Harvestor);
-                UnitManagerService.SpawnUnit(EnemyId, new Vector2(10, i + 10), Faction.AntiCyber, UnitType.Regular);
-            }
         }
 
         public void PrimaryClickEvent(bool isShift)

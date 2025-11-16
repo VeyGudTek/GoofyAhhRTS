@@ -61,20 +61,25 @@ namespace Source.GamePlay.Services.Unit
             }
         }
 
-        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, Faction faction, UnitType type)
+        public UnitData SpawnUnit(Guid playerId, Faction faction, UnitType type)
         {
-            if (UnitDataService == null) return;
+            if (UnitDataService == null) return null;
 
-            int layerMaskToHit = LayerMask.GetMask(LayerNames.Ground);
-            Vector3 origin = new(spawnLocation.x, SpawnRayYOrigin, spawnLocation.y);
+            int GroundLayer = LayerMask.GetMask(LayerNames.Ground);
+            UnitService currentHomeUnit = playerId == GamePlayService.PlayerId ? HomeUnit : EnemyHomeUnit;
+            Vector3 origin = new(currentHomeUnit.transform.position.x, SpawnRayYOrigin, currentHomeUnit.transform.position.y);
+            UnitData unitData = UnitDataService.GetUnitData(faction, type);
 
-            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMaskToHit))
+            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, Mathf.Infinity, GroundLayer))
             {
                 GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.InjectDependencies(this, playerId == GamePlayService.PlayerId ? HomeUnit : EnemyHomeUnit, playerId, UnitDataService.GetUnitData(faction, type));
+                unitService.InjectDependencies(this, currentHomeUnit, playerId, unitData);
+                return unitData;
             }
+
+            throw new Exception("Attempted to spawn unit in invalid location");
         }
 
         public void SelectUnit(UnitService selectedUnit, bool deselectPrevious)
