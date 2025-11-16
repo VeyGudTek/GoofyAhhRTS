@@ -27,6 +27,12 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         private SelectionService SelectionService { get; set; }
         [InitializationRequired]
+        private ResourceUIService ResourceUIService { get; set; }
+        [InitializationRequired]
+        private UnitButtonsService UnitButtonsService { get; set; }
+        [InitializationRequired]
+        private ResourceService ResourceService { get; set; }
+        [InitializationRequired]
         PauseService PauseService { get; set; }
         [InitializationRequired]
         private SceneService SceneService { get; set; }
@@ -36,18 +42,44 @@ namespace Source.GamePlay.Services
         private GameState GameState = GameState.Playing;
         private bool IsPlaying => GameState == GameState.Playing;
 
-        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService,PauseService pauseService, SceneService sceneService)
+        public void InjectDependencies(CameraService cameraService, 
+            UnitManagerService unitManagerService, 
+            SelectionService selectionService, 
+            PauseService pauseService, 
+            SceneService sceneService,
+            ResourceUIService resourceUIService,
+            UnitButtonsService unitButtonsService,
+            ResourceService resourceService
+            )
         {
             CameraService = cameraService;
             UnitManagerService = unitManagerService;
             SelectionService = selectionService;
             PauseService = pauseService;
             SceneService = sceneService;
+            ResourceUIService = resourceUIService;
+            UnitButtonsService = unitButtonsService;
+            ResourceService = resourceService;
+
+            InitializePlayerResources();
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
+        }
+
+        private void InitializePlayerResources()
+        {
+            ResourceService.CreateResourceMap(PlayerId, 100);
+            ResourceService.CreateResourceMap(EnemyId, 10000000);
+            UpdatePlayerResources(100);
+        }
+
+        public void UpdatePlayerResources(float newResources)
+        {
+            ResourceUIService.UpdateResourceText(newResources);
+            UnitButtonsService.UpdateDisabledButtons(newResources);
         }
 
         public void PrimaryClickEvent(bool isShift)

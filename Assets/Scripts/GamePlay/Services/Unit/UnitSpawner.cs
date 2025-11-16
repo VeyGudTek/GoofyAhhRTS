@@ -1,4 +1,3 @@
-using Source.GamePlay.Services.UI;
 using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.Utilities;
 using System;
@@ -13,13 +12,13 @@ namespace Source.GamePlay.Services.Unit
         [InitializationRequired]
         private UnitManagerService UnitManagerService { get; set; }
         [InitializationRequired]
-        private UnitButtonsService UnitButtonsService { get; set; }
+        private GamePlayService GamePlayService { get; set; }
 
-        public void InjectDependencies(ResourceService resourceService, UnitManagerService unitManagerService, UnitButtonsService unitButtonsService)
+        public void InjectDependencies(GamePlayService gamePlayService, ResourceService resourceService, UnitManagerService unitManagerService)
         {
             ResourceService = resourceService;
             UnitManagerService = unitManagerService;
-            UnitButtonsService = unitButtonsService;
+            GamePlayService = gamePlayService;
         }
 
         private void Start()
@@ -33,8 +32,8 @@ namespace Source.GamePlay.Services.Unit
             
             if (unitData != null)
             {
-                float newResource = ResourceService.ChangeResource(playerId, -unitData.cost);
-                UnitButtonsService.UpdateDisabledButtons(newResource);
+                float newResources = ResourceService.ChangeResource(playerId, -unitData.cost);
+                GamePlayService.UpdatePlayerResources(newResources);
             }
         }
     }
