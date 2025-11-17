@@ -25,6 +25,8 @@ namespace Source.GamePlay.Services.Unit
         private UnitDataService UnitDataService { get; set; }
         [InitializationRequired]
         private GamePlayService GamePlayService { get; set; }
+        [InitializationRequired]
+        private ResourceService ResourceService { get; set; }
 
         private const float SpawnRayYOrigin = 100f;
         [SerializeField]
@@ -32,10 +34,11 @@ namespace Source.GamePlay.Services.Unit
         private readonly List<UnitService> Units = new();
         private readonly List<UnitService> PreviouslySelectedUnits = new();
 
-        public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService)
+        public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService, ResourceService resourceService)
         {
             UnitDataService = unitDataService;
             GamePlayService = gamePlayService;
+            ResourceService = resourceService;
 
             InitializeExistingUnits();
         }
@@ -61,13 +64,13 @@ namespace Source.GamePlay.Services.Unit
             }
         }
 
-        public UnitData SpawnUnit(Guid playerId, Faction faction, UnitType type)
+        public void SpawnUnit(Guid playerId, Faction faction, UnitType type)
         {
-            if (UnitDataService == null) return null;
+            if (UnitDataService == null) return;
 
             int GroundLayer = LayerMask.GetMask(LayerNames.Ground);
             UnitService currentHomeUnit = playerId == GamePlayService.PlayerId ? HomeUnit : EnemyHomeUnit;
-            Vector3 origin = new(currentHomeUnit.transform.position.x, SpawnRayYOrigin, currentHomeUnit.transform.position.y);
+            Vector3 origin = new(currentHomeUnit.transform.position.x, SpawnRayYOrigin, currentHomeUnit.transform.position.z);
             UnitData unitData = UnitDataService.GetUnitData(faction, type);
 
             if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, Mathf.Infinity, GroundLayer))
@@ -76,10 +79,10 @@ namespace Source.GamePlay.Services.Unit
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
                 unitService.InjectDependencies(this, currentHomeUnit, playerId, unitData);
-                return unitData;
-            }
 
-            throw new Exception("Attempted to spawn unit in invalid location");
+                ResourceService.ChangeResource(playerId, -unitData.cost);
+                GamePlayService.UpdatePlayerResources(playerId);
+            }
         }
 
         public void SelectUnit(UnitService selectedUnit, bool deselectPrevious)

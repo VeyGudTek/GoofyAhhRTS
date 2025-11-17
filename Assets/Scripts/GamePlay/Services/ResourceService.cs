@@ -13,6 +13,11 @@ namespace Source.GamePlay.Services
             Resources.Add(id, initialValue);
         }
 
+        public float GetResource(Guid id)
+        {
+            return Resources[id];
+        }
+
         public float ChangeResource(Guid id, float value)
         {
             Resources[id] = Resources[id] + value;

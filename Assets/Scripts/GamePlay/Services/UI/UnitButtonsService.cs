@@ -11,13 +11,13 @@ namespace Source.GamePlay.Services.UI
         [SerializeField]
         private List<Button> Buttons = new List<Button>();
         private Dictionary<int, float> ButtonCostMapping = new Dictionary<int, float>();
-        private UnitSpawner UnitSpawner { get; set; }
         private GamePlayService GamePlayService { get; set; }
         private UnitDataService UnitDataService { get; set; }
+        private UnitManagerService UnitManagerService { get; set; }
 
-        public void InjectDependencies(GamePlayService gamePlayService, UnitSpawner unitSpawner, UnitDataService unitDataService)
+        public void InjectDependencies(GamePlayService gamePlayService, UnitManagerService unitManagerService, UnitDataService unitDataService)
         {
-            UnitSpawner = unitSpawner;
+            UnitManagerService = unitManagerService;
             GamePlayService = gamePlayService;
             UnitDataService = unitDataService;
             InitializeButtonInfo(0, Faction.ProCyber, UnitType.Regular);
@@ -25,7 +25,7 @@ namespace Source.GamePlay.Services.UI
 
         public void InitializeButtonInfo(int buttonIndex, Faction faction, UnitType type)
         {
-            Buttons[buttonIndex].onClick.AddListener(() => UnitSpawner.SpawnUnit(GamePlayService.PlayerId, faction, type));
+            Buttons[buttonIndex].onClick.AddListener(() => UnitManagerService.SpawnUnit(GamePlayService.PlayerId, faction, type));
             ButtonCostMapping.Add(buttonIndex, UnitDataService.GetUnitData(faction, type).cost);
         }
 

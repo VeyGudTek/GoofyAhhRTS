@@ -7,7 +7,6 @@ using Source.GamePlay.Services.Unit.Instance;
 using System.Collections.Generic;
 using Source.Shared.Services;
 using Source.GamePlay.Services.UI;
-using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.StaticData;
 
 namespace Source.GamePlay.Services
@@ -73,13 +72,14 @@ namespace Source.GamePlay.Services
         {
             ResourceService.CreateResourceMap(PlayerId, 100);
             ResourceService.CreateResourceMap(EnemyId, 10000000);
-            UpdatePlayerResources(100);
+            UpdatePlayerResources(PlayerId);
         }
 
-        public void UpdatePlayerResources(float newResources)
+        public void UpdatePlayerResources(Guid playerId)
         {
-            ResourceUIService.UpdateResourceText(newResources);
-            UnitButtonsService.UpdateDisabledButtons(newResources);
+            float resource = ResourceService.GetResource(playerId);
+            ResourceUIService.UpdateResourceText(resource);
+            UnitButtonsService.UpdateDisabledButtons(resource);
         }
 
         public void PrimaryClickEvent(bool isShift)

@@ -44,9 +44,6 @@ namespace Source.GamePlay.Services
         private PauseService PauseService;
         [InitializationRequired]
         [SerializeField]
-        private UnitSpawner UnitSpawner;
-        [InitializationRequired]
-        [SerializeField]
         private ResourceService ResourceService;
         [InitializationRequired]
         [SerializeField]
@@ -69,10 +66,9 @@ namespace Source.GamePlay.Services
             CameraService.InjectDependencies(SettingsRepository);
             SelectionService.InjectDependencies(CameraService);
             InputService.InjectDependencies(GamePlayService);
-            UnitManagerService.InjectDependencies(UnitDataService, GamePlayService);
+            UnitManagerService.InjectDependencies(UnitDataService, GamePlayService, ResourceService);
             GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService, PauseService, SceneService, ResourceUIService, UnitButtonsService, ResourceService);
-            UnitSpawner.InjectDependencies(GamePlayService, ResourceService, UnitManagerService);
-            UnitButtonsService.InjectDependencies(GamePlayService, UnitSpawner, UnitDataService);
+            UnitButtonsService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);
         }
     }
 }

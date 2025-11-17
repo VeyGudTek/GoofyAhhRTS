@@ -1911,7 +1911,6 @@ GameObject:
   - component: {fileID: 1066151766}
   - component: {fileID: 1066151767}
   - component: {fileID: 1066151768}
-  - component: {fileID: 1066151770}
   - component: {fileID: 1066151769}
   m_Layer: 0
   m_Name: Master
@@ -1985,7 +1984,6 @@ MonoBehaviour:
   PauseMenuService: {fileID: 1799955308}
   SceneService: {fileID: 1066151768}
   PauseService: {fileID: 760991785}
-  UnitSpawner: {fileID: 1066151770}
   ResourceService: {fileID: 1066151769}
   UnitButtonsService: {fileID: 1930174221}
   ResourceUIService: {fileID: 1715220720}
@@ -2042,18 +2040,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d96fd7c6773520d4cb323ff75e813c90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1066151770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1066151760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ae504cca49e20b4091b08e4cee89dc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1074222702
