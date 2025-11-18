@@ -26,8 +26,6 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         private SelectionService SelectionService { get; set; }
         [InitializationRequired]
-        private ResourceUIService ResourceUIService { get; set; }
-        [InitializationRequired]
         private UnitButtonsService UnitButtonsService { get; set; }
         [InitializationRequired]
         private ResourceService ResourceService { get; set; }
@@ -46,7 +44,6 @@ namespace Source.GamePlay.Services
             SelectionService selectionService, 
             PauseService pauseService, 
             SceneService sceneService,
-            ResourceUIService resourceUIService,
             UnitButtonsService unitButtonsService,
             ResourceService resourceService
             )
@@ -56,30 +53,13 @@ namespace Source.GamePlay.Services
             SelectionService = selectionService;
             PauseService = pauseService;
             SceneService = sceneService;
-            ResourceUIService = resourceUIService;
             UnitButtonsService = unitButtonsService;
             ResourceService = resourceService;
-
-            InitializePlayerResources();
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
-        }
-
-        private void InitializePlayerResources()
-        {
-            ResourceService.CreateResourceMap(PlayerId, 100);
-            ResourceService.CreateResourceMap(EnemyId, 10000000);
-            UpdatePlayerResources(PlayerId);
-        }
-
-        public void UpdatePlayerResources(Guid playerId)
-        {
-            float resource = ResourceService.GetResource(playerId);
-            ResourceUIService.UpdateResourceText(resource);
-            UnitButtonsService.UpdateDisabledButtons(resource);
         }
 
         public void PrimaryClickEvent(bool isShift)

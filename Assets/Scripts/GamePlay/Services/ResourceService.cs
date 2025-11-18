@@ -1,27 +1,38 @@
+using Source.GamePlay.Services.UI;
+using TMPro;
 using UnityEngine;
-using System.Collections.Generic;
-using System;
 
 namespace Source.GamePlay.Services
 {
     public class ResourceService : MonoBehaviour
     {
-        private Dictionary<Guid, float> Resources { get; set; } = new();
+        private UnitButtonsService UnitButtonsService { get; set; }
+        [SerializeField]
+        private float resource = 0f;
 
-        public void CreateResourceMap(Guid id, float initialValue)
+        [SerializeField]
+        private TMP_Text ResourceText;
+
+        public void InjectDependencies(UnitButtonsService unitButtonsService)
         {
-            Resources.Add(id, initialValue);
+            UnitButtonsService = unitButtonsService;
         }
 
-        public float GetResource(Guid id)
+        private void Start()
         {
-            return Resources[id];
+            UpdateResource();
         }
 
-        public float ChangeResource(Guid id, float value)
+        public void ChangeResource(float value)
         {
-            Resources[id] = Resources[id] + value;
-            return Resources[id];
+            resource += value;
+            UpdateResource();
+        }
+
+        private void UpdateResource()
+        {
+            ResourceText.text = $"Resources: {resource.ToString()}";
+            UnitButtonsService.UpdateDisabledButtons(resource);
         }
     }
 }

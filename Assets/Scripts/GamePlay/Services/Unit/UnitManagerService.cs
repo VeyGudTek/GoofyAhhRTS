@@ -6,6 +6,7 @@ using Source.Shared.Utilities;
 using Source.GamePlay.Static.Classes;
 using Source.GamePlay.Services.Unit.Instance;
 using Source.GamePlay.Static.ScriptableObjects;
+using Source.GamePlay.Services.UI;
 
 namespace Source.GamePlay.Services.Unit
 {
@@ -29,6 +30,7 @@ namespace Source.GamePlay.Services.Unit
         private ResourceService ResourceService { get; set; }
 
         private const float SpawnRayYOrigin = 100f;
+        private readonly Vector3 SpawnOffset = new Vector3(1f, 0f, 0f);
         [SerializeField]
         private List<UnitService> ResourceUnits = new List<UnitService>();
         private readonly List<UnitService> Units = new();
@@ -73,15 +75,15 @@ namespace Source.GamePlay.Services.Unit
             Vector3 origin = new(currentHomeUnit.transform.position.x, SpawnRayYOrigin, currentHomeUnit.transform.position.z);
             UnitData unitData = UnitDataService.GetUnitData(faction, type);
 
-            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, Mathf.Infinity, GroundLayer))
+            if (Physics.Raycast(origin + SpawnOffset, Vector3.down, out RaycastHit hit, Mathf.Infinity, GroundLayer))
             {
                 GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
                 unitService.InjectDependencies(this, currentHomeUnit, playerId, unitData);
+                unitService.CommandUnit(hit.point + SpawnOffset, unitService.Radius, null);
 
-                ResourceService.ChangeResource(playerId, -unitData.cost);
-                GamePlayService.UpdatePlayerResources(playerId);
+                ResourceService.ChangeResource(-unitData.cost);
             }
         }
 

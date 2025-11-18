@@ -20,7 +20,9 @@ namespace Source.GamePlay.Services.UI
             UnitManagerService = unitManagerService;
             GamePlayService = gamePlayService;
             UnitDataService = unitDataService;
-            InitializeButtonInfo(0, Faction.ProCyber, UnitType.Regular);
+
+            InitializeButtonInfo(0, Faction.ProCyber, UnitType.Harvestor);
+            InitializeButtonInfo(1, Faction.ProCyber, UnitType.Regular);
         }
 
         public void InitializeButtonInfo(int buttonIndex, Faction faction, UnitType type)
