@@ -38,6 +38,8 @@ namespace Source.GamePlay.Services.Unit.Instance
         [InitializationRequired]
         private UnitManagerService UnitManagerService { get; set; }
         [InitializationRequired]
+        private ResourceService ResourceService { get; set; }
+        [InitializationRequired]
         public BaseUnitTypeService UnitTypeService { get; private set; }
         private float MaxHealth { get; set; } = 50f;
         private float Health { get; set; } = 50f;
@@ -45,9 +47,10 @@ namespace Source.GamePlay.Services.Unit.Instance
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
 
-        public void InjectDependencies(UnitManagerService unitManagerService, UnitService homeBase, Guid playerId, UnitData unitData)
+        public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, UnitService homeBase, Guid playerId, UnitData unitData)
         {
             UnitManagerService = unitManagerService;
+            ResourceService = resourceService;
             UnitTypeService = CreateUnitType(unitData.UnitType);
             PlayerId = playerId;
             MaxHealth = unitData.MaxHealth;
@@ -171,7 +174,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void AddGold(float gold)
         {
-            Debug.Log("Gold Added");
+            ResourceService.ChangeResource(gold);
         }
     }
 }

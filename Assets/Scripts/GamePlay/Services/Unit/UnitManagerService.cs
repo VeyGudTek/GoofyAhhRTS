@@ -25,17 +25,21 @@ namespace Source.GamePlay.Services.Unit
         private UnitDataService UnitDataService { get; set; }
         [InitializationRequired]
         private GamePlayService GamePlayService { get; set; }
+        [InitializationRequired]
+        private ResourceService ResourceService { get; set; }
 
         private const float SpawnRayYOrigin = 100f;
+        private readonly Vector3 SpawnOffset = new Vector3(1f, 0f, 0f);
         [SerializeField]
         private List<UnitService> ResourceUnits = new List<UnitService>();
         private readonly List<UnitService> Units = new();
         private readonly List<UnitService> PreviouslySelectedUnits = new();
 
-        public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService)
+        public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService, ResourceService resourceService)
         {
             UnitDataService = unitDataService;
             GamePlayService = gamePlayService;
+            ResourceService = resourceService;
 
             InitializeExistingUnits();
         }
@@ -49,31 +53,36 @@ namespace Source.GamePlay.Services.Unit
         {
             if (GamePlayService == null || UnitDataService == null) return;
 
-            HomeUnit.InjectDependencies(this, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(Faction.ProCyber, UnitType.Home));
+            HomeUnit.InjectDependencies(this, ResourceService, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(Faction.ProCyber, UnitType.Home));
             Units.Add(HomeUnit);
-            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.EnemyId, UnitDataService.GetUnitData(Faction.AntiCyber, UnitType.Home));
+            EnemyHomeUnit.InjectDependencies(this, ResourceService, EnemyHomeUnit, GamePlayService.EnemyId, UnitDataService.GetUnitData(Faction.AntiCyber, UnitType.Home));
             Units.Add(EnemyHomeUnit);
 
             foreach(UnitService resource in  ResourceUnits)
             {
-                resource.InjectDependencies(this, null, Guid.Empty, UnitDataService.GetUnitData(Faction.None, UnitType.Resource));
+                resource.InjectDependencies(this, ResourceService, null, Guid.Empty, UnitDataService.GetUnitData(Faction.None, UnitType.Resource));
                 Units.Add(resource);
             }
         }
 
-        public void SpawnUnit(Guid playerId, Vector2 spawnLocation, Faction faction, UnitType type)
+        public void SpawnUnit(Guid playerId, Faction faction, UnitType type)
         {
             if (UnitDataService == null) return;
 
-            int layerMaskToHit = LayerMask.GetMask(LayerNames.Ground);
-            Vector3 origin = new(spawnLocation.x, SpawnRayYOrigin, spawnLocation.y);
+            int GroundLayer = LayerMask.GetMask(LayerNames.Ground);
+            UnitService currentHomeUnit = playerId == GamePlayService.PlayerId ? HomeUnit : EnemyHomeUnit;
+            Vector3 origin = new(currentHomeUnit.transform.position.x, SpawnRayYOrigin, currentHomeUnit.transform.position.z);
+            UnitData unitData = UnitDataService.GetUnitData(faction, type);
 
-            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMaskToHit))
+            if (Physics.Raycast(origin + SpawnOffset, Vector3.down, out RaycastHit hit, Mathf.Infinity, GroundLayer))
             {
                 GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.InjectDependencies(this, playerId == GamePlayService.PlayerId ? HomeUnit : EnemyHomeUnit, playerId, UnitDataService.GetUnitData(faction, type));
+                unitService.InjectDependencies(this, ResourceService, currentHomeUnit, playerId, unitData);
+                unitService.CommandUnit(hit.point + SpawnOffset, unitService.Radius, null);
+
+                ResourceService.ChangeResource(-unitData.cost);
             }
         }
 

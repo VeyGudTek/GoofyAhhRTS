@@ -7,7 +7,6 @@ using Source.GamePlay.Services.Unit.Instance;
 using System.Collections.Generic;
 using Source.Shared.Services;
 using Source.GamePlay.Services.UI;
-using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.StaticData;
 
 namespace Source.GamePlay.Services
@@ -36,7 +35,12 @@ namespace Source.GamePlay.Services
         private GameState GameState = GameState.Playing;
         private bool IsPlaying => GameState == GameState.Playing;
 
-        public void InjectDependencies(CameraService cameraService, UnitManagerService unitManagerService, SelectionService selectionService,PauseService pauseService, SceneService sceneService)
+        public void InjectDependencies(CameraService cameraService, 
+            UnitManagerService unitManagerService, 
+            SelectionService selectionService, 
+            PauseService pauseService, 
+            SceneService sceneService
+            )
         {
             CameraService = cameraService;
             UnitManagerService = unitManagerService;
@@ -48,14 +52,6 @@ namespace Source.GamePlay.Services
         private void Start()
         {
             this.CheckInitializeRequired();
-            //TempCodeBelow
-
-            for (int i = -7; i < 7; i += 2)
-            {
-                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -10), Faction.ProCyber, UnitType.Regular);
-                UnitManagerService.SpawnUnit(PlayerId, new Vector2(i, -15), Faction.ProCyber, UnitType.Harvestor);
-                UnitManagerService.SpawnUnit(EnemyId, new Vector2(10, i + 10), Faction.AntiCyber, UnitType.Regular);
-            }
         }
 
         public void PrimaryClickEvent(bool isShift)
