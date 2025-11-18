@@ -54,14 +54,14 @@ namespace Source.GamePlay.Services.Unit
         {
             if (GamePlayService == null || UnitDataService == null) return;
 
-            HomeUnit.InjectDependencies(this, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(Faction.ProCyber, UnitType.Home));
+            HomeUnit.InjectDependencies(this, ResourceService, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(Faction.ProCyber, UnitType.Home));
             Units.Add(HomeUnit);
-            EnemyHomeUnit.InjectDependencies(this, EnemyHomeUnit, GamePlayService.EnemyId, UnitDataService.GetUnitData(Faction.AntiCyber, UnitType.Home));
+            EnemyHomeUnit.InjectDependencies(this, ResourceService, EnemyHomeUnit, GamePlayService.EnemyId, UnitDataService.GetUnitData(Faction.AntiCyber, UnitType.Home));
             Units.Add(EnemyHomeUnit);
 
             foreach(UnitService resource in  ResourceUnits)
             {
-                resource.InjectDependencies(this, null, Guid.Empty, UnitDataService.GetUnitData(Faction.None, UnitType.Resource));
+                resource.InjectDependencies(this, ResourceService, null, Guid.Empty, UnitDataService.GetUnitData(Faction.None, UnitType.Resource));
                 Units.Add(resource);
             }
         }
@@ -80,7 +80,7 @@ namespace Source.GamePlay.Services.Unit
                 GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.InjectDependencies(this, currentHomeUnit, playerId, unitData);
+                unitService.InjectDependencies(this, ResourceService, currentHomeUnit, playerId, unitData);
                 unitService.CommandUnit(hit.point + SpawnOffset, unitService.Radius, null);
 
                 ResourceService.ChangeResource(-unitData.cost);
