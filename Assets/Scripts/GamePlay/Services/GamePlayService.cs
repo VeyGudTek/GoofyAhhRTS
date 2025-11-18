@@ -26,10 +26,6 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         private SelectionService SelectionService { get; set; }
         [InitializationRequired]
-        private UnitButtonsService UnitButtonsService { get; set; }
-        [InitializationRequired]
-        private ResourceService ResourceService { get; set; }
-        [InitializationRequired]
         PauseService PauseService { get; set; }
         [InitializationRequired]
         private SceneService SceneService { get; set; }
@@ -43,9 +39,7 @@ namespace Source.GamePlay.Services
             UnitManagerService unitManagerService, 
             SelectionService selectionService, 
             PauseService pauseService, 
-            SceneService sceneService,
-            UnitButtonsService unitButtonsService,
-            ResourceService resourceService
+            SceneService sceneService
             )
         {
             CameraService = cameraService;
@@ -53,8 +47,6 @@ namespace Source.GamePlay.Services
             SelectionService = selectionService;
             PauseService = pauseService;
             SceneService = sceneService;
-            UnitButtonsService = unitButtonsService;
-            ResourceService = resourceService;
         }
 
         private void Start()
