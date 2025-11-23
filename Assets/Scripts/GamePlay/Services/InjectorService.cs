@@ -4,6 +4,7 @@ using Source.GamePlay.Services.Unit;
 using UnityEngine;
 using Source.Shared.Repositories;
 using Source.GamePlay.Services.UI;
+using Source.GamePlay.Services.Unit.Computer;
 
 namespace Source.GamePlay.Services
 {
@@ -48,6 +49,12 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         [SerializeField]
         private UnitButtonsService UnitButtonsService;
+        [InitializationRequired]
+        [SerializeField]
+        private TimerService TimerService;
+        [InitializationRequired]
+        [SerializeField]
+        private UnitComputerService UnitComputerService;
 
         private void Awake()
         {
@@ -67,6 +74,7 @@ namespace Source.GamePlay.Services
             GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService, PauseService, SceneService);
             ResourceService.InjectDependencies(UnitButtonsService);
             UnitButtonsService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);
+            UnitComputerService.InjectDependencies(GamePlayService, UnitManagerService, TimerService);
         }
     }
 }

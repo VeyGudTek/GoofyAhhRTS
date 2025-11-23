@@ -65,7 +65,7 @@ namespace Source.GamePlay.Services.Unit
             }
         }
 
-        public void SpawnUnit(Guid playerId, Faction faction, UnitType type)
+        public void SpawnUnit(Guid playerId, Faction faction, UnitType type, int? computerId = null)
         {
             if (UnitDataService == null) return;
 
@@ -79,10 +79,13 @@ namespace Source.GamePlay.Services.Unit
                 GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.InjectDependencies(this, ResourceService, currentHomeUnit, playerId, unitData);
+                unitService.InjectDependencies(this, ResourceService, currentHomeUnit, playerId, unitData, computerId);
                 unitService.CommandUnit(hit.point + SpawnOffset, unitService.Radius, null);
 
-                ResourceService.ChangeResource(-unitData.cost);
+                if (playerId == GamePlayService.PlayerId)
+                {
+                    ResourceService.ChangeResource(-unitData.cost);
+                }
             }
         }
 
@@ -155,8 +158,20 @@ namespace Source.GamePlay.Services.Unit
                 u.Selected
             );
 
-            float stoppingDistance = unitsToMove.Aggregate(0f, 
-                (total, currUnit) => total + currUnit.Area, 
+            MoveUnits(unitsToMove, destination, target);
+        }
+
+        public void MoveUnits(Vector3 destination, UnitService target, List<int> computerIds)
+        {
+            IEnumerable<UnitService> unitsToMove = Units.Where(u => computerIds.Contains(u.ComputerId));
+
+            MoveUnits(unitsToMove, destination, target);
+        }
+
+        private void MoveUnits(IEnumerable<UnitService> unitsToMove, Vector3 destination, UnitService target)
+        {
+            float stoppingDistance = unitsToMove.Aggregate(0f,
+                (total, currUnit) => total + currUnit.Area,
                 total => Mathf.Sqrt(total / Mathf.PI)
             );
 

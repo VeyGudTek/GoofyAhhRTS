@@ -45,9 +45,10 @@ namespace Source.GamePlay.Services.Unit.Instance
         private float Health { get; set; } = 50f;
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
+        public int ComputerId { get; private set; } = -1;
         public bool Selected { get; private set; } = false;
 
-        public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, UnitService homeBase, Guid playerId, UnitData unitData)
+        public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, UnitService homeBase, Guid playerId, UnitData unitData, int? computerId = null)
         {
             UnitManagerService = unitManagerService;
             ResourceService = resourceService;
@@ -56,6 +57,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             MaxHealth = unitData.MaxHealth;
             Health = MaxHealth;
             Range = unitData.Range;
+            ComputerId = computerId != null ? (int)computerId : -1;
 
             if (MeshRenderer != null)
                 MeshRenderer.material = unitData.Material;
