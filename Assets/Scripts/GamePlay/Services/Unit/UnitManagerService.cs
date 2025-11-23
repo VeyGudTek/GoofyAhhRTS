@@ -82,10 +82,7 @@ namespace Source.GamePlay.Services.Unit
                 unitService.InjectDependencies(this, ResourceService, currentHomeUnit, playerId, unitData, computerId);
                 unitService.CommandUnit(hit.point + SpawnOffset, unitService.Radius, null);
 
-                if (playerId == GamePlayService.PlayerId)
-                {
-                    ResourceService.ChangeResource(-unitData.cost);
-                }
+                ResourceService.ChangeResource(playerId, -unitData.cost);
             }
         }
 

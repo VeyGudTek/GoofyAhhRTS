@@ -176,7 +176,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void AddGold(float gold)
         {
-            ResourceService.ChangeResource(gold);
+            ResourceService.ChangeResource(PlayerId, gold);
         }
     }
 }

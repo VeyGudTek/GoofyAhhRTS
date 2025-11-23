@@ -72,7 +72,7 @@ namespace Source.GamePlay.Services
             InputService.InjectDependencies(GamePlayService);
             UnitManagerService.InjectDependencies(UnitDataService, GamePlayService, ResourceService);
             GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService, PauseService, SceneService);
-            ResourceService.InjectDependencies(UnitButtonsService);
+            ResourceService.InjectDependencies(GamePlayService, UnitButtonsService);
             UnitButtonsService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);
             UnitComputerService.InjectDependencies(GamePlayService, UnitManagerService, TimerService);
         }
