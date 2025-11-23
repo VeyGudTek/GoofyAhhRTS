@@ -18,6 +18,12 @@ namespace Source.GamePlay.Services.Unit.Instance
         private UnitAttackService UnitAttackService;
         [SerializeField]
         [InitializationRequired]
+        private UnitVisionService UnitVisionService;
+        [field: SerializeField]
+        [InitializationRequired]
+        public UnitComputerService UnitComputerService { get; private set; }
+        [SerializeField]
+        [InitializationRequired]
         private HealthBarService HealthBarService;
         [InitializationRequired]
         [SerializeField]
@@ -45,7 +51,6 @@ namespace Source.GamePlay.Services.Unit.Instance
         private float Health { get; set; } = 50f;
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
-        public int ComputerId { get; private set; } = -1;
         public bool Selected { get; private set; } = false;
 
         public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, Guid playerId, UnitData unitData, int? computerId = null)
@@ -57,7 +62,6 @@ namespace Source.GamePlay.Services.Unit.Instance
             MaxHealth = unitData.MaxHealth;
             Health = MaxHealth;
             Range = unitData.Range;
-            ComputerId = computerId != null ? (int)computerId : -1;
 
             if (MeshRenderer != null)
                 MeshRenderer.material = unitData.Material;
@@ -65,6 +69,10 @@ namespace Source.GamePlay.Services.Unit.Instance
                 UnitAttackService.InjectDependencies(this, unitData);
             if (UnitMovementService != null)
                 UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.height, NavMeshAgent, unitData.Speed);
+            if (UnitVisionService != null)
+                UnitVisionService.InjectDependencies(this, unitData);
+            if (UnitComputerService != null)
+                UnitComputerService.InjectDependencies(this, computerId);
             if (UnitTypeService != null)
                 UnitTypeService.InjectDependencies(this);
 
@@ -95,19 +103,18 @@ namespace Source.GamePlay.Services.Unit.Instance
         public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target)
         {
             UnitTypeService.SetTarget(target);
+            UnitComputerService.SetOriginalCommand(destination, stoppingDistance, target);
 
             if (target == null)
             {
-                if (UnitMovementService != null)
-                {
-                    UnitMovementService.MoveUnit(destination, stoppingDistance);
-                }
+                UnitMovementService.MoveUnit(destination, stoppingDistance);
             }
         }
 
         public float Area => HitBox == null ? 0f : Mathf.PI * (HitBox.radius * HitBox.radius);
         public float Radius => HitBox == null ? 0f : HitBox.radius;
         public UnitService HomeBase => UnitManagerService.GetHomeBase(PlayerId);
+        public int ComputerId => UnitComputerService.ComputerId;
 
         private bool CanSeeTarget()
         {

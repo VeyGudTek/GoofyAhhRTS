@@ -28,7 +28,7 @@ namespace Source.GamePlay.Services.UI
         public void InitializeButtonInfo(int buttonIndex, Faction faction, UnitType type)
         {
             Buttons[buttonIndex].onClick.AddListener(() => UnitManagerService.SpawnUnit(GamePlayService.PlayerId, faction, type));
-            ButtonCostMapping.Add(buttonIndex, UnitDataService.GetUnitData(faction, type).cost);
+            ButtonCostMapping.Add(buttonIndex, UnitDataService.GetUnitData(faction, type).Cost);
         }
 
         public void UpdateDisabledButtons(float currentResources)

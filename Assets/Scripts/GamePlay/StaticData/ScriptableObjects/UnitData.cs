@@ -22,6 +22,7 @@ namespace Source.GamePlay.Static.ScriptableObjects
         public Color ProjectileStartColor;
         public Color ProjectileEndColor;
         public GameObject UnitType;
-        public float cost;
+        public float Cost;
+        public float Vision;
     }
 }

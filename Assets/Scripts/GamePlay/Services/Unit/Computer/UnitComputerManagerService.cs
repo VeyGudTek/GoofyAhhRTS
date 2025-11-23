@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Source.GamePlay.Services.Unit.Computer
 {
-    public class UnitComputerService : MonoBehaviour
+    public class UnitComputerManagerService : MonoBehaviour
     {
         [InitializationRequired]
         private GamePlayService GamePlayService { get; set; }
@@ -37,12 +37,11 @@ namespace Source.GamePlay.Services.Unit.Computer
 
         public void OnUpdateResource(float currentResource)
         {
-            
             ComputerSpawnCommand currentCommand = SpawnCommands.FirstOrDefault();
             if (currentCommand == null) return;
 
             UnitData newUnitData = UnitDataService.GetUnitData(currentCommand.Faction, currentCommand.Type);
-            if (newUnitData.cost > currentResource) return;
+            if (newUnitData.Cost > currentResource) return;
 
             SpawnCommands.RemoveAt(0);
             UnitManagerService.SpawnUnit(GamePlayService.EnemyId, currentCommand.Faction, currentCommand.Type, currentCommand.ComputerId);

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace Source.GamePlay.Services
 {
@@ -12,24 +11,24 @@ namespace Source.GamePlay.Services
     {
         private GamePlayService GamePlayService { get; set; }
         private UnitButtonsService UnitButtonsService { get; set; }
-        private UnitComputerService UnitComputerService { get; set; }
+        private UnitComputerManagerService UnitComputerManagerService { get; set; }
         [SerializeField]
         private Dictionary<Guid, float> ResourceMap = new();
 
         [SerializeField]
         private TMP_Text ResourceText;
 
-        public void InjectDependencies(GamePlayService gamePlayService, UnitButtonsService unitButtonsService, UnitComputerService unitComputerService)
+        public void InjectDependencies(GamePlayService gamePlayService, UnitButtonsService unitButtonsService, UnitComputerManagerService unitComputerManagerService)
         {
             GamePlayService = gamePlayService;
             UnitButtonsService = unitButtonsService;
-            UnitComputerService = unitComputerService;
+            UnitComputerManagerService = unitComputerManagerService;
         }
 
         private void Start()
         {
             ChangeResource(GamePlayService.PlayerId, 100);
-            ChangeResource(GamePlayService.EnemyId, 20);
+            ChangeResource(GamePlayService.EnemyId, 100);
         }
 
         public void ChangeResource(Guid playerId, float value)
@@ -47,9 +46,9 @@ namespace Source.GamePlay.Services
             {
                 UpdateResource(ResourceMap[playerId]);
             }
-            if (playerId == GamePlayService.EnemyId && UnitComputerService.HasComputer)
+            if (playerId == GamePlayService.EnemyId && UnitComputerManagerService.HasComputer)
             {
-                UnitComputerService.OnUpdateResource(ResourceMap[playerId]);
+                UnitComputerManagerService.OnUpdateResource(ResourceMap[playerId]);
             }
         }
 
