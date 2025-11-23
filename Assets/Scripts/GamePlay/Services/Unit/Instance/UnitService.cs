@@ -48,7 +48,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         public int ComputerId { get; private set; } = -1;
         public bool Selected { get; private set; } = false;
 
-        public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, UnitService homeBase, Guid playerId, UnitData unitData, int? computerId = null)
+        public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, Guid playerId, UnitData unitData, int? computerId = null)
         {
             UnitManagerService = unitManagerService;
             ResourceService = resourceService;
