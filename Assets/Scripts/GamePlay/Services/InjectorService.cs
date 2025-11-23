@@ -51,9 +51,6 @@ namespace Source.GamePlay.Services
         private UnitButtonsService UnitButtonsService;
         [InitializationRequired]
         [SerializeField]
-        private TimerService TimerService;
-        [InitializationRequired]
-        [SerializeField]
         private UnitComputerService UnitComputerService;
 
         private void Awake()
@@ -72,9 +69,9 @@ namespace Source.GamePlay.Services
             InputService.InjectDependencies(GamePlayService);
             UnitManagerService.InjectDependencies(UnitDataService, GamePlayService, ResourceService);
             GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService, PauseService, SceneService);
-            ResourceService.InjectDependencies(GamePlayService, UnitButtonsService);
+            ResourceService.InjectDependencies(GamePlayService, UnitButtonsService, UnitComputerService);
             UnitButtonsService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);
-            UnitComputerService.InjectDependencies(GamePlayService, UnitManagerService, TimerService);
+            UnitComputerService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);
         }
     }
 }

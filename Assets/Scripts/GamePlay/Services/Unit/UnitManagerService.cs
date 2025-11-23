@@ -195,6 +195,11 @@ namespace Source.GamePlay.Services.Unit
             if (playerId == GamePlayService.EnemyId) return EnemyHomeUnit;
             return null;
         }
+
+        public int GetCountByComputerIds(List<int> computerIds)
+        {
+            return Units.Where(u => computerIds.Contains(u.ComputerId)).Count();
+        }
     }
 }
 

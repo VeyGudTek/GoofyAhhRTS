@@ -7,7 +7,7 @@ namespace Source.GamePlay.Services.Unit
     [Serializable]
     public class ComputerActionCommand
     {
-        public float Time;
+        public int UnitThreshold;
         public List<int> ComputerIds;
         public GameObject Target;
     }

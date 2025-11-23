@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Source.GamePlay.Services.Unit.Instance;
+using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.Utilities;
 using UnityEngine;
 
@@ -13,56 +14,55 @@ namespace Source.GamePlay.Services.Unit.Computer
         [InitializationRequired]
         private UnitManagerService UnitManagerService { get; set; }
         [InitializationRequired]
-        private TimerService TimerService { get; set; }
-        [SerializeField]
-        private bool HasComputer = false;
+        private UnitDataService UnitDataService { get; set; }
+
+        [field: SerializeField]
+        public bool HasComputer { get; private set; } = false;
         [SerializeField]
         private List<ComputerActionCommand> ActionCommands = new();
         [SerializeField]
         private List<ComputerSpawnCommand> SpawnCommands = new();
 
-        public void InjectDependencies(GamePlayService gamePlayService, UnitManagerService unitManagerService, TimerService timerService)
+        public void InjectDependencies(GamePlayService gamePlayService, UnitManagerService unitManagerService, UnitDataService unitDataService)
         {
             GamePlayService = gamePlayService;
             UnitManagerService = unitManagerService;
-            TimerService = timerService;
+            UnitDataService = unitDataService;
         }
 
         private void Start()
         {
             this.CheckInitializeRequired();
-
-            if (HasComputer)
-            {
-                InvokeRepeating(nameof(ProcessSpawnCommands), 0f, .5f);
-                InvokeRepeating(nameof(ProcessActionCommands), .1f, .5f);
-            }
         }
 
-        private void ProcessSpawnCommands()
+        public void OnUpdateResource(float currentResource)
         {
+            
             ComputerSpawnCommand currentCommand = SpawnCommands.FirstOrDefault();
+            if (currentCommand == null) return;
 
-            if (currentCommand != null && currentCommand.Time <= TimerService.CurrentTime)
-            {
-                UnitManagerService.SpawnUnit(GamePlayService.EnemyId, currentCommand.Faction, currentCommand.Type, currentCommand.ComputerId);
+            UnitData newUnitData = UnitDataService.GetUnitData(currentCommand.Faction, currentCommand.Type);
+            if (newUnitData.cost > currentResource) return;
 
-                SpawnCommands.RemoveAt(0);
-            }
+            SpawnCommands.RemoveAt(0);
+            UnitManagerService.SpawnUnit(GamePlayService.EnemyId, currentCommand.Faction, currentCommand.Type, currentCommand.ComputerId);
+            
+            ProcessActionCommands();
         }
 
         private void ProcessActionCommands()
         {
             ComputerActionCommand currentCommand = ActionCommands.FirstOrDefault();
+            if (currentCommand == null) return;
 
-            if (currentCommand != null && currentCommand.Time <= TimerService.CurrentTime)
-            {
-                Vector3 destination = currentCommand.Target.transform.position;
-                UnitService target = currentCommand.Target.GetComponent<UnitService>();
-                UnitManagerService.MoveUnits(destination, target, currentCommand.ComputerIds);
+            int numUnits = UnitManagerService.GetCountByComputerIds(currentCommand.ComputerIds);
+            if (numUnits < currentCommand.UnitThreshold) return;
 
-                ActionCommands.RemoveAt(0);
-            }
+            Vector3 destination = currentCommand.Target.transform.position;
+            UnitService target = currentCommand.Target.GetComponent<UnitService>();
+            UnitManagerService.MoveUnits(destination, target, currentCommand.ComputerIds);
+
+            ActionCommands.RemoveAt(0);  
         }
     }
 }

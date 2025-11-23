@@ -41,12 +41,12 @@ namespace Source.GamePlay.Services.Unit
             this.CheckInitializeRequired();
         }
 
-        public UnitData GetUnitData(Faction color, UnitType type)
+        public UnitData GetUnitData(Faction faction, UnitType type)
         {
             if (type == UnitType.Resource)
                 return ResourceData;
 
-            UnitData data =  color switch
+            UnitData data = faction switch
             {
                 Faction.ProCyber => GetProCyberUnitData(type),
                 Faction.AntiCyber => GetAntiCyberUnitData(type),
@@ -56,7 +56,7 @@ namespace Source.GamePlay.Services.Unit
             return data == null ? new UnitData() : data;
         }
 
-        public UnitData GetProCyberUnitData(UnitType type)
+        private UnitData GetProCyberUnitData(UnitType type)
         {
             return type switch 
             {
@@ -67,7 +67,7 @@ namespace Source.GamePlay.Services.Unit
             };
         }
 
-        public UnitData GetAntiCyberUnitData(UnitType type)
+        private UnitData GetAntiCyberUnitData(UnitType type)
         {
             return type switch
             {
