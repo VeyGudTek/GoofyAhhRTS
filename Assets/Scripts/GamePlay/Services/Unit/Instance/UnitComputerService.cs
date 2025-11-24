@@ -9,6 +9,7 @@ public class UnitComputerService : MonoBehaviour
     public int ComputerId { get; private set; } = -1;
     private bool IsComputer => ComputerId >= 0;
     private Vector3? AgroStartLocation { get; set; } = null;
+    private bool IsAgro => AgroStartLocation != null;
     private UnitService OriginalTarget { get; set; }
     private float OriginalStoppingDistance { get; set; }
     private Vector3 OriginalDestination { get; set; }
@@ -27,28 +28,30 @@ public class UnitComputerService : MonoBehaviour
 
     private void CheckAgroDistance()
     {
-        //This functionality is broken.
-        if (AgroStartLocation != null)
+        if (IsAgro && IsComputer)
         {
             if (Vector3.Distance((Vector3)AgroStartLocation, transform.position) > AgroDistance)
             {
-                Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, OriginalTarget);
+                StopAgro();
             }
         }
     }
 
     public void SetOriginalCommand(Vector3 destination, float stoppingDistance, UnitService target)
     {
-        OriginalDestination = destination;
-        OriginalTarget = target;
-        OriginalStoppingDistance = stoppingDistance;
+        if (!IsAgro)
+        {
+            OriginalDestination = destination;
+            OriginalTarget = target;
+            OriginalStoppingDistance = stoppingDistance;
+        }
     }
 
     public void OnVisionEnter(UnitService newUnitInVision)
     {
         if (!IsComputer) return;
 
-        if (CanAgro(newUnitInVision))
+        if (!IsAgro && CanAgro(newUnitInVision))
         {
             AgroStartLocation = transform.position;
 
@@ -58,7 +61,7 @@ public class UnitComputerService : MonoBehaviour
 
     public void OnVisionExit(List<UnitService> otherUnitsInVision)
     {
-        if (!IsComputer) return;
+        if (!IsComputer || !IsAgro) return;
 
         IEnumerable<UnitService> unitsToAgro = otherUnitsInVision.Where(u => CanAgro(u));
         if (unitsToAgro.Count() > 0)
@@ -66,11 +69,16 @@ public class UnitComputerService : MonoBehaviour
             IEnumerable<UnitService> sortedUnits = otherUnitsInVision.OrderBy(u => Vector3.Distance((Vector3)AgroStartLocation, u.transform.position));
             Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, sortedUnits.First());
         }
-        else
+        else 
         {
-            Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, OriginalTarget);
-            AgroStartLocation = null;
+            StopAgro();
         }
+    }
+
+    private void StopAgro()
+    {
+        Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, OriginalTarget);
+        AgroStartLocation = null;
     }
 
     private bool CanAgro(UnitService unit)
