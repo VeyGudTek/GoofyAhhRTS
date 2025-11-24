@@ -16,9 +16,9 @@ namespace Source.GamePlay.Services.Unit.Instance
         [SerializeField]
         [InitializationRequired]
         private UnitAttackService UnitAttackService;
-        [SerializeField]
+        [field: SerializeField]
         [InitializationRequired]
-        private UnitVisionService UnitVisionService;
+        public UnitVisionService UnitVisionService { get; private set; }
         [field: SerializeField]
         [InitializationRequired]
         public UnitComputerService UnitComputerService { get; private set; }
@@ -150,12 +150,11 @@ namespace Source.GamePlay.Services.Unit.Instance
             if (UnitTypeService.OriginalTarget != null && UnitTypeService.OriginalTarget == unit)
             {
                 UnitTypeService.SetTarget(null);
-                if (UnitMovementService != null)
-                    UnitMovementService.StopPathFinding();
+                UnitMovementService.StopPathFinding();
             }
             
-            if (UnitAttackService != null) 
-                UnitAttackService.RemoveUnitInRange(unit);
+            UnitAttackService.RemoveUnitInRange(unit);
+            UnitVisionService.RemoveUnitInRange(unit);
         }
 
         public void Damage(float damage)

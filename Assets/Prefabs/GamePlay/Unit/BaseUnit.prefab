@@ -544,7 +544,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UnitMovementService: {fileID: 1724303742889655876}
   UnitAttackService: {fileID: 5688184842991367836}
-  UnitVisionService: {fileID: 837896987769935904}
+  <UnitVisionService>k__BackingField: {fileID: 837896987769935904}
   <UnitComputerService>k__BackingField: {fileID: 5769665529726958417}
   HealthBarService: {fileID: 5939567787711105434}
   HitBox: {fileID: 527395166707192913}

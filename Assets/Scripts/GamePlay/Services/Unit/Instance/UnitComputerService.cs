@@ -1,4 +1,5 @@
 using Source.GamePlay.Services.Unit.Instance;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,7 +14,9 @@ public class UnitComputerService : MonoBehaviour
     private UnitService OriginalTarget { get; set; }
     private float OriginalStoppingDistance { get; set; }
     private Vector3 OriginalDestination { get; set; }
+    private bool AgroOnCooldown { get; set; } = false;
     private const float AgroDistance = 4;
+    private const float AgroResetTime = 2;
 
     public void InjectDependencies(UnitService self, int? computerId)
     {
@@ -23,19 +26,42 @@ public class UnitComputerService : MonoBehaviour
 
     private void Update()
     {
-        CheckAgroDistance();
+        LookForEnemy();
+        ReturnToDestination();
     }
 
-    private void CheckAgroDistance()
+    private void LookForEnemy()
     {
-        if (IsAgro && IsComputer)
+        if (IsAgro || !IsComputer) return;
+
+        IEnumerable<UnitService> unitsToAgro =  Self.UnitVisionService.VisibleUnits.Where(u => CanAgro(u)).ToList();
+        if (unitsToAgro.Count() > 0)
+        {
+            AgroStartLocation = transform.position;
+            UnitService newTarget = unitsToAgro.OrderBy(u => Vector3.Distance(transform.position, u.transform.position)).First();
+            Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, newTarget);
+        }
+    }
+
+    private void ReturnToDestination()
+    {
+        if (IsAgro && IsComputer && !AgroOnCooldown)
         {
             if (Vector3.Distance((Vector3)AgroStartLocation, transform.position) > AgroDistance)
             {
-                StopAgro();
+                Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, OriginalTarget);
+                AgroOnCooldown = true;
+                StartCoroutine(ResetAgro());
             }
         }
     }
+
+    private IEnumerator ResetAgro()
+    {
+        yield return new WaitForSeconds(AgroResetTime);
+        AgroOnCooldown = false;
+        AgroStartLocation = null;
+    } 
 
     public void SetOriginalCommand(Vector3 destination, float stoppingDistance, UnitService target)
     {
@@ -45,40 +71,6 @@ public class UnitComputerService : MonoBehaviour
             OriginalTarget = target;
             OriginalStoppingDistance = stoppingDistance;
         }
-    }
-
-    public void OnVisionEnter(UnitService newUnitInVision)
-    {
-        if (!IsComputer) return;
-
-        if (!IsAgro && CanAgro(newUnitInVision))
-        {
-            AgroStartLocation = transform.position;
-
-            Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, newUnitInVision);
-        }
-    }
-
-    public void OnVisionExit(List<UnitService> otherUnitsInVision)
-    {
-        if (!IsComputer || !IsAgro) return;
-
-        IEnumerable<UnitService> unitsToAgro = otherUnitsInVision.Where(u => CanAgro(u));
-        if (unitsToAgro.Count() > 0)
-        {
-            IEnumerable<UnitService> sortedUnits = otherUnitsInVision.OrderBy(u => Vector3.Distance((Vector3)AgroStartLocation, u.transform.position));
-            Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, sortedUnits.First());
-        }
-        else 
-        {
-            StopAgro();
-        }
-    }
-
-    private void StopAgro()
-    {
-        Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, OriginalTarget);
-        AgroStartLocation = null;
     }
 
     private bool CanAgro(UnitService unit)
