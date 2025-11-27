@@ -6,6 +6,7 @@ using Source.Shared.Utilities;
 using Source.GamePlay.Static.Classes;
 using Source.GamePlay.Services.Unit.Instance;
 using Source.GamePlay.Static.ScriptableObjects;
+using Source.GamePlay.Services.Unit.Computer;
 
 namespace Source.GamePlay.Services.Unit
 {
@@ -27,6 +28,8 @@ namespace Source.GamePlay.Services.Unit
         private GamePlayService GamePlayService { get; set; }
         [InitializationRequired]
         private ResourceService ResourceService { get; set; }
+        [InitializationRequired]
+        private UnitComputerManagerService UnitComputerManagerService { get; set; }
 
         private const float SpawnRayYOrigin = 100f;
         private readonly Vector3 SpawnOffset = new Vector3(1f, 0f, 0f);
@@ -35,11 +38,12 @@ namespace Source.GamePlay.Services.Unit
         private readonly List<UnitService> Units = new();
         private readonly List<UnitService> PreviouslySelectedUnits = new();
 
-        public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService, ResourceService resourceService)
+        public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService, ResourceService resourceService, UnitComputerManagerService unitComputerManagerService)
         {
             UnitDataService = unitDataService;
             GamePlayService = gamePlayService;
             ResourceService = resourceService;
+            UnitComputerManagerService = unitComputerManagerService;
 
             InitializeExistingUnits();
         }
@@ -181,6 +185,7 @@ namespace Source.GamePlay.Services.Unit
         public void DestroyUnit(UnitService unitToDestroy)
         {
             Units.Remove(unitToDestroy);
+            UnitComputerManagerService.OnUnitDelete(unitToDestroy);
             PreviouslySelectedUnits.Remove(unitToDestroy);
             foreach(UnitService currentUnit in Units)
             {

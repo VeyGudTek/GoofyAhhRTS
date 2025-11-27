@@ -63,6 +63,17 @@ namespace Source.GamePlay.Services.Unit.Computer
 
             ActionCommands.RemoveAt(0);  
         }
+
+        public void OnUnitDelete(UnitService deletedUnit)
+        {
+            foreach (ComputerActionCommand action in ActionCommands.ToList())
+            {
+                if (action.Target.TryGetComponent(out UnitService targetUnit) && targetUnit == deletedUnit)
+                {
+                    ActionCommands.Remove(action);
+                }
+            }
+        }
     }
 }
 
