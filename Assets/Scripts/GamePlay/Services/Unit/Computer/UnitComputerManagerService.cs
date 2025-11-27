@@ -15,9 +15,6 @@ namespace Source.GamePlay.Services.Unit.Computer
         private UnitManagerService UnitManagerService { get; set; }
         [InitializationRequired]
         private UnitDataService UnitDataService { get; set; }
-
-        [field: SerializeField]
-        public bool HasComputer { get; private set; } = false;
         [SerializeField]
         private List<ComputerActionCommand> ActionCommands = new();
         [SerializeField]

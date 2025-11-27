@@ -46,7 +46,7 @@ namespace Source.GamePlay.Services
             {
                 UpdateResource(ResourceMap[playerId]);
             }
-            if (playerId == GamePlayService.EnemyId && UnitComputerManagerService.HasComputer)
+            if (playerId == GamePlayService.EnemyId)
             {
                 UnitComputerManagerService.OnUpdateResource(ResourceMap[playerId]);
             }
