@@ -67,7 +67,7 @@ namespace Source.GamePlay.Services
             CameraService.InjectDependencies(SettingsRepository);
             SelectionService.InjectDependencies(CameraService);
             InputService.InjectDependencies(GamePlayService);
-            UnitManagerService.InjectDependencies(UnitDataService, GamePlayService, ResourceService);
+            UnitManagerService.InjectDependencies(UnitDataService, GamePlayService, ResourceService, UnitComputerManagerService);
             GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService, PauseService, SceneService);
             ResourceService.InjectDependencies(GamePlayService, UnitButtonsService, UnitComputerManagerService);
             UnitButtonsService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);
