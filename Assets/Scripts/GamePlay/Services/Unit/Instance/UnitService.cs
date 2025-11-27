@@ -100,10 +100,13 @@ namespace Source.GamePlay.Services.Unit.Instance
             SelectionIndicator.SetActive(false);
         }
 
-        public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target)
+        public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target, bool setComputer = true)
         {
             UnitTypeService.SetTarget(target);
-            UnitComputerService.SetOriginalCommand(destination, stoppingDistance, target);
+            if (setComputer)
+            {
+                UnitComputerService.SetOriginalCommand(destination, stoppingDistance, target);
+            }
 
             if (target == null)
             {

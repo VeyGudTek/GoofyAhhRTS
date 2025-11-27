@@ -39,7 +39,7 @@ public class UnitComputerService : MonoBehaviour
         {
             AgroStartLocation = transform.position;
             UnitService newTarget = unitsToAgro.OrderBy(u => Vector3.Distance(transform.position, u.transform.position)).First();
-            Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, newTarget);
+            Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, newTarget, false);
         }
     }
 
@@ -49,7 +49,7 @@ public class UnitComputerService : MonoBehaviour
         {
             if (Vector3.Distance((Vector3)AgroStartLocation, transform.position) > AgroDistance)
             {
-                Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, OriginalTarget);
+                Self.CommandUnit(OriginalDestination, OriginalStoppingDistance, OriginalTarget, false);
                 AgroOnCooldown = true;
                 StartCoroutine(ResetAgro());
             }
@@ -65,12 +65,9 @@ public class UnitComputerService : MonoBehaviour
 
     public void SetOriginalCommand(Vector3 destination, float stoppingDistance, UnitService target)
     {
-        if (!IsAgro)
-        {
-            OriginalDestination = destination;
-            OriginalTarget = target;
-            OriginalStoppingDistance = stoppingDistance;
-        }
+        OriginalDestination = destination;
+        OriginalTarget = target;
+        OriginalStoppingDistance = stoppingDistance;
     }
 
     public void RemoveUnit(UnitService unit)
