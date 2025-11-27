@@ -73,6 +73,14 @@ public class UnitComputerService : MonoBehaviour
         }
     }
 
+    public void RemoveUnit(UnitService unit)
+    {
+        if (unit == OriginalTarget)
+        {
+            OriginalTarget = null;
+        }
+    }
+
     private bool CanAgro(UnitService unit)
     {
         return unit.PlayerId != Self.PlayerId && !unit.UnitTypeService.IsResource;

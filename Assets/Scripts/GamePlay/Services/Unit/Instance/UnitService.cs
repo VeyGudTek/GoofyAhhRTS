@@ -155,6 +155,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             
             UnitAttackService.RemoveUnitInRange(unit);
             UnitVisionService.RemoveUnitInRange(unit);
+            UnitComputerService.RemoveUnit(unit);
         }
 
         public void Damage(float damage)
