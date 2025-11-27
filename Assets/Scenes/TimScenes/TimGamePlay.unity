@@ -1286,12 +1286,17 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4925235821277857539, guid: bdc06722c7c5cb04ba4add2714084525, type: 3}
   m_PrefabInstance: {fileID: 494267392}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 494267395}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2cfb869cdc224454b81544351349887b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &494267395 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4590323852618973426, guid: bdc06722c7c5cb04ba4add2714084525, type: 3}
+  m_PrefabInstance: {fileID: 494267392}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &497561034
 GameObject:
   m_ObjectHideFlags: 0
@@ -4707,14 +4712,21 @@ MonoBehaviour:
   <HasComputer>k__BackingField: 1
   ActionCommands:
   - UnitThreshold: 0
+    UnitRequirement: {fileID: 0}
     ComputerIds: 01000000
     Target: {fileID: 1502962157}
   - UnitThreshold: 3
+    UnitRequirement: {fileID: 0}
     ComputerIds: 01000000
     Target: {fileID: 1502962157}
   - UnitThreshold: 1
+    UnitRequirement: {fileID: 0}
     ComputerIds: 02000000
     Target: {fileID: 24953017}
+  - UnitThreshold: 0
+    UnitRequirement: {fileID: 1502962156}
+    ComputerIds: 01000000
+    Target: {fileID: 494267395}
   SpawnCommands:
   - Faction: 1
     Type: 0
