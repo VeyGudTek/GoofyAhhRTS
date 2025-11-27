@@ -51,6 +51,8 @@ namespace Source.GamePlay.Services.Unit
         private void Start()
         {
             this.CheckInitializeRequired();
+
+            InvokeRepeating(nameof(UpdateVisibleUnits), 0f, .5f);
         }
 
         private void InitializeExistingUnits()
@@ -204,6 +206,26 @@ namespace Source.GamePlay.Services.Unit
         public int GetCountByComputerIds(List<int> computerIds)
         {
             return Units.Where(u => computerIds.Contains(u.ComputerId)).Count();
+        }
+
+        private void UpdateVisibleUnits()
+        {
+            List<UnitService> visibleUnits = new();
+            foreach (UnitService allyUnit in Units.Where(u => u.PlayerId == GamePlayService.PlayerId))
+            {
+                visibleUnits.AddRange(allyUnit.UnitVisionService.VisibleUnits);
+            }
+            foreach (UnitService nonAllyUnit in Units.Where(u => u.PlayerId != GamePlayService.PlayerId))
+            {
+                if (visibleUnits.Contains(nonAllyUnit))
+                {
+                    nonAllyUnit.VisibilityService.SetVisability(true);
+                }
+                else
+                {
+                    nonAllyUnit.VisibilityService.SetVisability(false);
+                }
+            }
         }
     }
 }

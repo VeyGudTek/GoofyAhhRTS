@@ -3,6 +3,8 @@ using Source.GamePlay.Static.Classes;
 using Source.GamePlay.Static.ScriptableObjects;
 using Source.Shared.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,6 +27,9 @@ namespace Source.GamePlay.Services.Unit.Instance
         [SerializeField]
         [InitializationRequired]
         private HealthBarService HealthBarService;
+        [field: SerializeField]
+        [InitializationRequired]
+        public VisibilityService VisibilityService { get; private set; }
         [InitializationRequired]
         [SerializeField]
         private CapsuleCollider HitBox;
@@ -128,14 +133,27 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             if (target == null) return false;
 
-            int layersToHit = LayerMask.GetMask(LayerNames.Obstacle);
+            int layersToHit = LayerMask.GetMask(LayerNames.Obstacle, LayerNames.Unit);
             Vector3 direction = target.transform.position - transform.position;
             Vector3 origin = transform.position;
-            if (Physics.Raycast(origin, direction, Mathf.Infinity, layersToHit))
+
+            RaycastHit[] hits = Physics.RaycastAll(origin, direction, Mathf.Infinity, layersToHit);
+            IEnumerable<GameObject> orderedObjects = hits
+                .Select(h => h.collider.gameObject)
+                .OrderBy(g => Vector3.Distance(g.transform.position, origin));
+
+            foreach (GameObject obj in orderedObjects)
             {
-                return false;
+                if (!obj.TryGetComponent(out UnitService unit))
+                {
+                    return false;
+                }
+                else if (unit = target)
+                {
+                    return true;
+                }
             }
-            return true;
+            return false;
         }
 
         private bool IsInRangeOfTarget()
