@@ -1,4 +1,7 @@
 using Source.GamePlay.Services.UI;
+using Source.GamePlay.Services.Unit.Computer;
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -6,30 +9,50 @@ namespace Source.GamePlay.Services
 {
     public class ResourceService : MonoBehaviour
     {
+        private GamePlayService GamePlayService { get; set; }
         private UnitButtonsService UnitButtonsService { get; set; }
+        private UnitComputerManagerService UnitComputerManagerService { get; set; }
         [SerializeField]
-        private float resource = 0f;
+        private Dictionary<Guid, float> ResourceMap = new();
 
         [SerializeField]
         private TMP_Text ResourceText;
 
-        public void InjectDependencies(UnitButtonsService unitButtonsService)
+        public void InjectDependencies(GamePlayService gamePlayService, UnitButtonsService unitButtonsService, UnitComputerManagerService unitComputerManagerService)
         {
+            GamePlayService = gamePlayService;
             UnitButtonsService = unitButtonsService;
+            UnitComputerManagerService = unitComputerManagerService;
         }
 
         private void Start()
         {
-            UpdateResource();
+            ChangeResource(GamePlayService.PlayerId, 100);
+            ChangeResource(GamePlayService.EnemyId, 100);
         }
 
-        public void ChangeResource(float value)
+        public void ChangeResource(Guid playerId, float value)
         {
-            resource += value;
-            UpdateResource();
+            if (ResourceMap.ContainsKey(playerId))
+            {
+                ResourceMap[playerId] += value;
+            }
+            else
+            {
+                ResourceMap.Add(playerId, value);
+            }
+                
+            if (playerId == GamePlayService.PlayerId)
+            {
+                UpdateResource(ResourceMap[playerId]);
+            }
+            if (playerId == GamePlayService.EnemyId)
+            {
+                UnitComputerManagerService.OnUpdateResource(ResourceMap[playerId]);
+            }
         }
 
-        private void UpdateResource()
+        private void UpdateResource(float resource)
         {
             ResourceText.text = $"Resources: {resource.ToString()}";
             UnitButtonsService.UpdateDisabledButtons(resource);

@@ -6,6 +6,7 @@ using Source.Shared.Utilities;
 using Source.GamePlay.Static.Classes;
 using Source.GamePlay.Services.Unit.Instance;
 using Source.GamePlay.Static.ScriptableObjects;
+using Source.GamePlay.Services.Unit.Computer;
 
 namespace Source.GamePlay.Services.Unit
 {
@@ -27,6 +28,8 @@ namespace Source.GamePlay.Services.Unit
         private GamePlayService GamePlayService { get; set; }
         [InitializationRequired]
         private ResourceService ResourceService { get; set; }
+        [InitializationRequired]
+        private UnitComputerManagerService UnitComputerManagerService { get; set; }
 
         private const float SpawnRayYOrigin = 100f;
         private readonly Vector3 SpawnOffset = new Vector3(1f, 0f, 0f);
@@ -35,11 +38,12 @@ namespace Source.GamePlay.Services.Unit
         private readonly List<UnitService> Units = new();
         private readonly List<UnitService> PreviouslySelectedUnits = new();
 
-        public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService, ResourceService resourceService)
+        public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService, ResourceService resourceService, UnitComputerManagerService unitComputerManagerService)
         {
             UnitDataService = unitDataService;
             GamePlayService = gamePlayService;
             ResourceService = resourceService;
+            UnitComputerManagerService = unitComputerManagerService;
 
             InitializeExistingUnits();
         }
@@ -53,19 +57,19 @@ namespace Source.GamePlay.Services.Unit
         {
             if (GamePlayService == null || UnitDataService == null) return;
 
-            HomeUnit.InjectDependencies(this, ResourceService, HomeUnit, GamePlayService.PlayerId, UnitDataService.GetUnitData(Faction.ProCyber, UnitType.Home));
+            HomeUnit.InjectDependencies(this, ResourceService, GamePlayService.PlayerId, UnitDataService.GetUnitData(Faction.ProCyber, UnitType.Home));
             Units.Add(HomeUnit);
-            EnemyHomeUnit.InjectDependencies(this, ResourceService, EnemyHomeUnit, GamePlayService.EnemyId, UnitDataService.GetUnitData(Faction.AntiCyber, UnitType.Home));
+            EnemyHomeUnit.InjectDependencies(this, ResourceService, GamePlayService.EnemyId, UnitDataService.GetUnitData(Faction.AntiCyber, UnitType.Home));
             Units.Add(EnemyHomeUnit);
 
             foreach(UnitService resource in  ResourceUnits)
             {
-                resource.InjectDependencies(this, ResourceService, null, Guid.Empty, UnitDataService.GetUnitData(Faction.None, UnitType.Resource));
+                resource.InjectDependencies(this, ResourceService, Guid.Empty, UnitDataService.GetUnitData(Faction.None, UnitType.Resource));
                 Units.Add(resource);
             }
         }
 
-        public void SpawnUnit(Guid playerId, Faction faction, UnitType type)
+        public void SpawnUnit(Guid playerId, Faction faction, UnitType type, int? computerId = null)
         {
             if (UnitDataService == null) return;
 
@@ -79,10 +83,10 @@ namespace Source.GamePlay.Services.Unit
                 GameObject newUnit = Instantiate(BaseUnit, hit.point, Quaternion.identity, this.transform);
                 UnitService unitService = newUnit.GetComponent<UnitService>();
                 Units.Add(unitService);
-                unitService.InjectDependencies(this, ResourceService, currentHomeUnit, playerId, unitData);
+                unitService.InjectDependencies(this, ResourceService, playerId, unitData, computerId);
                 unitService.CommandUnit(hit.point + SpawnOffset, unitService.Radius, null);
 
-                ResourceService.ChangeResource(-unitData.cost);
+                ResourceService.ChangeResource(playerId, -unitData.Cost);
             }
         }
 
@@ -155,8 +159,20 @@ namespace Source.GamePlay.Services.Unit
                 u.Selected
             );
 
-            float stoppingDistance = unitsToMove.Aggregate(0f, 
-                (total, currUnit) => total + currUnit.Area, 
+            MoveUnits(unitsToMove, destination, target);
+        }
+
+        public void MoveUnits(Vector3 destination, UnitService target, List<int> computerIds)
+        {
+            IEnumerable<UnitService> unitsToMove = Units.Where(u => computerIds.Contains(u.ComputerId));
+
+            MoveUnits(unitsToMove, destination, target);
+        }
+
+        private void MoveUnits(IEnumerable<UnitService> unitsToMove, Vector3 destination, UnitService target)
+        {
+            float stoppingDistance = unitsToMove.Aggregate(0f,
+                (total, currUnit) => total + currUnit.Area,
                 total => Mathf.Sqrt(total / Mathf.PI)
             );
 
@@ -169,6 +185,7 @@ namespace Source.GamePlay.Services.Unit
         public void DestroyUnit(UnitService unitToDestroy)
         {
             Units.Remove(unitToDestroy);
+            UnitComputerManagerService.OnUnitDelete(unitToDestroy);
             PreviouslySelectedUnits.Remove(unitToDestroy);
             foreach(UnitService currentUnit in Units)
             {
@@ -180,8 +197,13 @@ namespace Source.GamePlay.Services.Unit
         public UnitService GetHomeBase(Guid playerId)
         {
             if (playerId == GamePlayService.PlayerId) return HomeUnit;
-            if (playerId == GamePlayService.EnemyId) return HomeUnit;
+            if (playerId == GamePlayService.EnemyId) return EnemyHomeUnit;
             return null;
+        }
+
+        public int GetCountByComputerIds(List<int> computerIds)
+        {
+            return Units.Where(u => computerIds.Contains(u.ComputerId)).Count();
         }
     }
 }

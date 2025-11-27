@@ -16,6 +16,12 @@ namespace Source.GamePlay.Services.Unit.Instance
         [SerializeField]
         [InitializationRequired]
         private UnitAttackService UnitAttackService;
+        [field: SerializeField]
+        [InitializationRequired]
+        public UnitVisionService UnitVisionService { get; private set; }
+        [field: SerializeField]
+        [InitializationRequired]
+        public UnitComputerService UnitComputerService { get; private set; }
         [SerializeField]
         [InitializationRequired]
         private HealthBarService HealthBarService;
@@ -47,7 +53,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
 
-        public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, UnitService homeBase, Guid playerId, UnitData unitData)
+        public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, Guid playerId, UnitData unitData, int? computerId = null)
         {
             UnitManagerService = unitManagerService;
             ResourceService = resourceService;
@@ -63,6 +69,10 @@ namespace Source.GamePlay.Services.Unit.Instance
                 UnitAttackService.InjectDependencies(this, unitData);
             if (UnitMovementService != null)
                 UnitMovementService.InjectDependencies(this, HitBox == null ? 0f : HitBox.height, NavMeshAgent, unitData.Speed);
+            if (UnitVisionService != null)
+                UnitVisionService.InjectDependencies(this, unitData);
+            if (UnitComputerService != null)
+                UnitComputerService.InjectDependencies(this, computerId);
             if (UnitTypeService != null)
                 UnitTypeService.InjectDependencies(this);
 
@@ -90,22 +100,24 @@ namespace Source.GamePlay.Services.Unit.Instance
             SelectionIndicator.SetActive(false);
         }
 
-        public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target)
+        public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target, bool setComputer = true)
         {
             UnitTypeService.SetTarget(target);
+            if (setComputer)
+            {
+                UnitComputerService.SetOriginalCommand(destination, stoppingDistance, target);
+            }
 
             if (target == null)
             {
-                if (UnitMovementService != null)
-                {
-                    UnitMovementService.MoveUnit(destination, stoppingDistance);
-                }
+                UnitMovementService.MoveUnit(destination, stoppingDistance);
             }
         }
 
         public float Area => HitBox == null ? 0f : Mathf.PI * (HitBox.radius * HitBox.radius);
         public float Radius => HitBox == null ? 0f : HitBox.radius;
         public UnitService HomeBase => UnitManagerService.GetHomeBase(PlayerId);
+        public int ComputerId => UnitComputerService.ComputerId;
 
         private bool CanSeeTarget()
         {
@@ -141,12 +153,12 @@ namespace Source.GamePlay.Services.Unit.Instance
             if (UnitTypeService.OriginalTarget != null && UnitTypeService.OriginalTarget == unit)
             {
                 UnitTypeService.SetTarget(null);
-                if (UnitMovementService != null)
-                    UnitMovementService.StopPathFinding();
+                UnitMovementService.StopPathFinding();
             }
             
-            if (UnitAttackService != null) 
-                UnitAttackService.RemoveUnitInRange(unit);
+            UnitAttackService.RemoveUnitInRange(unit);
+            UnitVisionService.RemoveUnitInRange(unit);
+            UnitComputerService.RemoveUnit(unit);
         }
 
         public void Damage(float damage)
@@ -174,7 +186,7 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void AddGold(float gold)
         {
-            ResourceService.ChangeResource(gold);
+            ResourceService.ChangeResource(PlayerId, gold);
         }
     }
 }

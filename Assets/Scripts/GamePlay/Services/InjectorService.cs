@@ -4,6 +4,7 @@ using Source.GamePlay.Services.Unit;
 using UnityEngine;
 using Source.Shared.Repositories;
 using Source.GamePlay.Services.UI;
+using Source.GamePlay.Services.Unit.Computer;
 
 namespace Source.GamePlay.Services
 {
@@ -48,6 +49,9 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         [SerializeField]
         private UnitButtonsService UnitButtonsService;
+        [InitializationRequired]
+        [SerializeField]
+        private UnitComputerManagerService UnitComputerManagerService;
 
         private void Awake()
         {
@@ -63,10 +67,11 @@ namespace Source.GamePlay.Services
             CameraService.InjectDependencies(SettingsRepository);
             SelectionService.InjectDependencies(CameraService);
             InputService.InjectDependencies(GamePlayService);
-            UnitManagerService.InjectDependencies(UnitDataService, GamePlayService, ResourceService);
+            UnitManagerService.InjectDependencies(UnitDataService, GamePlayService, ResourceService, UnitComputerManagerService);
             GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService, PauseService, SceneService);
-            ResourceService.InjectDependencies(UnitButtonsService);
+            ResourceService.InjectDependencies(GamePlayService, UnitButtonsService, UnitComputerManagerService);
             UnitButtonsService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);
+            UnitComputerManagerService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);
         }
     }
 }

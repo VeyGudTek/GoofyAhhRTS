@@ -21,4 +21,5 @@ MonoBehaviour:
   ProjectileStartColor: {r: 0.05630207, g: 0, b: 1, a: 1}
   ProjectileEndColor: {r: 0, g: 0.9184027, b: 1, a: 1}
   UnitType: {fileID: 2011009503091313746, guid: f7de72b69bacb954598807c885ed3b95, type: 3}
-  cost: 20
+  Cost: 0
+  Vision: 10
