@@ -49,21 +49,6 @@ namespace Source.GamePlay.Services.Unit.Computer
             ProcessActionCommands();
         }
 
-        private void ProcessActionCommands()
-        {
-            ComputerActionCommand currentCommand = ActionCommands.FirstOrDefault();
-            if (currentCommand == null) return;
-
-            int numUnits = UnitManagerService.GetCountByComputerIds(currentCommand.ComputerIds);
-            if (numUnits < currentCommand.UnitThreshold) return;
-
-            Vector3 destination = currentCommand.Target.transform.position;
-            UnitService target = currentCommand.Target.GetComponent<UnitService>();
-            UnitManagerService.MoveUnits(destination, target, currentCommand.ComputerIds);
-
-            ActionCommands.RemoveAt(0);  
-        }
-
         public void OnUnitDelete(UnitService deletedUnit)
         {
             foreach (ComputerActionCommand action in ActionCommands.ToList())
@@ -72,7 +57,31 @@ namespace Source.GamePlay.Services.Unit.Computer
                 {
                     ActionCommands.Remove(action);
                 }
+
+                if (action.UnitRequirement == deletedUnit)
+                {
+                    action.UnitRequirement = null;
+                    ProcessActionCommands();
+                }
             }
+        }
+
+        private void ProcessActionCommands()
+        {
+            foreach (ComputerActionCommand currentCommand in ActionCommands.ToList())
+            {
+                if (currentCommand.UnitRequirement != null) return;
+
+                int numUnits = UnitManagerService.GetCountByComputerIds(currentCommand.ComputerIds);
+                if (numUnits < currentCommand.UnitThreshold) return;
+
+                Vector3 destination = currentCommand.Target.transform.position;
+                UnitService target = currentCommand.Target.GetComponent<UnitService>();
+                UnitManagerService.MoveUnits(destination, target, currentCommand.ComputerIds);
+
+                ActionCommands.Remove(currentCommand);
+            }
+            
         }
     }
 }
