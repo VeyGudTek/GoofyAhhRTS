@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Source.GamePlay.Services.Unit;
 using Source.GamePlay.Services.Unit.Instance;
 using Source.Shared.Utilities;
@@ -5,6 +7,13 @@ using UnityEngine;
 
 namespace Source.GamePlay.Services
 {
+    public class PixelData
+    {
+        public int x;
+        public int y;
+        public float a;
+    }
+
     public class FogService : MonoBehaviour
     {
         [SerializeField]
@@ -38,6 +47,7 @@ namespace Source.GamePlay.Services
         public void UpdateTexture()
         {
             Texture2D fogAlphaMap = InitializeTexture();
+            List<PixelData> pixels = new();
 
             foreach (UnitService unit in UnitManagerService.AllyUnits)
             {
@@ -50,13 +60,31 @@ namespace Source.GamePlay.Services
                     for (int j = (int)-radius; j <= radius; j++)
                     {
                         Vector2 pixelPosition = new Vector2(
-                            Mathf.Clamp(i + mapPosition.x, 0, fogAlphaMap.width), 
-                            Mathf.Clamp(j + mapPosition.y, 0, fogAlphaMap.height)
+                            (int)Mathf.Clamp(i + mapPosition.x, 0, fogAlphaMap.width),
+                            (int)Mathf.Clamp(j + mapPosition.y, 0, fogAlphaMap.height)
                         );
                         float alpha = GetAlpha(radius, Vector2.Distance(pixelPosition, mapPosition));
-                        fogAlphaMap.SetPixel(fogAlphaMap.width - (int)pixelPosition.x, fogAlphaMap.height - (int)pixelPosition.y, new Color(255, 255, 255, alpha));
+
+                        PixelData existingPixel = pixels.Where(p => p.x == pixelPosition.x && p.y == pixelPosition.y).FirstOrDefault();
+                        if (existingPixel != null)
+                        {
+                            existingPixel.a = Mathf.Min(existingPixel.a, alpha);
+                        }
+                        else
+                        {
+                            pixels.Add(new PixelData() { 
+                                x = (int)pixelPosition.x, 
+                                y = (int)pixelPosition.y,
+                                a = alpha
+                            });
+                        }
                     }
                 }
+            }
+
+            foreach (PixelData pixel in pixels)
+            {
+                fogAlphaMap.SetPixel(fogAlphaMap.width - pixel.x, fogAlphaMap.height - pixel.y, new Color(255, 255, 255, pixel.a));
             }
             fogAlphaMap.Apply();
 
@@ -84,7 +112,7 @@ namespace Source.GamePlay.Services
             float worldX = Mathf.Clamp(worldPosition.x, Left, Right);
             float worldZ = Mathf.Clamp(worldPosition.y, Bottom, Top);
 
-            float textureX = worldX - Left + 1;
+            float textureX = worldX - Left;
             float textureY = worldZ - Bottom + 1;
 
             return new Vector2(textureX, textureY);
