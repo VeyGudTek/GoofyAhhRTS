@@ -36,7 +36,7 @@ namespace Source.GamePlay.Services
         private float Height => Top - Bottom;
         private bool ReadyToUpdate { get; set; } = true;
         private Texture2D FogAlphaMap { get; set; }
-        private const int IterationsPerFrame = 5000;
+        private const int IterationsPerFrame = 2000;
         
         public void InjectDependencies(UnitManagerService unitManagerService)
         {
