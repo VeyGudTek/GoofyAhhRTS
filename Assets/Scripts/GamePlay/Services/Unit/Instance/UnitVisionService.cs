@@ -9,12 +9,13 @@ namespace Source.GamePlay.Services.Unit.Instance
     {
         private UnitService Self { get; set; }
         private List<UnitService> UnitsInVisionRange { get; set; } = new();
+        public float VisionRange { get; private set; }
         public IEnumerable<UnitService> VisibleUnits => UnitsInVisionRange.Where(u => Self.CanSeeUnit(u));
 
         public void InjectDependencies(UnitService self, UnitData unitData)
         {
             Self = self;
-
+            VisionRange = unitData.Vision;
             transform.localScale = new Vector3(unitData.Vision * 2f, transform.localScale.y, unitData.Vision * 2f);
         }
 

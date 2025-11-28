@@ -52,6 +52,9 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         [SerializeField]
         private UnitComputerManagerService UnitComputerManagerService;
+        [InitializationRequired]
+        [SerializeField]
+        private FogService FogService;
 
         private void Awake()
         {
@@ -72,6 +75,7 @@ namespace Source.GamePlay.Services
             ResourceService.InjectDependencies(GamePlayService, UnitButtonsService, UnitComputerManagerService);
             UnitButtonsService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);
             UnitComputerManagerService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);
+            FogService.InjectDependencies(UnitManagerService);
         }
     }
 }

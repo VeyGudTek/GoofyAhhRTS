@@ -37,6 +37,7 @@ namespace Source.GamePlay.Services.Unit
         private List<UnitService> ResourceUnits = new List<UnitService>();
         private readonly List<UnitService> Units = new();
         private readonly List<UnitService> PreviouslySelectedUnits = new();
+        public IEnumerable<UnitService> AllyUnits => Units.Where(u => u.PlayerId == GamePlayService.PlayerId);
 
         public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService, ResourceService resourceService, UnitComputerManagerService unitComputerManagerService)
         {
