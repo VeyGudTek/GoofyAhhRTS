@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Source.GamePlay.Services.Unit;
 using Source.GamePlay.Services.Unit.Instance;
+using Source.GamePlay.Static.Classes;
 using Source.Shared.Utilities;
 using UnityEngine;
 
@@ -90,7 +91,7 @@ namespace Source.GamePlay.Services
             int currentIteration = 0;
             foreach (UnitService unit in UnitManagerService.AllyUnits.ToList())
             {
-                Vector2 worldPosition = new Vector2(unit.transform.position.x * FogQualityMultiplier, unit.transform.position.z * FogQualityMultiplier);
+                Vector3 worldPosition = unit.transform.position;
                 Vector2 mapPosition = MapPositionToPixel(worldPosition);
                 float radius = unit.UnitVisionService.VisionRange * FogQualityMultiplier;
 
@@ -102,7 +103,7 @@ namespace Source.GamePlay.Services
                             (int)Mathf.Clamp(i + mapPosition.x, 0, FogAlphaMap.width),
                             (int)Mathf.Clamp(j + mapPosition.y, 0, FogAlphaMap.height)
                         );
-                        float alpha = GetAlpha(radius, Vector2.Distance(pixelPosition, mapPosition));
+                        float alpha = GetAlpha(radius, pixelPosition, mapPosition, worldPosition);
 
                         PixelData existingPixel = pixels.Where(p => p.x == pixelPosition.x && p.y == pixelPosition.y).FirstOrDefault();
                         if (existingPixel != null)
@@ -125,19 +126,27 @@ namespace Source.GamePlay.Services
             SetPixels(pixels);
         }
 
-        private Vector2 MapPositionToPixel(Vector2 worldPosition)
+        private Vector2 MapPositionToPixel(Vector3 worldPosition)
         {
-            float worldX = Mathf.Clamp(worldPosition.x, Left, Right);
-            float worldZ = Mathf.Clamp(worldPosition.y, Bottom, Top);
+            float worldX = Mathf.Clamp(worldPosition.x * FogQualityMultiplier, Left, Right);
+            float worldZ = Mathf.Clamp(worldPosition.z * FogQualityMultiplier, Bottom, Top);
 
             float textureX = (worldX - Left);
-            float textureY = (worldZ - Bottom + 1);
+            float textureY = (worldZ - Bottom);
 
             return new Vector2(textureX, textureY);
         }
 
-        private float GetAlpha(float radius, float distanceFromCenter)
+        private float GetAlpha(float radius, Vector2 pixelPosition, Vector2 mapPosition, Vector3 unitWorldPosition)
         {
+            float distanceFromCenter = Vector2.Distance(pixelPosition, mapPosition);
+
+            int layerMask = LayerMask.GetMask(LayerNames.Obstacle);
+            if (Physics.Raycast(unitWorldPosition, GetPixelDirection(pixelPosition, mapPosition), distanceFromCenter / FogQualityMultiplier, layerMask))
+            {
+                return 1f;
+            }
+
             float fullAlphaRadiusPercent = .6f;
             float dropOffDistance = (1f - fullAlphaRadiusPercent) * radius;
 
@@ -147,6 +156,15 @@ namespace Source.GamePlay.Services
             }
 
             return Mathf.Max(0, 1f - (radius - distanceFromCenter) / dropOffDistance);
+        }
+
+        private Vector3 GetPixelDirection(Vector2 pixelPosition, Vector2 unitMapPosition)
+        {
+            return new Vector3(
+                pixelPosition.x - unitMapPosition.x,
+                0f,
+                pixelPosition.y - unitMapPosition.y
+            );
         }
 
         private void SetPixels(List<PixelData> pixels)
