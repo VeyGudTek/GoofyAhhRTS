@@ -25,13 +25,14 @@ namespace Source.GamePlay.Services
         [InitializationRequired]
         private UnitManagerService UnitManagerService { get; set; }
 
-        private float Top => Mathf.Max(Corner1.position.z, Corner2.position.z);
-        private float Bottom => Mathf.Min(Corner1.position.z, Corner2.position.z);
-        private float Left => Mathf.Min(Corner1.position.x, Corner2.position.x);
-        private float Right => Mathf.Max(Corner1.position.x, Corner2.position.x);
+        private const float FogQualityMultiplier = 2f;
+        private float Top => Mathf.Max(Corner1.position.z, Corner2.position.z) * FogQualityMultiplier;
+        private float Bottom => Mathf.Min(Corner1.position.z, Corner2.position.z) * FogQualityMultiplier;
+        private float Left => Mathf.Min(Corner1.position.x, Corner2.position.x) * FogQualityMultiplier;
+        private float Right => Mathf.Max(Corner1.position.x, Corner2.position.x) * FogQualityMultiplier;
         private float Length => Right - Left;
         private float Height => Top - Bottom;
-
+        
         public void InjectDependencies(UnitManagerService unitManagerService)
         {
             UnitManagerService = unitManagerService;
@@ -47,40 +48,7 @@ namespace Source.GamePlay.Services
         public void UpdateTexture()
         {
             Texture2D fogAlphaMap = InitializeTexture();
-            List<PixelData> pixels = new();
-
-            foreach (UnitService unit in UnitManagerService.AllyUnits)
-            {
-                Vector2 worldPosition = new Vector2(unit.transform.position.x, unit.transform.position.z);
-                Vector2 mapPosition = MapPositionToPixel(worldPosition, fogAlphaMap);
-                float radius = unit.UnitVisionService.VisionRange;
-
-                for (int i = (int)-radius; i <= radius; i++)
-                {
-                    for (int j = (int)-radius; j <= radius; j++)
-                    {
-                        Vector2 pixelPosition = new Vector2(
-                            (int)Mathf.Clamp(i + mapPosition.x, 0, fogAlphaMap.width),
-                            (int)Mathf.Clamp(j + mapPosition.y, 0, fogAlphaMap.height)
-                        );
-                        float alpha = GetAlpha(radius, Vector2.Distance(pixelPosition, mapPosition));
-
-                        PixelData existingPixel = pixels.Where(p => p.x == pixelPosition.x && p.y == pixelPosition.y).FirstOrDefault();
-                        if (existingPixel != null)
-                        {
-                            existingPixel.a = Mathf.Min(existingPixel.a, alpha);
-                        }
-                        else
-                        {
-                            pixels.Add(new PixelData() { 
-                                x = (int)pixelPosition.x, 
-                                y = (int)pixelPosition.y,
-                                a = alpha
-                            });
-                        }
-                    }
-                }
-            }
+            List<PixelData> pixels = GetPixels(fogAlphaMap);
 
             foreach (PixelData pixel in pixels)
             {
@@ -107,13 +75,49 @@ namespace Source.GamePlay.Services
             return fogAlphaMap;
         }
 
+        private List<PixelData> GetPixels(Texture2D fogAlphaMap)
+        {
+            List<PixelData> pixels = new();
+
+            foreach (UnitService unit in UnitManagerService.AllyUnits)
+            {
+                Vector2 worldPosition = new Vector2(unit.transform.position.x * FogQualityMultiplier, unit.transform.position.z * FogQualityMultiplier);
+                Vector2 mapPosition = MapPositionToPixel(worldPosition, fogAlphaMap);
+                float radius = unit.UnitVisionService.VisionRange * FogQualityMultiplier;
+
+                for (float i = (int)-radius; i <= radius; i++)
+                {
+                    for (float j = (int)-radius; j <= radius; j++)
+                    {
+                        Vector2 pixelPosition = new Vector2(
+                            (int)Mathf.Clamp(i + mapPosition.x, 0, fogAlphaMap.width),
+                            (int)Mathf.Clamp(j + mapPosition.y, 0, fogAlphaMap.height)
+                        );
+                        float alpha = GetAlpha(radius, Vector2.Distance(pixelPosition, mapPosition));
+
+                        PixelData existingPixel = pixels.Where(p => p.x == pixelPosition.x && p.y == pixelPosition.y).FirstOrDefault();
+                        if (existingPixel != null)
+                        {
+                            existingPixel.a = Mathf.Min(existingPixel.a, alpha);
+                        }
+                        else
+                        {
+                            pixels.Add(new PixelData() { x = (int)pixelPosition.x, y = (int)pixelPosition.y, a = alpha });
+                        }
+                    }
+                }
+            }
+
+            return pixels;
+        }
+
         private Vector2 MapPositionToPixel(Vector2 worldPosition, Texture2D alphaMap)
         {
             float worldX = Mathf.Clamp(worldPosition.x, Left, Right);
             float worldZ = Mathf.Clamp(worldPosition.y, Bottom, Top);
 
-            float textureX = worldX - Left;
-            float textureY = worldZ - Bottom + 1;
+            float textureX = (worldX - Left);
+            float textureY = (worldZ - Bottom + 1);
 
             return new Vector2(textureX, textureY);
         }
