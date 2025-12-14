@@ -59,7 +59,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             if (!CanAttack) return;
 
-            IEnumerable<UnitService> attackableUnits = UnitsInRange.Where(u => Self.CanSeeUnit(u) &&
+            IEnumerable<UnitService> attackableUnits = UnitsInRange.Where(u => Self.UnitVisionService.VisibleUnits.Contains(u) &&
                 Self.UnitTypeService.CanAutoAttack(u));
 
             if (attackableUnits.Count() > 0)
