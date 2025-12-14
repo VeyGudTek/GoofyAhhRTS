@@ -20,25 +20,16 @@ namespace Source.GamePlay.Services.Unit.Instance
         private UnitAttackService UnitAttackService;
         [field: SerializeField]
         [InitializationRequired]
+        public UnitVisualService UnitVisualService { get; private set; }
+        [field: SerializeField]
+        [InitializationRequired]
         public UnitVisionService UnitVisionService { get; private set; }
         [field: SerializeField]
         [InitializationRequired]
         public UnitComputerService UnitComputerService { get; private set; }
-        [SerializeField]
-        [InitializationRequired]
-        private HealthBarService HealthBarService;
-        [field: SerializeField]
-        [InitializationRequired]
-        public VisibilityService VisibilityService { get; private set; }
         [InitializationRequired]
         [SerializeField]
         private CapsuleCollider HitBox;
-        [SerializeField]
-        [InitializationRequired]
-        private GameObject SelectionIndicator;
-        [SerializeField]
-        [InitializationRequired]
-        private MeshRenderer MeshRenderer;
         [InitializationRequired]
         [SerializeField]
         private NavMeshAgent NavMeshAgent;
@@ -52,11 +43,12 @@ namespace Source.GamePlay.Services.Unit.Instance
         private ResourceService ResourceService { get; set; }
         [InitializationRequired]
         public BaseUnitTypeService UnitTypeService { get; private set; }
-        private float MaxHealth { get; set; } = 50f;
+        public float MaxHealth { get; private set; } = 50f;
         private float Health { get; set; } = 50f;
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
+        public UnitStatusService UnitStatusService { get; private set; } = new();
 
         public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, Guid playerId, UnitData unitData, int? computerId = null)
         {
@@ -67,9 +59,10 @@ namespace Source.GamePlay.Services.Unit.Instance
             MaxHealth = unitData.MaxHealth;
             Health = MaxHealth;
             Range = unitData.Range;
+            UnitStatusService.InjectDependencies(this);
 
-            if (MeshRenderer != null)
-                MeshRenderer.material = unitData.Material;
+            if (UnitVisualService != null) 
+                UnitVisualService.SetMaterial(unitData.Material);
             if (UnitAttackService != null)
                 UnitAttackService.InjectDependencies(this, unitData);
             if (UnitMovementService != null)
@@ -102,7 +95,6 @@ namespace Source.GamePlay.Services.Unit.Instance
         private void Start()
         {
             this.CheckInitializeRequired();
-            SelectionIndicator.SetActive(false);
         }
 
         public void CommandUnit(Vector3 destination, float stoppingDistance, UnitService target, bool setComputer = true)
@@ -181,25 +173,31 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void Damage(float damage)
         {
+            if (UnitStatusService.Shield > 0f)
+            {
+                UnitStatusService.SetShield(UnitStatusService.Shield - damage);
+                return;
+            }
+
             Health -= damage;
             if (Health < 0f)
             {
                 UnitManagerService.DestroyUnit(this);
                 return;
             }
-            HealthBarService.SetHealth(Health / MaxHealth);
+            UnitVisualService.SetHealth(Health / MaxHealth);
         }
 
         public void Select()
         {
             Selected = true;
-            SelectionIndicator.SetActive(true);
+            UnitVisualService.SetSelect(true);
         }
 
         public void DeSelect()
         {
             Selected = false;
-            SelectionIndicator.SetActive(false);
+            UnitVisualService.SetSelect(false);
         }
 
         public void AddGold(float gold)

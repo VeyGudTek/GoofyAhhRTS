@@ -59,7 +59,10 @@ namespace Source.GamePlay.Services
             if (SelectionService == null || !IsPlaying) return;
 
             ContactDto contact = SelectionService.StartSelection();
-            UnitManagerService.SelectUnit(contact.Unit, !isShift);
+            if (!contact.HitUI)
+            {
+                UnitManagerService.SelectUnit(contact.Unit, !isShift);
+            }
         }
 
         public void PrimaryHoldEvent()

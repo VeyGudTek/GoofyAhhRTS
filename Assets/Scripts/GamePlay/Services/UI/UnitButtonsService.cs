@@ -23,6 +23,7 @@ namespace Source.GamePlay.Services.UI
 
             InitializeButtonInfo(0, Faction.ProCyber, UnitType.Harvestor);
             InitializeButtonInfo(1, Faction.ProCyber, UnitType.Regular);
+            InitializeButtonInfo(2, Faction.ProCyber, UnitType.Vanguard);
         }
 
         public void InitializeButtonInfo(int buttonIndex, Faction faction, UnitType type)

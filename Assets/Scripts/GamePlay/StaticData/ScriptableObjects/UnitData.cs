@@ -7,7 +7,8 @@ namespace Source.GamePlay.Static.ScriptableObjects
         Harvestor,
         Regular,
         Home,
-        Resource
+        Resource,
+        Vanguard
     }
 
     [CreateAssetMenu(fileName = "UnitData", menuName = "Scriptable Objects/UnitData")]

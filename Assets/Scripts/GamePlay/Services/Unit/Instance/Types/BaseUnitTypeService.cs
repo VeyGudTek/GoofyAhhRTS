@@ -24,6 +24,7 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
         public virtual bool CanManualAttack() { return false; }
         public virtual bool CanAutoAttack(UnitService target) { return false; }
         public virtual void Attack(UnitService target, float damage) { }
+        public virtual void Special() { }
     }
 }
 
