@@ -18,8 +18,8 @@ MonoBehaviour:
   Speed: 5
   Cooldown: 2
   Damage: 5
-  ProjectileStartColor: {r: 0, g: 0, b: 0, a: 0}
-  ProjectileEndColor: {r: 0, g: 0, b: 0, a: 0}
+  ProjectileStartColor: {r: 0, g: 0.0046834946, b: 1, a: 1}
+  ProjectileEndColor: {r: 0, g: 1, b: 0.9827447, a: 1}
   UnitType: {fileID: 2011009503091313746, guid: 68ba319710042d740aa443a19f14f8ae, type: 3}
   Cost: 70
   Vision: 10

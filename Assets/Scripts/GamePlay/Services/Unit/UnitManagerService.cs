@@ -7,6 +7,7 @@ using Source.GamePlay.Static.Classes;
 using Source.GamePlay.Services.Unit.Instance;
 using Source.GamePlay.Static.ScriptableObjects;
 using Source.GamePlay.Services.Unit.Computer;
+using Source.GamePlay.Services.UI;
 
 namespace Source.GamePlay.Services.Unit
 {
@@ -30,6 +31,8 @@ namespace Source.GamePlay.Services.Unit
         private ResourceService ResourceService { get; set; }
         [InitializationRequired]
         private UnitComputerManagerService UnitComputerManagerService { get; set; }
+        [InitializationRequired]
+        private SelectedUnitService SelectedUnitService { get; set; }
 
         private const float SpawnRayYOrigin = 100f;
         private readonly Vector3 SpawnOffset = new Vector3(1f, 0f, 0f);
@@ -39,12 +42,17 @@ namespace Source.GamePlay.Services.Unit
         private readonly List<UnitService> PreviouslySelectedUnits = new();
         public IEnumerable<UnitService> AllyUnits => Units.Where(u => u.PlayerId == GamePlayService.PlayerId);
 
-        public void InjectDependencies(UnitDataService unitDataService, GamePlayService gamePlayService, ResourceService resourceService, UnitComputerManagerService unitComputerManagerService)
+        public void InjectDependencies(UnitDataService unitDataService, 
+            GamePlayService gamePlayService, 
+            ResourceService resourceService, 
+            UnitComputerManagerService unitComputerManagerService,
+            SelectedUnitService selectedUnitService)
         {
             UnitDataService = unitDataService;
             GamePlayService = gamePlayService;
             ResourceService = resourceService;
             UnitComputerManagerService = unitComputerManagerService;
+            SelectedUnitService = selectedUnitService;
 
             InitializeExistingUnits();
         }
@@ -113,6 +121,8 @@ namespace Source.GamePlay.Services.Unit
                     selectedUnit.Select();
                 }
             }
+
+            SelectedUnitService.OnNewSelection(AllyUnits.Where(u => u.Selected).ToList());
         }
 
         public void SelectUnits(List<UnitService> unitsToSelect)
@@ -126,6 +136,8 @@ namespace Source.GamePlay.Services.Unit
             {
                 unit.Select();
             }
+
+            SelectedUnitService.OnNewSelection(AllyUnits.Where(u => u.Selected).ToList());
         }
 
         public void DeSelectUnits(bool includePrevious)
