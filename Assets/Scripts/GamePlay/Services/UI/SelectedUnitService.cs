@@ -93,7 +93,7 @@ namespace Source.GamePlay.Services.UI
             int currentButtonIndex = 0;
             if (unitsWithSpecial.TryGetValue(UnitType.Vanguard, out List<UnitService> vanguardUnits))
             {
-                SetSpecialButton(currentButtonIndex, vanguardUnits);
+                SetSpecialButton(currentButtonIndex, UnitType.Vanguard.ToString(), vanguardUnits);
                 currentButtonIndex ++;
             }
 
@@ -104,10 +104,11 @@ namespace Source.GamePlay.Services.UI
             }
         }
 
-        private void SetSpecialButton(int buttonIndex, List<UnitService> units)
+        private void SetSpecialButton(int buttonIndex, string buttonLabel, List<UnitService> units)
         {
             Button currentButton = SpecialButtons[buttonIndex];
 
+            currentButton.GetComponentInChildren<TMP_Text>().text = buttonLabel;
             currentButton.gameObject.SetActive(true);
             currentButton.onClick.RemoveAllListeners();
             currentButton.onClick.AddListener(() =>
