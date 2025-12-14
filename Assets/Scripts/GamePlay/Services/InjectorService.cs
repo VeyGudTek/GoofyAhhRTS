@@ -57,7 +57,7 @@ namespace Source.GamePlay.Services
         private FogService FogService;
         [InitializationRequired]
         [SerializeField]
-        private SelectedUnitService SelectedUnitService;
+        private SelectedUnitUIService SelectedUnitUIService;
 
         private void Awake()
         {
@@ -73,7 +73,7 @@ namespace Source.GamePlay.Services
             CameraService.InjectDependencies(SettingsRepository);
             SelectionService.InjectDependencies(CameraService);
             InputService.InjectDependencies(GamePlayService);
-            UnitManagerService.InjectDependencies(UnitDataService, GamePlayService, ResourceService, UnitComputerManagerService, SelectedUnitService);
+            UnitManagerService.InjectDependencies(UnitDataService, GamePlayService, ResourceService, UnitComputerManagerService, SelectedUnitUIService);
             GamePlayService.InjectDependencies(CameraService, UnitManagerService, SelectionService, PauseService, SceneService);
             ResourceService.InjectDependencies(GamePlayService, UnitButtonsService, UnitComputerManagerService);
             UnitButtonsService.InjectDependencies(GamePlayService, UnitManagerService, UnitDataService);

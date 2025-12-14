@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Source.GamePlay.Services.UI
 {
-    public class SelectedUnitService : MonoBehaviour
+    public class SelectedUnitUIService : MonoBehaviour
     {
         [field: SerializeField]
         private List<Button> SpecialButtons { get; set; }

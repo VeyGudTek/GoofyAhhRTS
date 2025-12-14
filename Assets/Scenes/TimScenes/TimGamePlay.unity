@@ -3238,7 +3238,7 @@ MonoBehaviour:
   UnitButtonsService: {fileID: 1930174221}
   UnitComputerManagerService: {fileID: 2110775527}
   FogService: {fileID: 986903166}
-  SelectedUnitService: {fileID: 1672584273}
+  SelectedUnitUIService: {fileID: 1672584273}
 --- !u!114 &1066151766
 MonoBehaviour:
   m_ObjectHideFlags: 0

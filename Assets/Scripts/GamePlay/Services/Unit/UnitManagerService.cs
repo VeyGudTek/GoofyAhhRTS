@@ -32,7 +32,7 @@ namespace Source.GamePlay.Services.Unit
         [InitializationRequired]
         private UnitComputerManagerService UnitComputerManagerService { get; set; }
         [InitializationRequired]
-        private SelectedUnitService SelectedUnitService { get; set; }
+        private SelectedUnitUIService SelectedUnitUIService { get; set; }
 
         private const float SpawnRayYOrigin = 100f;
         private readonly Vector3 SpawnOffset = new Vector3(1f, 0f, 0f);
@@ -46,13 +46,13 @@ namespace Source.GamePlay.Services.Unit
             GamePlayService gamePlayService, 
             ResourceService resourceService, 
             UnitComputerManagerService unitComputerManagerService,
-            SelectedUnitService selectedUnitService)
+            SelectedUnitUIService selectedUnitUIService)
         {
             UnitDataService = unitDataService;
             GamePlayService = gamePlayService;
             ResourceService = resourceService;
             UnitComputerManagerService = unitComputerManagerService;
-            SelectedUnitService = selectedUnitService;
+            SelectedUnitUIService = selectedUnitUIService;
 
             InitializeExistingUnits();
         }
@@ -122,7 +122,7 @@ namespace Source.GamePlay.Services.Unit
                 }
             }
 
-            SelectedUnitService.OnNewSelection(AllyUnits.Where(u => u.Selected).ToList());
+            SelectedUnitUIService.OnNewSelection(AllyUnits.Where(u => u.Selected).ToList());
         }
 
         public void SelectUnits(List<UnitService> unitsToSelect)
@@ -137,7 +137,7 @@ namespace Source.GamePlay.Services.Unit
                 unit.Select();
             }
 
-            SelectedUnitService.OnNewSelection(AllyUnits.Where(u => u.Selected).ToList());
+            SelectedUnitUIService.OnNewSelection(AllyUnits.Where(u => u.Selected).ToList());
         }
 
         public void DeSelectUnits(bool includePrevious)
