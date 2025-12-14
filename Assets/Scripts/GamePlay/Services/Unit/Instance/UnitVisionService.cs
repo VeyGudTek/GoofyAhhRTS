@@ -1,6 +1,7 @@
+using Source.GamePlay.Static.Classes;
+using Source.GamePlay.Static.ScriptableObjects;
 using System.Collections.Generic;
 using System.Linq;
-using Source.GamePlay.Static.ScriptableObjects;
 using UnityEngine;
 
 namespace Source.GamePlay.Services.Unit.Instance
@@ -10,13 +11,38 @@ namespace Source.GamePlay.Services.Unit.Instance
         private UnitService Self { get; set; }
         private List<UnitService> UnitsInVisionRange { get; set; } = new();
         public float VisionRange { get; private set; }
-        public IEnumerable<UnitService> VisibleUnits => UnitsInVisionRange.Where(u => Self.CanSeeUnit(u));
+        public IEnumerable<UnitService> VisibleUnits => UnitsInVisionRange.Where(u => UnitUnobstructed(u));
 
         public void InjectDependencies(UnitService self, UnitData unitData)
         {
             Self = self;
             VisionRange = unitData.Vision;
             transform.localScale = new Vector3(unitData.Vision * 2f, transform.localScale.y, unitData.Vision * 2f);
+        }
+
+        private bool UnitUnobstructed(UnitService target)
+        {
+            int layersToHit = LayerMask.GetMask(LayerNames.Obstacle, LayerNames.Unit);
+            Vector3 direction = target.transform.position - Self.transform.position;
+            Vector3 origin = Self.transform.position;
+
+            RaycastHit[] hits = Physics.RaycastAll(origin, direction, Mathf.Infinity, layersToHit);
+            IEnumerable<GameObject> orderedObjects = hits
+                .Select(h => h.collider.gameObject)
+                .OrderBy(g => Vector3.Distance(g.transform.position, origin));
+
+            foreach (GameObject obj in orderedObjects)
+            {
+                if (!obj.TryGetComponent(out UnitService unit))
+                {
+                    return false;
+                }
+                else if (unit = target)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void OnTriggerEnter(Collider other)

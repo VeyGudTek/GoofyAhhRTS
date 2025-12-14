@@ -118,38 +118,6 @@ namespace Source.GamePlay.Services.Unit.Instance
         public UnitService HomeBase => UnitManagerService.GetHomeBase(PlayerId);
         public int ComputerId => UnitComputerService.ComputerId;
 
-        private bool CanSeeTarget()
-        {
-            return CanSeeUnit(UnitTypeService.GetTarget());
-        }
-
-        public bool CanSeeUnit(UnitService target)
-        {
-            if (target == null) return false;
-
-            int layersToHit = LayerMask.GetMask(LayerNames.Obstacle, LayerNames.Unit);
-            Vector3 direction = target.transform.position - transform.position;
-            Vector3 origin = transform.position;
-
-            RaycastHit[] hits = Physics.RaycastAll(origin, direction, Mathf.Infinity, layersToHit);
-            IEnumerable<GameObject> orderedObjects = hits
-                .Select(h => h.collider.gameObject)
-                .OrderBy(g => Vector3.Distance(g.transform.position, origin));
-
-            foreach (GameObject obj in orderedObjects)
-            {
-                if (!obj.TryGetComponent(out UnitService unit))
-                {
-                    return false;
-                }
-                else if (unit = target)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         private bool IsInRangeOfTarget()
         {
             if (UnitTypeService.GetTarget() == null) return false;
@@ -158,7 +126,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             return distanceToTarget <= Range;
         }
 
-        public bool CanAttackTarget => IsInRangeOfTarget() && CanSeeTarget();
+        public bool CanAttackTarget => IsInRangeOfTarget() && UnitVisionService.VisibleUnits.Contains(UnitTypeService.GetTarget());
 
         public void RemoveDestroyedUnit(UnitService unit)
         {
