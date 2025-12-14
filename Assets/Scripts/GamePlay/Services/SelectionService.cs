@@ -12,9 +12,10 @@ namespace Source.GamePlay.Services
 {
     public class ContactDto
     {
-        public bool HitGameObject = false;
-        public Vector3 Point = Vector3.zero;
-        public UnitService Unit = null;
+        public bool HitUI { get; set; } = false;
+        public bool HitGameObject { get; set; } = false;
+        public Vector3 Point { get; set; } = Vector3.zero;
+        public UnitService Unit { get; set; } = null;
     }
 
     public class SelectionService : MonoBehaviour
@@ -100,9 +101,14 @@ namespace Source.GamePlay.Services
             Vector2 mousePosition = Mouse.current.position.value;
 
             if (CameraService == null) return contact;
-            if (MouseIsOverUI()) return contact;
+
+            if (MouseIsOverUI())
+            {
+                contact.HitUI = true;
+                return contact;
+            }
+
             if (!CameraService.ScreenToWorldPoint(mousePosition, out Ray ray)) return contact;
-            
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMaskToHit))
             {
                 contact.HitGameObject = true;
