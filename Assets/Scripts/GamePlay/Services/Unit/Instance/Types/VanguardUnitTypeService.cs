@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Source.GamePlay.Services.Unit.Instance.Types
 {
-    public class VanguardUnitType : BaseUnitTypeService
+    public class VanguardUnitTypeService : BaseUnitTypeService
     {
         private const float ShieldHealth = 50f;
         public override bool HasAttack => true;

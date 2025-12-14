@@ -45,7 +45,7 @@ namespace Source.GamePlay.Services.UI
 
                 switch (typeName)
                 {
-                    case nameof(VanguardUnitType):
+                    case nameof(VanguardUnitTypeService):
                         AddTypeToDict(unitWithSpecials, UnitType.Vanguard, unit);
                         break;
                     default:
