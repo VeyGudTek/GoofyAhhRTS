@@ -30,12 +30,14 @@ namespace Source.GamePlay.Services.Unit.Instance
         {
             Buffs.Add(buff);
             StartCoroutine(RemoveBuff(buff, duration));
+            Self.UnitVisualService.ShowBuffs(Buffs);
         }
 
         private IEnumerator RemoveBuff(Buff buff, float duration)
         {
             yield return new WaitForSeconds(duration);
             Buffs.Remove(buff);
+            Self.UnitVisualService.ShowBuffs(Buffs);
         }
 
         public float GetDamageBuff()
