@@ -170,6 +170,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             
             UnitAttackService.RemoveUnitInRange(unit);
             UnitVisionService.RemoveUnitInRange(unit);
+            UnitTypeService.RemoveUnitInRange(unit);
             UnitComputerService.RemoveUnit(unit);
         }
 
@@ -187,6 +188,12 @@ namespace Source.GamePlay.Services.Unit.Instance
                 UnitManagerService.DestroyUnit(this);
                 return;
             }
+            UnitVisualService.SetHealth(Health / MaxHealth);
+        }
+
+        public void Heal(float health)
+        {
+            Health = Math.Min(Health + health, MaxHealth);
             UnitVisualService.SetHealth(Health / MaxHealth);
         }
 
