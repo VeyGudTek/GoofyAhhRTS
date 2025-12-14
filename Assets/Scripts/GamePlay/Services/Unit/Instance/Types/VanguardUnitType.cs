@@ -4,7 +4,7 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
 {
     public class VanguardUnitType : BaseUnitTypeService
     {
-        private const float ShieldHealth = 30f;
+        private const float ShieldHealth = 50f;
         public override bool HasAttack => true;
         public override bool HasMove => true;
 
@@ -39,7 +39,7 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
 
         public override void Special()
         {
-            Self.UnitStatusService.Shield = ShieldHealth;
+            Self.UnitStatusService.SetShield(ShieldHealth);
         }
     }
 }

@@ -232,11 +232,11 @@ namespace Source.GamePlay.Services.Unit
             {
                 if (visibleUnits.Contains(nonAllyUnit))
                 {
-                    nonAllyUnit.VisibilityService.SetVisability(true);
+                    nonAllyUnit.UnitVisualService.SetVisability(true);
                 }
                 else
                 {
-                    nonAllyUnit.VisibilityService.SetVisability(false);
+                    nonAllyUnit.UnitVisualService.SetVisability(false);
                 }
             }
         }
