@@ -191,6 +191,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             UnitVisualService.SetHealth(Health / MaxHealth);
         }
 
+        //Will be used for medic
         public void Heal(float health)
         {
             Health = Math.Min(Health + health, MaxHealth);

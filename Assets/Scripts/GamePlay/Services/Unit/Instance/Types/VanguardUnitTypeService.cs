@@ -34,7 +34,7 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
 
         public override void Attack(UnitService target, float damage)
         {
-            target.Damage(damage);
+            target.Damage(damage + Self.UnitStatusService.GetDamageBuff());
         }
 
         public override void Special()

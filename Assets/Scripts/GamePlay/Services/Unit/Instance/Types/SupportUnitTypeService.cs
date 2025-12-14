@@ -5,7 +5,7 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
 {
     public class SupportUnitTypeService : BaseUnitTypeService
     {
-        private const float HealAmount = 50f;
+        private const float BuffDuration = 5f;
         private List<UnitService> UnitsInRange = new List<UnitService>();
         public override bool HasMove => true;
 
@@ -13,7 +13,7 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
         {
             foreach (UnitService unit in UnitsInRange)
             {
-                unit.Heal(HealAmount);
+                unit.UnitStatusService.AddBuff(Buff.Damage, BuffDuration);
             }
             Self.Damage(50f);
         }
