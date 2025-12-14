@@ -57,6 +57,7 @@ namespace Source.GamePlay.Services.Unit.Instance
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
+        public UnitStatusService UnitStatusService { get; private set; } = new();
 
         public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, Guid playerId, UnitData unitData, int? computerId = null)
         {
@@ -181,6 +182,12 @@ namespace Source.GamePlay.Services.Unit.Instance
 
         public void Damage(float damage)
         {
+            if (UnitStatusService.Shield > 0f)
+            {
+                UnitStatusService.Shield -= damage;
+                return;
+            }
+
             Health -= damage;
             if (Health < 0f)
             {
