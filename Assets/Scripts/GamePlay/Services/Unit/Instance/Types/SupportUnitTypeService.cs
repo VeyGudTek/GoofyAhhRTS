@@ -11,11 +11,11 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
 
         public override void Special()
         {
-            Self.Damage(50f);
             foreach (UnitService unit in UnitsInRange)
             {
                 unit.Heal(HealAmount);
             }
+            Self.Damage(50f);
         }
 
         public override void RemoveUnitInRange(UnitService unit)
