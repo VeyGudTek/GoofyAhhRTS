@@ -8,7 +8,8 @@ namespace Source.GamePlay.Static.ScriptableObjects
         Regular,
         Home,
         Resource,
-        Vanguard
+        Vanguard,
+        Support
     }
 
     [CreateAssetMenu(fileName = "UnitData", menuName = "Scriptable Objects/UnitData")]
