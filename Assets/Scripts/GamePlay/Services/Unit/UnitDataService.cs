@@ -28,6 +28,9 @@ namespace Source.GamePlay.Services.Unit
         private UnitData ProCyberVanguardData;
         [SerializeField]
         [InitializationRequired]
+        private UnitData ProCyberSupportData;
+        [SerializeField]
+        [InitializationRequired]
         private UnitData AntiCyberRegularData;
         [SerializeField]
         [InitializationRequired]
@@ -67,6 +70,7 @@ namespace Source.GamePlay.Services.Unit
                 UnitType.Home => ProCyberHomeData,
                 UnitType.Harvestor => ProCyberHarvestorData,
                 UnitType.Vanguard => ProCyberVanguardData,
+                UnitType.Support => ProCyberSupportData,
                 _ => throw new Exception("[UnitDataService]: Invalid Unit Type"),
             };
         }

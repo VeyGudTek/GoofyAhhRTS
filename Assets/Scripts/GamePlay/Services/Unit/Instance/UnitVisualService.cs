@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Source.GamePlay.Services.Unit.Instance
@@ -10,6 +11,8 @@ namespace Source.GamePlay.Services.Unit.Instance
         [SerializeField]
         private GameObject ShieldBar;
         [SerializeField]
+        private GameObject DamageBuffIndicator;
+        [SerializeField]
         private GameObject VisibilityIndicator;
         [SerializeField]
         private GameObject SelectionIndicator;
@@ -21,6 +24,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             BaseHealthLength = HealthBar.transform.localScale.x;
             ShieldBar.SetActive(false);
             SelectionIndicator.SetActive(false);
+            ShowBuffs(new List<Buff>());
         }
 
         public void SetMaterial(Material material)
@@ -56,6 +60,11 @@ namespace Source.GamePlay.Services.Unit.Instance
                 ShieldBar.transform.localScale.y,
                 ShieldBar.transform.localScale.z
             );
+        }
+
+        public void ShowBuffs(List<Buff> buffs)
+        {
+            DamageBuffIndicator.SetActive(buffs.Contains(Buff.Damage));
         }
 
         public void SetVisability(bool visible)

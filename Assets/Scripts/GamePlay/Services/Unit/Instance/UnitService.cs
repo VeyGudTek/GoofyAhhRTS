@@ -28,6 +28,9 @@ namespace Source.GamePlay.Services.Unit.Instance
         [InitializationRequired]
         public UnitComputerService UnitComputerService { get; private set; }
         [InitializationRequired]
+        [field: SerializeField]
+        public UnitStatusService UnitStatusService { get; private set; }
+        [InitializationRequired]
         [SerializeField]
         private CapsuleCollider HitBox;
         [InitializationRequired]
@@ -48,7 +51,6 @@ namespace Source.GamePlay.Services.Unit.Instance
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
-        public UnitStatusService UnitStatusService { get; private set; } = new();
 
         public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, Guid playerId, UnitData unitData, int? computerId = null)
         {
@@ -168,6 +170,7 @@ namespace Source.GamePlay.Services.Unit.Instance
             
             UnitAttackService.RemoveUnitInRange(unit);
             UnitVisionService.RemoveUnitInRange(unit);
+            UnitTypeService.RemoveUnitInRange(unit);
             UnitComputerService.RemoveUnit(unit);
         }
 
@@ -185,6 +188,13 @@ namespace Source.GamePlay.Services.Unit.Instance
                 UnitManagerService.DestroyUnit(this);
                 return;
             }
+            UnitVisualService.SetHealth(Health / MaxHealth);
+        }
+
+        //Will be used for medic
+        public void Heal(float health)
+        {
+            Health = Math.Min(Health + health, MaxHealth);
             UnitVisualService.SetHealth(Health / MaxHealth);
         }
 

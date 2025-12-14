@@ -55,7 +55,7 @@ namespace Source.GamePlay.Services.Unit.Instance.Types
             }
             else
             {
-                float modifiedDamage = target.UnitTypeService.IsResource ? damage : damage * ResourceDamageModifier;
+                float modifiedDamage = target.UnitTypeService.IsResource ? damage : damage * ResourceDamageModifier + Self.UnitStatusService.GetDamageBuff();
                 target.Damage(modifiedDamage);
 
                 if (target.UnitTypeService.IsResource)

@@ -45,8 +45,11 @@ namespace Source.GamePlay.Services.UI
 
                 switch (typeName)
                 {
-                    case nameof(VanguardUnitType):
+                    case nameof(VanguardUnitTypeService):
                         AddTypeToDict(unitWithSpecials, UnitType.Vanguard, unit);
+                        break;
+                    case nameof(SupportUnitTypeService):
+                        AddTypeToDict(unitWithSpecials, UnitType.Support, unit);
                         break;
                     default:
                         break;
@@ -91,10 +94,10 @@ namespace Source.GamePlay.Services.UI
         private void DisplaySpecialButtons(Dictionary<UnitType, List<UnitService>> unitsWithSpecial)
         {
             int currentButtonIndex = 0;
-            if (unitsWithSpecial.TryGetValue(UnitType.Vanguard, out List<UnitService> vanguardUnits))
+            foreach (UnitType type in unitsWithSpecial.Keys)
             {
-                SetSpecialButton(currentButtonIndex, UnitType.Vanguard.ToString(), vanguardUnits);
-                currentButtonIndex ++;
+                SetSpecialButton(currentButtonIndex, type.ToString(), unitsWithSpecial[type]);
+                currentButtonIndex++;
             }
 
             while (currentButtonIndex < SpecialButtons.Count)
