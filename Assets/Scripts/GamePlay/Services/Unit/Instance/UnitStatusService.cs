@@ -1,6 +1,8 @@
+using UnityEngine;
+
 namespace Source.GamePlay.Services.Unit.Instance
 {
-    public class UnitStatusService
+    public class UnitStatusService : MonoBehaviour
     {
         private UnitService Self { get; set; }
         public float Shield { get; private set; } = 0f;

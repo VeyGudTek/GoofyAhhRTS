@@ -1,16 +1,35 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class SupportUnitTypeService : MonoBehaviour
+namespace Source.GamePlay.Services.Unit.Instance.Types
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class SupportUnitTypeService : BaseUnitTypeService
     {
-        
-    }
+        private List<UnitService> unitsInRange = new List<UnitService>();
+        public override bool HasMove => true;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public override void Special()
+        {
+            foreach (UnitService unit in unitsInRange)
+            {
+
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.TryGetComponent(out UnitService unit))
+            {
+                unitsInRange.Add(unit);
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.TryGetComponent(out UnitService unit))
+            {
+                unitsInRange.Remove(unit);
+            }
+        }
     }
 }

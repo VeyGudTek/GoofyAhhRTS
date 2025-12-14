@@ -28,6 +28,9 @@ namespace Source.GamePlay.Services.Unit.Instance
         [InitializationRequired]
         public UnitComputerService UnitComputerService { get; private set; }
         [InitializationRequired]
+        [field: SerializeField]
+        public UnitStatusService UnitStatusService { get; private set; }
+        [InitializationRequired]
         [SerializeField]
         private CapsuleCollider HitBox;
         [InitializationRequired]
@@ -48,7 +51,6 @@ namespace Source.GamePlay.Services.Unit.Instance
         public float Range { get; private set; } = 2.5f;
         public Guid PlayerId { get; private set; } = Guid.Empty;
         public bool Selected { get; private set; } = false;
-        public UnitStatusService UnitStatusService { get; private set; } = new();
 
         public void InjectDependencies(UnitManagerService unitManagerService, ResourceService resourceService, Guid playerId, UnitData unitData, int? computerId = null)
         {

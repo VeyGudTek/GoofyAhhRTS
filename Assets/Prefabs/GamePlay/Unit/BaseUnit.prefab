@@ -571,6 +571,7 @@ GameObject:
   - component: {fileID: 4925235821277857539}
   - component: {fileID: -3675312499849701561}
   - component: {fileID: 5769665529726958417}
+  - component: {fileID: 3613294664670508208}
   m_Layer: 6
   m_Name: BaseUnit
   m_TagString: Untagged
@@ -687,6 +688,7 @@ MonoBehaviour:
   <UnitVisualService>k__BackingField: {fileID: 5612762287567262485}
   <UnitVisionService>k__BackingField: {fileID: 837896987769935904}
   <UnitComputerService>k__BackingField: {fileID: 5769665529726958417}
+  <UnitStatusService>k__BackingField: {fileID: 3613294664670508208}
   HitBox: {fileID: 527395166707192913}
   NavMeshAgent: {fileID: -384323498120774872}
   navMeshObstacle: {fileID: -3675312499849701561}
@@ -716,6 +718,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5809a5b30cecfcf4fa2cad2d1c28cda4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3613294664670508208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4590323852618973426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87985f54c3330284f928f8e8ace6fc73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5301969090425376558
